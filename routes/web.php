@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/admin_dashboard', 'App\Http\Controllers\Admin\DashboardController@index')->name('admin.dashboard');
+Route::get('/employee_dashboard', 'App\Http\Controllers\Employee\DashboardController@index')->name('employee.dashboard');
+
+Route::get('/dashboard', function () {
+    $role = Auth::user()->role;
+    switch ($role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+            break;
+        case 'employee':
+            return redirect()->route('employee.dashboard');
+            break;
+
+        default:
+            return '/';
+            break;
+    }
+})->middleware(['auth'])->name('dashboard');
+
+
+require __DIR__.'/auth.php';
