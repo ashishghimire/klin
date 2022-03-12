@@ -37,5 +37,9 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth'])->name('dashboard');
 
+Route::resource('customer', \App\Http\Controllers\CustomerController::class)->except(['destroy'])->middleware(['auth']);
 
-require __DIR__.'/auth.php';
+
+Route::delete('/customer/{customer}', 'App\Http\Controllers\CustomerController@destroy')->name('customer.destroy')->middleware(['auth', 'password.confirm']);
+
+require __DIR__ . '/auth.php';
