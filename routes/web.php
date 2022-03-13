@@ -42,4 +42,7 @@ Route::resource('customer', \App\Http\Controllers\CustomerController::class)->ex
 
 Route::delete('/customer/{customer}', 'App\Http\Controllers\CustomerController@destroy')->name('customer.destroy')->middleware(['auth', 'password.confirm']);
 
+
+Route::resource('customer.bill', \App\Http\Controllers\BillController::class)->middleware(['auth']);
+
 require __DIR__ . '/auth.php';

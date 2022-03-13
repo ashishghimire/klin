@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends Model
+class Bill extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
-        'name', 'address', 'phone', 'email',
-    ];
-
-    public function bills(){
-        return $this->hasMany(Bill::class);
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
     }
+
 }
