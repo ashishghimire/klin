@@ -13,7 +13,7 @@ class StoreBillRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,9 @@ class StoreBillRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            //
+            'estimate_no' => 'required',
         ];
     }
 }

@@ -59,7 +59,8 @@ class BillController extends Controller
      */
     public function store(StoreBillRequest $request)
     {
-        //
+        dd($request->all());
+        dd(json_encode($request->service_details));
     }
 
     /**

@@ -11,6 +11,10 @@ class Bill extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $casts = [
+        'service_details' => 'array',
+    ];
+
     public function customer()
     {
         return $this->hasOne(Customer::class);
