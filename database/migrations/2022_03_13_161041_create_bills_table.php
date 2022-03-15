@@ -21,8 +21,9 @@ class CreateBillsTable extends Migration
             $table->float('amount');
             $table->float('paid_amount')->default(0);
             $table->enum('payment_status',['unpaid', 'partial', 'paid'])->default('unpaid');
-            $table->string('payment_mode');
+            $table->string('payment_mode')->nullable();
             $table->enum('laundry_status', ['unprocessed', 'processing', 'completed', 'delivered'])->default('unprocessed');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

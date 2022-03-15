@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
 use App\Models\PaymentMode;
 use App\Models\Service;
+use App\Services\BillService;
 use App\Services\CustomerService;
+
 
 class BillController extends Controller
 {
@@ -15,22 +17,29 @@ class BillController extends Controller
      * @var CustomerService
      */
     protected $customer;
+    /**
+     * @var BillService
+     */
+    protected $bill;
 
     /**
      * Display a listing of the resource.
      *
      * @param CustomerService $customer
+     * @param BillService $bill
      */
 
-    public function __construct(CustomerService $customer)
+    public function __construct(CustomerService $customer, BillService $bill)
     {
-
         $this->customer = $customer;
+        $this->bill = $bill;
     }
 
     public function index()
     {
-        //
+        $bills = $this->bill->all();
+
+        return view('bill.index', compact('bills'));
     }
 
     /**
@@ -54,13 +63,23 @@ class BillController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param $customerId
      * @param  \App\Http\Requests\StoreBillRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBillRequest $request)
+    public function store($customerId, StoreBillRequest $request)
     {
-        dd($request->all());
-        dd(json_encode($request->service_details));
+        $data = $request->all();
+
+
+        $bill = $this->bill->save($customerId, $data);
+
+        if (!$bill) {
+            return redirect()->back()->withErrors('There was a problem in creating bill');
+        }
+
+
+        return redirect()->route('customer.bill.show', [$customerId, $bill]);
     }
 
     /**
@@ -69,9 +88,9 @@ class BillController extends Controller
      * @param  \App\Models\Bill $bill
      * @return \Illuminate\Http\Response
      */
-    public function show(Bill $bill)
+    public function show($customerId, Bill $bill)
     {
-        //
+        return view('bill.show', compact('customerId', 'bill'));
     }
 
     /**

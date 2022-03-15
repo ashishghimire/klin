@@ -55,7 +55,7 @@ class CustomerController extends Controller
             return redirect()->back()->withErrors('There was a problem in adding customer');
         }
 
-        return redirect()->route('dashboard')->with('message', "Customer successfully added");
+        return redirect()->route('customer.index')->with('message', "Customer successfully added");
     }
 
     /**

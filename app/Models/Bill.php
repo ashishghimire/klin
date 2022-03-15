@@ -15,9 +15,11 @@ class Bill extends Model
         'service_details' => 'array',
     ];
 
+    protected $fillable = ['customer_id', 'amount', 'user_id', 'estimate_no', 'service_details', 'paid_amount', 'payment_mode'];
+
     public function customer()
     {
-        return $this->hasOne(Customer::class);
+        return $this->belongsTo(Customer::class);
     }
 
 }

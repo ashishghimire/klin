@@ -43,6 +43,7 @@ Route::resource('customer', \App\Http\Controllers\CustomerController::class)->ex
 Route::delete('/customer/{customer}', 'App\Http\Controllers\CustomerController@destroy')->name('customer.destroy')->middleware(['auth', 'password.confirm']);
 
 
-Route::resource('customer.bill', \App\Http\Controllers\BillController::class)->middleware(['auth']);
+Route::resource('customer.bill', \App\Http\Controllers\BillController::class)->except(['index'])->middleware(['auth']);
 
+Route::get('bill', 'App\Http\Controllers\BillController@index')->name('bill.index')->middleware(['auth']);
 require __DIR__ . '/auth.php';
