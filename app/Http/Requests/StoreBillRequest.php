@@ -25,7 +25,7 @@ class StoreBillRequest extends FormRequest
     {
 
         return [
-            'estimate_no' => 'required',
+            'estimate_no' => 'unique:bills| required',
         ];
     }
 }

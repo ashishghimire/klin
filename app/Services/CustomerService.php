@@ -43,10 +43,8 @@ class CustomerService
         return $customer;
     }
 
-    public function update($id, $data)
+    public function update($customer, $data)
     {
-        $customer = $this->customer->find($id);
-
         return $this->customer->update($customer, $data);
     }
 
@@ -55,11 +53,14 @@ class CustomerService
         return $this->customer->all();
     }
 
-    public function delete($id)
+    public function delete($customer)
     {
-        $customer = $this->customer->find($id);
-
         return $this->customer->delete($customer);
+    }
+
+    public function total()
+    {
+        return $this->customer->count();
     }
 
 }

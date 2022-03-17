@@ -49,7 +49,10 @@ Route::get('bill', 'App\Http\Controllers\BillController@index')->name('bill.inde
 
 Route::get('bill/{bill}/edit', 'App\Http\Controllers\BillController@edit')->name('bill.edit')->middleware(['auth']);
 
-Route::get('bill/{bill}/update', 'App\Http\Controllers\BillController@update')->name('bill.update')->middleware(['auth']);
+Route::patch('bill/{bill}/update', 'App\Http\Controllers\BillController@update')->name('bill.update')->middleware(['auth']);
 
+Route::get('invoice/create', 'App\Http\Controllers\BillController@createInvoice')->name('invoice.create')->middleware(['auth']);
+
+//Route::get('invoice/store', 'App\Http\Controllers\BillController@storeInvoice')->name('invoice.create')->middleware(['auth']);
 
 require __DIR__ . '/auth.php';

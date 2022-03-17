@@ -37,7 +37,7 @@ class BillController extends Controller
 
     public function index()
     {
-        $bills = $this->bill->all();
+        $bills = $this->bill->get(1000);
 
         return view('bill.index', compact('bills'));
     }
@@ -85,6 +85,7 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param $customerId
      * @param  \App\Models\Bill $bill
      * @return \Illuminate\Http\Response
      */
@@ -117,7 +118,11 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill)
     {
-        //
+        if (!$this->bill->update($bill, $request->all())) {
+            return redirect()->back()->withErrors('There was a problem in updating bill');
+        }
+
+        return redirect()->route('bill.index')->withSuccess("Bill successfully updated");
     }
 
     /**
@@ -128,6 +133,17 @@ class BillController extends Controller
      */
     public function destroy(Bill $bill)
     {
-        //
+        if (!$this->bill->delete($bill)) {
+            return redirect()->back()->withErrors('There was a problem in deleting Bill');
+        }
+
+        return redirect()->route('dashboard')->with('message', "Bill successfully deleted");
+    }
+
+    public function createInvoice()
+    {
+        $customers = $this->customer->all();
+
+        return view('bill.invoice',compact('customers'));
     }
 }

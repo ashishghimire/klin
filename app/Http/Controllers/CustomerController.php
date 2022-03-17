@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorecustomerRequest;
-use App\Http\Requests\UpdatecustomerRequest;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\customer;
 use App\Services\CustomerService;
 
@@ -44,10 +44,10 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorecustomerRequest $request
+     * @param  \App\Http\Requests\StoreCustomerRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorecustomerRequest $request)
+    public function store(StoreCustomerRequest $request)
     {
         $data = $request->all();
 
@@ -84,13 +84,13 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatecustomerRequest $request
+     * @param  \App\Http\Requests\UpdateCustomerRequest $request
      * @param  \App\Models\customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatecustomerRequest $request, $id)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        if (!$this->customer->update($id, $request->all())) {
+        if (!$this->customer->update($customer, $request->all())) {
             return redirect()->back()->withErrors('There was a problem in updating customer');
         }
 
@@ -103,9 +103,9 @@ class CustomerController extends Controller
      * @param  \App\Models\customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
-        if (!$this->customer->delete($id)) {
+        if (!$this->customer->delete($customer)) {
             return redirect()->back()->withErrors('There was a problem in deleting customer');
         }
 

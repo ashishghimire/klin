@@ -41,6 +41,52 @@ class BillRepository implements BillRepositoryInterface
 
     public function all()
     {
-            return $this->bill->all();
+        return $this->bill->all();
+    }
+
+    public function update($bill, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $updated = $bill->update($data);
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            dd($e);// This is for debugging purpose only. Remove it!!
+            DB::rollback();
+            return false;
+        }
+        return $updated;
+    }
+
+    public function get($number)
+    {
+        return $this->bill->orderBy('created_at', 'desc')->take($number)->get();
+    }
+
+    public function delete($bill)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $deleted = $bill->delete();
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            dd($e);// This is for debugging purpose only. Remove it!!
+            DB::rollback();
+            return false;
+        }
+        return $deleted;
+    }
+
+    public function getCount($string)
+    {
+        return $this->bill->where('laundry_status', $string)->count();
     }
 }

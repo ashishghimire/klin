@@ -16,10 +16,10 @@ class CreateBillsTable extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->integer('estimate_no');
+            $table->bigInteger('estimate_no')->unique();
             $table->json('service_details');
-            $table->float('amount');
-            $table->float('paid_amount')->default(0);
+            $table->decimal('amount', $precision = 8, $scale = 2);
+            $table->decimal('paid_amount', $precision = 8, $scale = 2)->default(0);
             $table->enum('payment_status',['unpaid', 'partial', 'paid'])->default('unpaid');
             $table->string('payment_mode')->nullable();
             $table->enum('laundry_status', ['unprocessed', 'processing', 'completed', 'delivered'])->default('unprocessed');

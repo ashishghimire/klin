@@ -40,6 +40,11 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $this->customer->findOrFail($id);
     }
 
+    /**
+     * @param $customer
+     * @param $data
+     * @return bool
+     */
     public function update($customer, $data)
     {
         DB::beginTransaction();
@@ -80,5 +85,10 @@ class CustomerRepository implements CustomerRepositoryInterface
         }
         return $deleted;
 
+    }
+
+    public function count()
+    {
+        return $this->customer->count();
     }
 }

@@ -14,5 +14,7 @@ interface CustomerRepositoryInterface
 
     public function all();
 
-    public function delete($id);
+    public function delete($customer);
+
+    public function count();
 }
