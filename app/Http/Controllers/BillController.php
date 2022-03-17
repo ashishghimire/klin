@@ -101,7 +101,11 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        //
+        $services = Service::all();
+
+        $paymentModes = PaymentMode::all();
+
+        return view('bill.edit', compact('bill', 'services', 'paymentModes'));
     }
 
     /**

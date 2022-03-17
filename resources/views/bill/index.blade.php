@@ -66,7 +66,7 @@
                 </td>
                 <td>{{!empty($bill->payment_mode) ? $bill->payment_mode : '-'}}</td>
                 <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
-                <td>Edit, pay, delete</td>
+                <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
                 {{--<td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>--}}
                     {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create--}}
                         {{--Bill </a></td>--}}
