@@ -7,18 +7,37 @@
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             $(document).ready(function () {
+                // $('#customer-info').DataTable({
+                //     "columnDefs": [{
+                //         "searchable": false,
+                //         "orderable": false,
+                //         "targets": 'no-sort'
+                //     },
+                //         {
+                //             "searchable": false,
+                //             "targets": 'no-search'
+                //         }],
+                //     "order": [[3, 'desc']],
+                // });
+
+
                 $('#customer-info').DataTable({
-                    "columnDefs": [{
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": 'no-sort'
-                    },
-                        {
-                            "searchable": false,
-                            "targets": 'no-search'
-                        }],
-                    "order": [[4, 'desc']],
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('customer.index') }}",
+                    "order": [[3, 'desc']],
+                    columns: [
+                        {data: 'name', name: 'name'},
+                        {data: 'address', name: 'address'},
+                        {data: 'phone', name: 'phone'},
+                        {data: 'created_at', name: 'created_at'},
+                        {data: 'amount_spent', name: 'amount_spent'},
+                        {data: 'reward_points', name: 'reward_points'},
+                        {data: 'billing', name: 'billing', orderable: false, searchable: false},
+                        {data: 'edit', name: 'edit', orderable: false, searchable: false},
+                    ]
                 });
+
             });
         </script>
     @stop
@@ -41,29 +60,28 @@
             <th>Name</th>
             <th>Address</th>
             <th>Phone Number</th>
-            <th>Email</th>
-            <th class="default-asc no-search">Joined Date</th>
-            <th class="no-search">Amount Spent</th>
-            <th class="no-search">Reward Points</th>
-            <th class="no-sort">Action</th>
+            <th>Joined Date</th>
+            <th>Amount Spent</th>
+            <th>Reward Points</th>
+            <th>Billing</th>
+            <th>Edit</th>
         </tr>
         </thead>
         <tbody>
-        @forelse($customers as $customer)
-            <tr>
-                <td>{{$customer->name}}</td>
-                <td>{{$customer->address}}</td>
-                <td>{{$customer->phone}}</td>
-                <td>{{!empty($customer->email) ? $customer->email : '-'}}</td>
-                <td>{{!empty($customer->created_at) ? $customer->created_at : '-'}}</td>
-                <td>{{$customer->amount_spent}}</td>
-                <td>{{$customer->reward_points}}</td>
-                <td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>
-                    <a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create Bill </a></td>
-            </tr>
-        @empty
-            <tr>No Customers Found</tr>
-        @endforelse
+        {{--@forelse($customers as $customer)--}}
+            {{--<tr>--}}
+                {{--<td>{{$customer->name}}</td>--}}
+                {{--<td>{{$customer->address}}</td>--}}
+                {{--<td>{{$customer->phone}}</td>--}}
+                {{--<td>{{!empty($customer->created_at) ? $customer->created_at : '-'}}</td>--}}
+                {{--<td>{{$customer->amount_spent}}</td>--}}
+                {{--<td>{{$customer->reward_points}}</td>--}}
+                {{--<td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>--}}
+                    {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create Bill </a></td>--}}
+            {{--</tr>--}}
+        {{--@empty--}}
+            {{--<tr>No Customers Found</tr>--}}
+        {{--@endforelse--}}
     </table>
 
 </x-app-layout>

@@ -65,7 +65,7 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     public function all()
     {
-        return $this->customer->all();
+        return $this->customer->orderBy('created_at', 'desc')->get();
     }
 
     public function delete($customer)

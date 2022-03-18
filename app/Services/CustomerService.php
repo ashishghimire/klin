@@ -28,7 +28,7 @@ class CustomerService
             return false;
         }
 
-        return true;
+        return $customer;
     }
 
 

@@ -15,20 +15,6 @@
             </div>
         @endif
         {!! Form::open(['route' => 'customer.store']) !!}
-            <div class="mb-3 row">
-               {!! Form::label('name', 'Name', ['class' => 'col-sm-2 col-form-label']) !!}
-
-                <div class="col-sm-10">
-                    {!! Form::text('name', null, ['class' => 'form-control-plaintext', 'required']) !!}
-                </div>
-            </div>
-            <div class="mb-3 row">
-                {!! Form::label('address', 'Address', ['class' => 'col-sm-2 col-form-label']) !!}
-
-                <div class="col-sm-10">
-                    {!! Form::text('address', null, ['class' => 'form-control-plaintext']) !!}
-                </div>
-            </div>
         <div class="mb-3 row">
             {!! Form::label('phone', 'Phone Number', ['class' => 'col-sm-2 col-form-label']) !!}
 
@@ -37,10 +23,17 @@
             </div>
         </div>
         <div class="mb-3 row">
-            {!! Form::label('email', 'Email', ['class' => 'col-sm-2 col-form-label']) !!}
+            {!! Form::label('name', 'Name', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
-                {!! Form::text('email', null, ['class' => 'form-control-plaintext']) !!}
+                {!! Form::text('name', null, ['class' => 'form-control-plaintext', 'required']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            {!! Form::label('address', 'Address', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('address', null, ['class' => 'form-control-plaintext']) !!}
             </div>
         </div>
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}

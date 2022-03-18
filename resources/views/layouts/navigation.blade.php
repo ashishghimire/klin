@@ -46,6 +46,10 @@
 
                             </x-slot>
                         </x-dropdown>
+
+                        <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
+                            Invoices
+                        </x-nav-link>
                     </div>
 
                     {{----}}

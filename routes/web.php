@@ -53,6 +53,6 @@ Route::patch('bill/{bill}/update', 'App\Http\Controllers\BillController@update')
 
 Route::get('invoice/create', 'App\Http\Controllers\BillController@createInvoice')->name('invoice.create')->middleware(['auth']);
 
-//Route::get('invoice/store', 'App\Http\Controllers\BillController@storeInvoice')->name('invoice.create')->middleware(['auth']);
+//Route::get('invoice-customer/store', 'App\Http\Controllers\CustomerController@createAndRedirectToBilling')->name('invoice.create')->middleware(['auth']);
 
 require __DIR__ . '/auth.php';

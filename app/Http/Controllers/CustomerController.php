@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\customer;
 use App\Services\CustomerService;
+use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
@@ -27,8 +29,35 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = $this->customer->all();
+        $datatable = Datatables::of($customers)
+            ->addIndexColumn()
+            ->editColumn('created_at', function ($customer) {
 
-        return view('customer.index', compact('customers'));
+                $date = date("Y-m-d", strtotime($customer->created_at));
+
+                return $date;
+            })
+            ->addColumn('billing', function ($row) {
+
+                $btn = '<a href=' . route('customer.bill.create', $row->id) . ' class="edit btn btn-primary btn-sm">Create Invoice</a>';
+
+                return $btn;
+            })
+            ->addColumn('edit', function ($row) {
+
+                $btn = '<a href=' . route('bill.edit', $row->id) . ' class="edit btn btn-secondary btn-sm">Edit Customer</a>';
+
+                return $btn;
+            })
+            ->rawColumns(['billing', 'edit'])
+            ->make(true);
+
+
+        if (request()->ajax()) {
+            return $datatable;
+        }
+
+        return view('customer.index');
     }
 
     /**
@@ -51,11 +80,16 @@ class CustomerController extends Controller
     {
         $data = $request->all();
 
-        if (!$this->customer->save($data)) {
+        $customer = $this->customer->save($data);
+        if (!$customer) {
             return redirect()->back()->withErrors('There was a problem in adding customer');
         }
 
-        return redirect()->route('customer.index')->with('message', "Customer successfully added");
+        if (empty($data['billing'])) {
+            return redirect()->route('customer.index')->with('message', "Customer successfully added");
+        } else {
+            return redirect()->route('customer.bill.create', $customer)->with('message', "Customer successfully added");
+        }
     }
 
     /**

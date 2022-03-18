@@ -16,6 +16,13 @@
         @endif
         {!! Form::model($customer, ['route' => ['customer.update', $customer->id], 'method' => 'PATCH']) !!}
         <div class="mb-3 row">
+            {!! Form::label('phone', 'Phone Number', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('phone', null, ['class' => 'form-control-plaintext', 'required']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
             {!! Form::label('name', 'Name', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
@@ -27,20 +34,6 @@
 
             <div class="col-sm-10">
                 {!! Form::text('address', null, ['class' => 'form-control-plaintext']) !!}
-            </div>
-        </div>
-        <div class="mb-3 row">
-            {!! Form::label('phone', 'Phone Number', ['class' => 'col-sm-2 col-form-label']) !!}
-
-            <div class="col-sm-10">
-                {!! Form::text('phone', null, ['class' => 'form-control-plaintext', 'required']) !!}
-            </div>
-        </div>
-        <div class="mb-3 row">
-            {!! Form::label('email', 'Email', ['class' => 'col-sm-2 col-form-label']) !!}
-
-            <div class="col-sm-10">
-                {!! Form::text('email', null, ['class' => 'form-control-plaintext']) !!}
             </div>
         </div>
         {!! Form::submit('Update Customer', ['class' => 'btn btn-outline-primary']); !!}
