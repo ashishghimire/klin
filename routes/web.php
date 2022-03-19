@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/admin_dashboard', 'App\Http\Controllers\Admin\DashboardController@index')->name('admin.dashboard');
@@ -55,4 +55,9 @@ Route::get('invoice/create', 'App\Http\Controllers\BillController@createInvoice'
 
 //Route::get('invoice-customer/store', 'App\Http\Controllers\CustomerController@createAndRedirectToBilling')->name('invoice.create')->middleware(['auth']);
 
+Route::get('rewards-system', 'App\Http\Controllers\CustomerController@editRewardKey')->name('rewards.edit')->middleware(['auth']);
+
+Route::patch('rewards-system', 'App\Http\Controllers\CustomerController@updateRewardKey')->name('rewards.store')->middleware(['auth']);
 require __DIR__ . '/auth.php';
+
+Route::get('income-statement', 'App\Http\Controllers\IncomeController@index')->name('income')->middleware(['auth']);

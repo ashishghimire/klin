@@ -12,15 +12,21 @@ class BillService
      * @var BillRepositoryInterface
      */
     protected $bill;
+    /**
+     * @var CustomerService
+     */
+    protected $customer;
 
     /**
      * BillService constructor.
      * @param BillRepositoryInterface $bill
+     * @param CustomerService $customer
      */
-    public function __construct(BillRepositoryInterface $bill)
+    public function __construct(BillRepositoryInterface $bill, CustomerService $customer)
     {
 
         $this->bill = $bill;
+        $this->customer = $customer;
     }
 
     public function save($customerId, $data)
@@ -28,6 +34,12 @@ class BillService
         $data = $this->processData($customerId, $data);
 
         $bill = $this->bill->save($data);
+
+        if ($data['payment_mode'] != 'reward_points') {
+            $this->customer->giveRewardPoints($customerId, $data['amount']);
+        } else {
+            $this->customer->payWithRewardPoints($customerId, $data['amount']);
+        }
 
 
         if (!$bill) {
@@ -52,6 +64,7 @@ class BillService
             $data['payment_status'] = 'partial';
         }
 
+
         return $data;
     }
 
@@ -75,9 +88,17 @@ class BillService
     {
         $customerId = $bill->customer->id;
 
+        $previousAmount = $bill->amount;
+
         $data = $this->processData($customerId, $data);
 
-        return $this->bill->update($bill, $data);
+        $updated = $this->bill->update($bill, $data);
+
+        if ($updated) {
+            $this->customer->updateRewardPoints($customerId, $previousAmount, $data['amount']);
+        }
+
+        return $updated;
     }
 
 
@@ -88,7 +109,17 @@ class BillService
 
     public function delete($bill)
     {
-        return $this->bill->delete($bill);
+        $amount = $bill->amount;
+
+        $customerId = $bill->customer->id;
+
+        $deleted = $this->bill->delete($bill);
+
+        if ($deleted) {
+            $this->customer->removeRewardPoints($customerId, $amount);
+        }
+
+        return $deleted;
     }
 
 

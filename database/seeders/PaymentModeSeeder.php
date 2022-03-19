@@ -27,6 +27,9 @@ class PaymentModeSeeder extends Seeder
             [
                 'name' => 'khalti',
             ],
+            [
+                'name' => 'reward points',
+            ]
         ]);
     }
 }

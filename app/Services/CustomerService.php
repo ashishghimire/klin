@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\Setting;
 use App\Repositories\Customer\CustomerRepositoryInterface;
 
 class CustomerService
@@ -61,6 +62,58 @@ class CustomerService
     public function total()
     {
         return $this->customer->count();
+    }
+
+    public function giveRewardPoints($customerId, $amount)
+    {
+        $customer = $this->find($customerId);
+
+        $rewardKey = Setting::first()->rewards_key;
+
+        $rewardPoints = floatval($amount) * floatval($rewardKey);
+
+
+        $customer->reward_points += floatval($rewardPoints);
+
+        $customer->save();
+    }
+
+    public function payWithRewardPoints($customerId, $amount)
+    {
+        $customer = $this->find($customerId);
+
+        $customer->reward_points -= $amount;
+
+        $customer->save();
+
+    }
+
+    public function updateRewardPoints($customerId, $previousAmount, $amount)
+    {
+        $customer = $this->find($customerId);
+
+        $rewardKey = Setting::first()->rewards_key;
+
+        $previousRewardPoints = floatval($previousAmount) * floatval($rewardKey);
+
+        $changedRewardPoints = floatval($amount) * floatval($rewardKey);
+
+        $customer->reward_points = $customer->reward_points - $previousRewardPoints + $changedRewardPoints;
+
+        $customer->save();
+    }
+
+    public function removeRewardPoints($customerId, $amount)
+    {
+        $customer = $this->find($customerId);
+
+        $rewardKey = Setting::first()->rewards_key;
+
+        $rewardPoints = floatval($amount) * floatval($rewardKey);
+
+        $customer->reward_points -= $rewardPoints;
+
+        $customer->save();
     }
 
 }

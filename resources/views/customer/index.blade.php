@@ -31,7 +31,6 @@
                         {data: 'address', name: 'address'},
                         {data: 'phone', name: 'phone'},
                         {data: 'created_at', name: 'created_at'},
-                        {data: 'amount_spent', name: 'amount_spent'},
                         {data: 'reward_points', name: 'reward_points'},
                         {data: 'billing', name: 'billing', orderable: false, searchable: false},
                         {data: 'edit', name: 'edit', orderable: false, searchable: false},
@@ -61,7 +60,6 @@
             <th>Address</th>
             <th>Phone Number</th>
             <th>Joined Date</th>
-            <th>Amount Spent</th>
             <th>Reward Points</th>
             <th>Billing</th>
             <th>Edit</th>

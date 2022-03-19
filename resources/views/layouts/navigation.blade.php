@@ -6,7 +6,8 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600"/>
+                        {{--<x-application-logo class="block h-10 w-auto fill-current text-gray-600"/>--}}
+                        <img src="{{asset('images/klin.jpg')}}" class="block h-10 w-auto fill-current text-gray-600"/>
                     </a>
                 </div>
 
@@ -43,16 +44,22 @@
                                 <x-dropdown-link :href="route('customer.create')">
                                     Add Customer
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('rewards.edit')">
+                                    Rewards System
+                                </x-dropdown-link>
 
                             </x-slot>
                         </x-dropdown>
 
-                        <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
-                            Invoices
-                        </x-nav-link>
+
                     </div>
 
-                    {{----}}
+                    <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
+                        Invoices
+                    </x-nav-link>
+                    <x-nav-link :href="route('income')" :active="request()->routeIs('bill.index')">
+                        Income Statement
+                    </x-nav-link>
 
                 </div>
             </div>

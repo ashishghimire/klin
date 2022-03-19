@@ -71,6 +71,14 @@ class BillController extends Controller
     {
         $data = $request->all();
 
+        $customer = $this->customer->find($customerId);
+
+        if ($request->payment_mode == 'reward points') {
+            $amount = $this->bill->calculateAmount($data['service_details']);
+            if ($customer->reward_points < $amount) {
+                return redirect()->back()->withErrors('There aren\'t enough reward points to pay for this bill');
+            }
+        }
 
         $bill = $this->bill->save($customerId, $data);
 
@@ -144,6 +152,6 @@ class BillController extends Controller
     {
         $customers = $this->customer->all();
 
-        return view('bill.invoice',compact('customers'));
+        return view('bill.invoice', compact('customers'));
     }
 }

@@ -8,6 +8,8 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Create bill for ').$customer->name }}
         </h2>
+        <br>
+        <span class="badge bg-success text-dark float-sm-start">Reward Points: {{$customer->reward_points}}</span>
     </x-slot>
     <div class="container">
         @if ($errors->any())

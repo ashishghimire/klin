@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\customer;
+use App\Models\Setting;
 use App\Services\CustomerService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -31,6 +34,11 @@ class CustomerController extends Controller
         $customers = $this->customer->all();
         $datatable = Datatables::of($customers)
             ->addIndexColumn()
+            ->editColumn('name', function ($customer) {
+                $name = '<a href=' . route('customer.show', $customer->id) . '>' . $customer->name . '</a>';
+
+                return $name;
+            })
             ->editColumn('created_at', function ($customer) {
 
                 $date = date("Y-m-d", strtotime($customer->created_at));
@@ -49,7 +57,7 @@ class CustomerController extends Controller
 
                 return $btn;
             })
-            ->rawColumns(['billing', 'edit'])
+            ->rawColumns(['name', 'billing', 'edit'])
             ->make(true);
 
 
@@ -100,7 +108,9 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        $customer = $this->customer->find($id);
+
+        return view('customer.show', compact('customer'));
     }
 
     /**
@@ -145,6 +155,31 @@ class CustomerController extends Controller
 
 
         return redirect()->route('dashboard')->with('message', "Customer successfully deleted");
+    }
 
+    public function editRewardKey()
+    {
+        $setting = Setting::first();
+
+        return view('customer.rewards', compact('setting'));
+    }
+
+    public function updateRewardKey(Request $request)
+    {
+        $setting = Setting::first();
+
+        $validator = Validator::make($request->all(), [
+            'rewards_key' => 'numeric|min:0|max:1'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('rewards.edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $setting->update($request->all());
+
+        return redirect()->route('dashboard')->with('message', "Reward Key successfully set to " . $request->rewards_key);
     }
 }

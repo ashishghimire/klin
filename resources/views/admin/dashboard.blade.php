@@ -12,17 +12,26 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     <div class="row">
+                        {{--<div class="col-sm-3">--}}
+                            {{--<a href="{{route('customer.index')}}">--}}
+                                {{--<figure class="figure">--}}
+                                    {{--<img src="{{asset('images/customers.png')}}" class="figure-img img-fluid rounded"--}}
+                                         {{--style="width:250px;height:250px">--}}
+                                    {{--<figcaption--}}
+                                        {{--class="figure-caption font-semibold text-xl text-gray-800 leading-tight">--}}
+                                        {{--Customers: {{$customersCount}}</figcaption>--}}
+                                {{--</figure>--}}
+                            {{--</a>--}}
+                        {{--</div>--}}
                         <div class="col-sm-3">
-                            <a href="{{route('customer.index')}}">
-                                <figure class="figure">
-                                    <img src="{{asset('images/customers.png')}}" class="figure-img img-fluid rounded"
-                                         style="width:250px;height:250px">
-                                    <figcaption
-                                        class="figure-caption font-semibold text-xl text-gray-800 leading-tight">
-                                        Customers: {{$customersCount}}</figcaption>
-                                </figure>
-                            </a>
+                            <figure class="figure">
+                                <img src="{{asset('images/laundryunprocessed.png')}}"
+                                     class="figure-img img-fluid rounded" style="width:250px;height:250px">
+                                <figcaption class="figure-caption font-semibold text-xl text-gray-800 leading-tight">
+                                    Unprocessed: {{$unprocessedCount}}</figcaption>
+                            </figure>
                         </div>
+
                         <div class="col-sm-3">
                             <figure class="figure">
                                 <img src="{{asset('images/laundryprocessing.png')}}"
