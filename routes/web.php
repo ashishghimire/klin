@@ -61,3 +61,7 @@ Route::patch('rewards-system', 'App\Http\Controllers\CustomerController@updateRe
 require __DIR__ . '/auth.php';
 
 Route::get('income-statement', 'App\Http\Controllers\IncomeController@index')->name('income')->middleware(['auth']);
+
+Route::any('income-statement/search', 'App\Http\Controllers\IncomeController@search')->name('income.search')->middleware(['auth']);
+
+

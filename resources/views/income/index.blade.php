@@ -1,11 +1,37 @@
 <x-app-layout>
+
     @section('styles')
-        <link rel="stylesheet" href="{{ asset('css/bootstrapDatatables.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
+    @stop
+    @section('scripts')
+        <script src="{{asset('js/moment.min.js')}}"></script>
+        <script src="{{asset('js/daterangepicker.js')}}"></script>
+        <script>
+            $(document).ready(function () {
+                $('input[name="datefilter"]').daterangepicker({
+                    autoUpdateInput: true,
+                    applyButtonClasses: 'btn btn-outline-primary',
+                    locale: {
+                        cancelLabel: 'Clear'
+                    }
+                });
+
+                $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                });
+
+                $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
+                    $(this).val('');
+                });
+
+
+            });
+        </script>
     @stop
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Income Statement for {{$today}}
+            Income Statement for {{$date}}
         </h2>
         <br>
     </x-slot>
@@ -15,20 +41,16 @@
             {{Session::get('success')}}
         </div>
     @endif
-        <div class="container">
-            <form action={{route('income')}} method="POST" role="search">
-                {{ csrf_field() }}
-                Get income statement for
-                <div class="input-group">
-                    <input type="text" class="form-control" name="q"
-                           placeholder="Search users">
-                    <button type="submit" class="btn btn-outline-secondary">
-                        <span class="glyphicon glyphicon-search">Search</span>
-                    </button>
-                </span>
-                </div>
-            </form>
-        </div>
+    <div class="container">
+        <form action={{route('income.search')}} method="GET" role="search" class="search">
+            {{ csrf_field() }}
+            Get income statement for
+
+            {!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}
+
+            {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
+        </form>
+    </div>
 
     <table id="customer-info" class="table table-striped" style="width:100%">
         <thead>
@@ -63,7 +85,7 @@
             </tr>
             <?php $sum += floatval($bill->amount); ?>
         @empty
-            <tr>No Bills Found</tr>
+            <tr>No Statement Found</tr>
         @endforelse
         </tbody>
         <tfoot>
@@ -75,5 +97,5 @@
         </tfoot>
 
     </table>
-{{$bills->render()}}
+    {{$bills->withQueryString()->links()}}
 </x-app-layout>
