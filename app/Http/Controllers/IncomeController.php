@@ -13,9 +13,9 @@ class IncomeController extends Controller
 
     public function index()
     {
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now()->format('m/d/Y');
 //
-        $bills = Bill::whereDate('created_at', $date)->paginate(1);
+        $bills = Bill::whereDate('created_at', $date)->paginate(10);
 
 
         return view('income.index', compact('bills', 'date'));
@@ -27,12 +27,24 @@ class IncomeController extends Controller
 
         $dates = explode("-", $date);
 
-        $startDate = Carbon::parse(strtotime($dates[0]))->startOfDay();
+        $startDate = Carbon::parse(strtotime($dates[0]))->startOfDay()->toDateString();
 
-        $endDate = Carbon::parse(strtotime($dates[0]))->endOfDay();
 
-        $bills = Bill::whereBetween('created_at', [$startDate, $endDate])->paginate(1);
+        $endDate = Carbon::parse(strtotime($dates[1]))->endOfDay()->toDateString();
 
-        return view('income.index', compact('bills', 'date'));
+        $billsQuery = Bill::whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate);
+
+
+        $total = 0;
+
+        foreach ($billsQuery->get() as $bill) {
+            if ($bill->payment_mode != 'reward points')
+                $total += $bill->amount;
+        }
+
+
+        $bills = $billsQuery->paginate(10);
+        return view('income.index', compact('bills', 'date', 'total'));
     }
 }

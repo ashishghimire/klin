@@ -9,7 +9,7 @@
         <script>
             $(document).ready(function () {
                 $('input[name="datefilter"]').daterangepicker({
-                    autoUpdateInput: true,
+                    autoUpdateInput: false,
                     applyButtonClasses: 'btn btn-outline-primary',
                     locale: {
                         cancelLabel: 'Clear'
@@ -64,7 +64,7 @@
         </tr>
         </thead>
         <tbody>
-        <?php $sum = 0.0;?>
+
         @forelse($bills->sortByDesc('created_at') as $bill)
             <tr>
                 <td>{{$bill->estimate_no}}</a>
@@ -81,9 +81,8 @@
                     @endif
                 </td>
                 <td>{{!empty($bill->payment_mode) ? $bill->payment_mode : '-'}}</td>
-                {{--<td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>--}}
             </tr>
-            <?php $sum += floatval($bill->amount); ?>
+
         @empty
             <tr>No Statement Found</tr>
         @endforelse
@@ -92,7 +91,7 @@
         <tr>
             <td></td>
             <td>Total</td>
-            <td>{{$sum}}</td>
+            <td>{{isset($total) ? $total : 0}}</td>
         </tr>
         </tfoot>
 
