@@ -65,3 +65,13 @@ Route::get('income-statement', 'App\Http\Controllers\IncomeController@index')->n
 Route::any('income-statement/search', 'App\Http\Controllers\IncomeController@search')->name('income.search')->middleware(['auth']);
 
 
+Route::get('import-customer', 'App\Http\Controllers\CustomerController@import')->name('customer.import')->middleware(['auth']);
+
+Route::resource('expense', \App\Http\Controllers\ExpenseController::class)->only(['create', 'store'])->middleware(['auth']);
+
+Route::get('expense-statement', 'App\Http\Controllers\ExpenseController@index')->name('expense')->middleware(['auth']);
+
+Route::any('expense-statement/search', 'App\Http\Controllers\ExpenseController@search')->name('expense.search')->middleware(['auth']);
+
+
+Route::post('change-payment-status', 'App\Http\Controllers\BillController@changePaymentStatus')->name('change-payment-status')->middleware(['auth']);

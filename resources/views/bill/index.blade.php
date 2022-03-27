@@ -19,6 +19,25 @@
                         }],
                     "order": [[6, 'desc']],
                 });
+
+                $(document).on('change', '.payment-status', function () {
+                    var billId = $(this).data('bill');
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
+                        method: "POST",
+                        url: "{{url('change-payment-status')}}",
+                        paymentStatus: $(this).val(),
+                        billId: billId,
+                        success: function(data) {
+                            alert(data);
+                        },
+                        error: function(data){
+                            alert("fail");
+                        }
+                    });
+                });
             });
         </script>
     @stop
@@ -42,7 +61,7 @@
             <th>Customer Name</th>
             <th>Phone Number</th>
             <th>Amount</th>
-            <th>Payment Status</th>
+            <th class="no-sort">Payment Status</th>
             <th>Payment Mode</th>
             <th>Date</th>
             <th class="no-sort">Action</th>
@@ -56,20 +75,21 @@
                 <td>{{$bill->customer->phone}}</td>
                 <td>{{$bill->amount}}</td>
                 <td>
-                    @if($bill->payment_status == 'paid')
-                        <span class="badge bg-success">Paid</span>
-                    @elseif($bill->payment_status == 'partial')
-                        <span class="badge bg-warning text-dark">Partially Paid</span>
-                    @else
-                        <span class="badge bg-danger">Unpaid</span>
-                    @endif
+                    <select name="payment_status" class="payment-status" data-bill="{{$bill->id}}">
+                        <option value="paid" {{$bill->payment_status == 'paid' ? 'selected' : ''}}>Paid</option>
+                        <option value="partial" {{$bill->payment_status == 'partial' ? 'selected' : ''}}>Partially
+                            Paid
+                        </option>
+                        <option value="unpaid" {{$bill->payment_status == 'unpaid' ? 'selected' : ''}}>Unpaid</option>
+                    </select>
+
                 </td>
                 <td>{{!empty($bill->payment_mode) ? $bill->payment_mode : '-'}}</td>
                 <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
                 <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
                 {{--<td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>--}}
-                    {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create--}}
-                        {{--Bill </a></td>--}}
+                {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create--}}
+                {{--Bill </a></td>--}}
             </tr>
         @empty
             <tr>No Customers Found</tr>

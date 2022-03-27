@@ -154,4 +154,10 @@ class BillController extends Controller
 
         return view('bill.invoice', compact('customers'));
     }
+
+    public function changePaymentStatus()
+    {
+        return request()->post('payment_status');
+//        dd(request()->all());
+    }   
 }

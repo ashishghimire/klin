@@ -15,7 +15,7 @@ class Bill extends Model
         'service_details' => 'array',
     ];
 
-    protected $fillable = ['customer_id', 'amount', 'user_id', 'estimate_no', 'service_details', 'paid_amount', 'payment_mode'];
+    protected $fillable = ['customer_id', 'amount', 'user_id', 'estimate_no', 'service_details', 'paid_amount', 'payment_mode', 'payment_status'];
 
     public function customer()
     {

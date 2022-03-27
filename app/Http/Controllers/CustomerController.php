@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Imports\CustomerImport;
 use App\Models\customer;
 use App\Models\Setting;
 use App\Services\CustomerService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -181,5 +183,11 @@ class CustomerController extends Controller
         $setting->update($request->all());
 
         return redirect()->route('dashboard')->with('message', "Reward Key successfully set to " . $request->rewards_key);
+    }
+
+
+    public function import()
+    {
+        $customers = Excel::import(new CustomerImport, 'import/customer_export.csv');
     }
 }

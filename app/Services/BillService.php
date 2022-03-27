@@ -31,9 +31,10 @@ class BillService
 
     public function save($customerId, $data)
     {
-        $data = $this->processData($customerId, $data);
+        $processedData = $this->processData($customerId, $data);
 
-        $bill = $this->bill->save($data);
+
+        $bill = $this->bill->save($processedData);
 
         if ($data['payment_mode'] != 'reward_points') {
             $this->customer->giveRewardPoints($customerId, $data['amount']);
@@ -90,9 +91,9 @@ class BillService
 
         $previousAmount = $bill->amount;
 
-        $data = $this->processData($customerId, $data);
+        $processedData = $this->processData($customerId, $data);
 
-        $updated = $this->bill->update($bill, $data);
+        $updated = $this->bill->update($bill, $processedData);
 
         if ($updated) {
             $this->customer->updateRewardPoints($customerId, $previousAmount, $data['amount']);

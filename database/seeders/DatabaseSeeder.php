@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ExpenseCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             PaymentModeSeeder::class,
             SettingSeeder::class,
+            ExpenseCategorySeeder::class,
         ]);
     }
 }
