@@ -39,7 +39,9 @@ class BillController extends Controller
     {
         $bills = $this->bill->get(1000);
 
-        return view('bill.index', compact('bills'));
+        $paymentModes = PaymentMode::where('name', '!=', 'reward points');
+
+        return view('bill.index', compact('bills', 'paymentModes'));
     }
 
     /**
@@ -155,9 +157,17 @@ class BillController extends Controller
         return view('bill.invoice', compact('customers'));
     }
 
-    public function changePaymentStatus()
+    public function changePaymentStatus(Bill $bill)
     {
-        return request()->post('payment_status');
-//        dd(request()->all());
-    }   
+        if(!empty(request()->payment_mode))
+        {
+            $bill->paid_amount = $bill->amount;
+            $bill->payment_status = 'paid';
+            $bill->payment_mode = request()->payment_mode;
+            $bill->save();
+        }
+
+        return redirect()->route('bill.index');
+    }
+
 }

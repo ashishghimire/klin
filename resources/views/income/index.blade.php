@@ -68,8 +68,9 @@
         <tbody>
 
         @forelse($bills->sortByDesc('created_at') as $bill)
-            <tr>
-                <td><a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
+            <tr {{$bill->payment_mode == 'reward points' ? 'class=table-danger': ''}}>
+                <td>
+                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
                 </td>
                 <td>{{!empty($bill->created_at) ? date("Y-m-d", strtotime($bill->created_at)) : '-'}}</td>
                 <td>{{round(($bill->amount/1.13), 2)}}</td>
@@ -99,7 +100,47 @@
             <td><strong>Income: </strong>{{round($income, 2)}}</td>
             <td><strong>13% VAT: </strong>{{round($vat, 2)}}</td>
             <td><strong>Amount: </strong>{{round($total, 2)}}</td>
+            <td></td>
+            <td><small><a href="#" data-bs-toggle="modal"
+                          data-bs-target="#incomeDetails">Detail</a></small></td>
         </tr>
+        <!-- Modal -->
+        <div class="modal fade" id="incomeDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">Cash</div>
+                                <div class="col-md-4 ms-auto">{{round($cash,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Khalti</div>
+                                <div class="col-md-4 ms-auto">{{round($khalti,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Esewa</div>
+                                <div class="col-md-4 ms-auto">{{round($esewa,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Reward points</div>
+                                <div class="col-md-4 ms-auto">{{round($rewardPay,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-red-600">Unpaid</div>
+                                <div class="col-md-4 ms-auto text-red-600">{{round($unpaid,2)}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{--<tr>--}}
         {{--<td></td>--}}
         {{--<td>Cash</td>--}}

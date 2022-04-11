@@ -22,18 +22,21 @@
 
                 $(document).on('change', '.payment-status', function () {
                     var billId = $(this).data('bill');
+                    var paymentStatus = $(this).val();
                     $.ajax({
                         headers: {
                             'X-CSRF-Token': '{{ csrf_token() }}',
                         },
                         method: "POST",
-                        url: "{{url('change-payment-status')}}",
-                        paymentStatus: $(this).val(),
-                        billId: billId,
-                        success: function(data) {
-                            alert(data);
+                        url: "{{url('change-payment-status')}}/" + billId,
+
+                        // paymentStatus: $(this).val(),
+                        // billId: billId,
+                        data: {payment_status: paymentStatus},
+                        success: function (data) {
+                            console.log(data);
                         },
-                        error: function(data){
+                        error: function (data) {
                             alert("fail");
                         }
                     });
@@ -75,25 +78,71 @@
                 <td>{{$bill->customer->phone}}</td>
                 <td>{{$bill->amount}}</td>
                 <td>
-                    <select name="payment_status" class="payment-status" data-bill="{{$bill->id}}">
-                        <option value="paid" {{$bill->payment_status == 'paid' ? 'selected' : ''}}>Paid</option>
-                        <option value="partial" {{$bill->payment_status == 'partial' ? 'selected' : ''}}>Partially
-                            Paid
-                        </option>
-                        <option value="unpaid" {{$bill->payment_status == 'unpaid' ? 'selected' : ''}}>Unpaid</option>
-                    </select>
-
+                    {{--<select name="payment_status" class="payment-status" data-bill="{{$bill->id}}">--}}
+                    {{--<option value="paid" {{$bill->payment_status == 'paid' ? 'selected' : ''}}>Paid</option>--}}
+                    {{--<option value="partial" {{$bill->payment_status == 'partial' ? 'selected' : ''}}>Partially--}}
+                    {{--Paid--}}
+                    {{--</option>--}}
+                    {{--<option value="unpaid" {{$bill->payment_status == 'unpaid' ? 'selected' : ''}}>Unpaid</option>--}}
+                    {{--</select>--}}
+                    @if($bill->payment_status == 'paid')
+                        <button type="button" class="btn btn-info btn-sm"
+                                disabled="disabled">{{$bill->payment_status}}</button>
+                    @else
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
+                    @endif
                 </td>
                 <td>{{!empty($bill->payment_mode) ? $bill->payment_mode : '-'}}</td>
                 <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
                 <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
-                {{--<td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>--}}
-                {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create--}}
-                {{--Bill </a></td>--}}
             </tr>
+            <div class="modal fade" id="modal-{{$bill->id}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-5"> Estimate no. {{$bill->estimate_no}}</div>
+
+                                    <div class="col-md-5 ms-auto">
+                                        <small>{{!empty($bill->created_at) ? date('d-m-Y', strtotime($bill->created_at)) : ''}}</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="align-self-md-auto">Customer: {{$bill->customer->name}}</div>
+
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    Amount: {{$bill->amount}}
+                                </div>
+                                {!! Form::open(['route'=>['change-payment-status', $bill->id]]) !!}
+                                <div class="row">
+                                    {!! Form::select('payment_mode',  $paymentModes->pluck('name', 'name') , $bill->payment_mode, ['placeholder' => 'Not paid', 'class' => 'form-select form-select-sm payment']) !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close
+                            </button>
+                            <button type="submit" class="btn btn-outline-primary">Pay</button>
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            </div>
         @empty
             <tr>No Customers Found</tr>
         @endforelse
+        </tbody>
     </table>
 
 </x-app-layout>
