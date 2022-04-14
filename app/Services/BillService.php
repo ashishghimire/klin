@@ -36,7 +36,7 @@ class BillService
 
         $bill = $this->bill->save($processedData);
 
-        if ($data['payment_mode'] != 'reward_points') {
+        if ($data['payment_mode'] != 'reward points') {
             $this->customer->giveRewardPoints($customerId, $data['amount']);
         } else {
             $this->customer->payWithRewardPoints($customerId, $data['amount']);
@@ -55,6 +55,11 @@ class BillService
         $data['user_id'] = Auth::user()->id;
         $data['customer_id'] = $customerId;
         $data['amount'] = $this->calculateAmount($data['service_details']);
+
+        if ($data['payment_mode'] == 'reward points') {
+            $data['payment_status'] = 'paid';
+            return $data;
+        }
 
         if (empty($data['paid_amount'])) {
             $data['payment_status'] = 'unpaid';

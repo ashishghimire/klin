@@ -58,8 +58,7 @@ $(document).ready(function(){
 
     $(document).on('change', '.payment', function () {
 
-
-        if (this.value != '') {
+        if (this.value != '' && this.value != 'reward points') {
 
             $("input[name='paid_amount']").removeAttr('hidden');
             $("input[name='paid_amount']").val('');

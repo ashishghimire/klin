@@ -57,7 +57,7 @@
                     <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
                         Invoices
                     </x-nav-link>
-                    <x-nav-link :href="route('income')" :active="request()->routeIs('bill.index')">
+                    <x-nav-link :href="route('income')" :active="request()->routeIs('income')">
                         Income Statement
                     </x-nav-link>
 
