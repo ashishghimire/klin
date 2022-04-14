@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\IncomeExport;
 use App\Models\Bill;
 use App\Services\BillService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IncomeController extends Controller
 {
@@ -92,5 +94,10 @@ class IncomeController extends Controller
         $bills = $billsQuery->paginate(10);
 
         return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'bills', 'vat', 'income');
+    }
+
+    public function fileExport()
+    {
+        return Excel::download(new IncomeExport, 'income_data.xlsx');
     }
 }

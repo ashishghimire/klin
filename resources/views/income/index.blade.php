@@ -30,6 +30,9 @@
     @stop
 
     <x-slot name="header">
+        <a href="{{route('income-export')}}">
+            <small>Download All Data</small>
+        </a>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Income Statement for {{$date}}
         </h2>
@@ -101,8 +104,10 @@
             <td><strong>13% VAT: </strong>{{round($vat, 2)}}</td>
             <td><strong>Amount: </strong>{{round($total, 2)}}</td>
             <td></td>
-            <td><small><a href="#" data-bs-toggle="modal"
-                          data-bs-target="#incomeDetails">Details</a></small></td>
+            <td>
+                <small><a href="#" data-bs-toggle="modal"
+                          data-bs-target="#incomeDetails">Details</a></small>
+            </td>
         </tr>
         <!-- Modal -->
         <div class="modal fade" id="incomeDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

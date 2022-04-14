@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CustomersExport;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Imports\CustomerImport;
@@ -189,5 +190,10 @@ class CustomerController extends Controller
     public function import()
     {
         $customers = Excel::import(new CustomerImport, 'import/customer_export.csv');
+    }
+
+    public function fileExport()
+    {
+        return Excel::download(new CustomersExport, 'customer_data.xlsx');
     }
 }

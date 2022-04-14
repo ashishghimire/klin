@@ -78,3 +78,8 @@ Route::post('change-payment-status/{bill}', 'App\Http\Controllers\BillController
 
 Route::post('change-laundry-status/{bill}', 'App\Http\Controllers\BillController@changeLaundryStatus')->name('change-laundry-status')->middleware(['auth']);
 
+Route::get('customer-export', 'App\Http\Controllers\CustomerController@fileExport')->name('customer-export')->middleware(['auth']);
+
+Route::get('income-export', 'App\Http\Controllers\IncomeController@fileExport')->name('income-export')->middleware(['auth']);
+
+Route::get('expense-export', 'App\Http\Controllers\ExpenseController@fileExport')->name('expense-export')->middleware(['auth']);

@@ -28,16 +28,19 @@
         </script>
     @stop
     <x-slot name="header">
+        <a href="{{route('customer-export')}}">
+            <small>Download All Data</small>
+        </a>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('All customers') }}
         </h2>
     </x-slot>
 
-        @if(Session::has('success'))
-            <div class="alert alert-success">
-                {{Session::get('success')}}
-            </div>
-        @endif
+    @if(Session::has('success'))
+        <div class="alert alert-success">
+            {{Session::get('success')}}
+        </div>
+    @endif
 
 
     <table id="customer-info" class="table table-striped" style="width:100%">

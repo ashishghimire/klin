@@ -30,6 +30,9 @@
     @stop
 
     <x-slot name="header">
+        <a href="{{route('expense-export')}}">
+            <small>Download All Data</small>
+        </a>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Expense Statement for {{$date}}
         </h2>
@@ -85,11 +88,14 @@
             <td></td>
             <td><strong>Total</strong></td>
             <td><strong>Amount: </strong>{{round($total, 2)}}</td>
-            <td><small><a href="#" data-bs-toggle="modal"
-                          data-bs-target="#expenseDetails">Details</a></small></td>
+            <td>
+                <small><a href="#" data-bs-toggle="modal"
+                          data-bs-target="#expenseDetails">Details</a></small>
+            </td>
         </tr>
 
-        <div class="modal fade" id="expenseDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="expenseDetails" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
 

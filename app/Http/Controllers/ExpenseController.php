@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExpenseExport;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExpenseController extends Controller
 {
@@ -192,5 +194,10 @@ class ExpenseController extends Controller
     public function destroy(Expense $expense)
     {
         //
+    }
+
+    public function fileExport()
+    {
+        return Excel::download(new ExpenseExport, 'expense_data.xlsx');
     }
 }
