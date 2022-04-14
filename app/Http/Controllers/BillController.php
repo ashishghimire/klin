@@ -37,7 +37,17 @@ class BillController extends Controller
 
     public function index()
     {
-        $bills = $this->bill->get(1000);
+        $laundryStatus = request()->query('laundry-status');
+        $number = 1000;
+
+        if (empty($laundryStatus)) {
+            $bills = $this->bill->get($number);
+        }
+
+        else
+        {
+            $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->take($number)->get();
+        }
 
         $paymentModes = PaymentMode::where('name', '!=', 'reward points');
 
@@ -159,8 +169,7 @@ class BillController extends Controller
 
     public function changePaymentStatus(Bill $bill)
     {
-        if(!empty(request()->payment_mode))
-        {
+        if (!empty(request()->payment_mode)) {
             $bill->paid_amount = $bill->amount;
             $bill->payment_status = 'paid';
             $bill->payment_mode = request()->payment_mode;
@@ -168,6 +177,15 @@ class BillController extends Controller
         }
 
         return redirect()->route('bill.index');
+    }
+
+    public function changeLaundryStatus(Bill $bill)
+    {
+        if (request()->ajax()) {
+            $bill->laundry_status = request()->laundry_status;
+            $bill->save();
+            return true;
+        }
     }
 
 }

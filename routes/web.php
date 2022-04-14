@@ -75,3 +75,6 @@ Route::any('expense-statement/search', 'App\Http\Controllers\ExpenseController@s
 
 
 Route::post('change-payment-status/{bill}', 'App\Http\Controllers\BillController@changePaymentStatus')->name('change-payment-status')->middleware(['auth']);
+
+Route::post('change-laundry-status/{bill}', 'App\Http\Controllers\BillController@changeLaundryStatus')->name('change-laundry-status')->middleware(['auth']);
+

@@ -7,19 +7,6 @@
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             $(document).ready(function () {
-                // $('#customer-info').DataTable({
-                //     "columnDefs": [{
-                //         "searchable": false,
-                //         "orderable": false,
-                //         "targets": 'no-sort'
-                //     },
-                //         {
-                //             "searchable": false,
-                //             "targets": 'no-search'
-                //         }],
-                //     "order": [[3, 'desc']],
-                // });
-
 
                 $('#customer-info').DataTable({
                     processing: true,
@@ -66,20 +53,6 @@
         </tr>
         </thead>
         <tbody>
-        {{--@forelse($customers as $customer)--}}
-            {{--<tr>--}}
-                {{--<td>{{$customer->name}}</td>--}}
-                {{--<td>{{$customer->address}}</td>--}}
-                {{--<td>{{$customer->phone}}</td>--}}
-                {{--<td>{{!empty($customer->created_at) ? $customer->created_at : '-'}}</td>--}}
-                {{--<td>{{$customer->amount_spent}}</td>--}}
-                {{--<td>{{$customer->reward_points}}</td>--}}
-                {{--<td><a class="btn btn-outline-dark" href="{{route('customer.edit', $customer->id)}}">Edit </a>--}}
-                    {{--<a class="btn btn-outline-dark" href="{{route('customer.bill.create', $customer->id)}}">Create Bill </a></td>--}}
-            {{--</tr>--}}
-        {{--@empty--}}
-            {{--<tr>No Customers Found</tr>--}}
-        {{--@endforelse--}}
     </table>
 
 </x-app-layout>

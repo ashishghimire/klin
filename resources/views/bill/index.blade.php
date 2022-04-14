@@ -20,25 +20,22 @@
                     "order": [[6, 'desc']],
                 });
 
-                $(document).on('change', '.payment-status', function () {
+                $(document).on('change', '.laundry-status', function () {
+                    $(this).attr('disabled', 'disabled');
                     var billId = $(this).data('bill');
-                    var paymentStatus = $(this).val();
+                    var laundryStatus = $(this).val();
+                    var self = $(this);
                     $.ajax({
                         headers: {
                             'X-CSRF-Token': '{{ csrf_token() }}',
                         },
                         method: "POST",
-                        url: "{{url('change-payment-status')}}/" + billId,
+                        url: "{{url('change-laundry-status')}}/" + billId,
 
-                        // paymentStatus: $(this).val(),
-                        // billId: billId,
-                        data: {payment_status: paymentStatus},
+                        data: {laundry_status: laundryStatus},
                         success: function (data) {
-                            console.log(data);
+                            self.removeAttr('disabled');
                         },
-                        error: function (data) {
-                            alert("fail");
-                        }
                     });
                 });
             });
@@ -64,8 +61,8 @@
             <th>Customer Name</th>
             <th>Phone Number</th>
             <th>Amount</th>
-            <th class="no-sort">Payment Status</th>
-            <th>Payment Mode</th>
+            <th>Payment Status</th>
+            <th class="no-sort">Laundry Status</th>
             <th>Date</th>
             <th class="no-sort">Action</th>
         </tr>
@@ -93,7 +90,9 @@
                                 data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
                     @endif
                 </td>
-                <td>{{!empty($bill->payment_mode) ? $bill->payment_mode : '-'}}</td>
+                <td>
+                    {!! Form::select('laundry_status',['unprocessed'=>'Unprocessed', 'processing'=>'Processing', 'completed'=>'Completed', 'delivered'=>'Delivered'], $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
+                </td>
                 <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
                 <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
             </tr>
