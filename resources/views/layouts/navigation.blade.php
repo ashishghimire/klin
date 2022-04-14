@@ -83,7 +83,7 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('expense')">
+                                <x-dropdown-link :href="route('expense.index')">
                                     Expense Statement
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('expense.create')">

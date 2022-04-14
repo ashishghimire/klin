@@ -102,7 +102,7 @@
             <td><strong>Amount: </strong>{{round($total, 2)}}</td>
             <td></td>
             <td><small><a href="#" data-bs-toggle="modal"
-                          data-bs-target="#incomeDetails">Detail</a></small></td>
+                          data-bs-target="#incomeDetails">Details</a></small></td>
         </tr>
         <!-- Modal -->
         <div class="modal fade" id="incomeDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -141,31 +141,6 @@
             </div>
         </div>
 
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Cash</td>--}}
-        {{--<td>{{$cash}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Khalti</td>--}}
-        {{--<td>{{$khalti}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Esewa</td>--}}
-        {{--<td>{{$esewa}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Reward points</td>--}}
-        {{--<td>{{$rewardPay}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Unpaid</td>--}}
-        {{--<td>{{$unpaid}}</td>--}}
-        {{--</tr>--}}
         </tfoot>
 
     </table>

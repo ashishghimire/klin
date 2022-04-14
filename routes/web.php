@@ -69,7 +69,7 @@ Route::get('import-customer', 'App\Http\Controllers\CustomerController@import')-
 
 Route::resource('expense', \App\Http\Controllers\ExpenseController::class)->only(['create', 'store'])->middleware(['auth']);
 
-Route::get('expense-statement', 'App\Http\Controllers\ExpenseController@index')->name('expense')->middleware(['auth']);
+Route::get('expense-statement', 'App\Http\Controllers\ExpenseController@index')->name('expense.index')->middleware(['auth']);
 
 Route::any('expense-statement/search', 'App\Http\Controllers\ExpenseController@search')->name('expense.search')->middleware(['auth']);
 

@@ -20,49 +20,7 @@ class IncomeController extends Controller
 
         $billsQuery = Bill::whereDate('created_at', $today);
 
-        $total = 0;
-
-        $cash = 0;
-
-        $khalti = 0;
-
-        $esewa = 0;
-
-        $rewardPay = 0;
-
-        $unpaid = 0;
-
-        $vat = 0;
-
-        $income = 0;
-
-        foreach ($billsQuery->get() as $bill) {
-            if ($bill->payment_mode != 'reward points') {
-                $vat += $bill->amount*0.13;
-                $total += $bill->amount;
-                $income += $total-$vat;
-            }
-
-            if ($bill->payment_mode == 'cash') {
-                $cash += $bill->paid_amount;
-            }
-
-            if ($bill->payment_mode == 'khalti') {
-                $khalti += $bill->paid_amount;
-            }
-
-            if ($bill->payment_mode == 'esewa') {
-                $esewa += $bill->paid_amount;
-            }
-
-            if ($bill->payment_mode == 'reward points') {
-                $rewardPay += $bill->paid_amount;
-            }
-
-            $unpaid += $bill->amount - $bill->paid_amount;
-        }
-
-        $bills = $billsQuery->paginate(10);
+        extract($this->calculate($billsQuery));
 
         return view('income.index', compact('income', 'vat', 'bills', 'date', 'total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid'));
     }
@@ -80,6 +38,15 @@ class IncomeController extends Controller
         $billsQuery = Bill::whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate);
 
+        extract($this->calculate($billsQuery));
+
+
+        return view('income.index', compact('income', 'vat', 'bills', 'date', 'total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid'));
+    }
+
+
+    public function calculate($billsQuery)
+    {
         $total = 0;
 
         $cash = 0;
@@ -98,9 +65,9 @@ class IncomeController extends Controller
 
         foreach ($billsQuery->get() as $bill) {
             if ($bill->payment_mode != 'reward points') {
-                $vat += ($bill->amount/1.13)*0.13;
+                $vat += ($bill->amount / 1.13) * 0.13;
                 $total += $bill->amount;
-                $income += $bill->amount/1.13;
+                $income += $bill->amount / 1.13;
             }
 
             if ($bill->payment_mode == 'cash') {
@@ -124,6 +91,6 @@ class IncomeController extends Controller
 
         $bills = $billsQuery->paginate(10);
 
-        return view('income.index', compact('income', 'vat','bills', 'date', 'total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid'));
+        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'bills', 'vat', 'income');
     }
 }

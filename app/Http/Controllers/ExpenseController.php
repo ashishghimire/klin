@@ -39,16 +39,55 @@ class ExpenseController extends Controller
 
         $expenseQuery = Expense::whereDate('created_at', $today);
 
+        extract($this->calculate($expenseQuery));
+
+
+        return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
+
+    }
+
+    public function calculate($expenseQuery)
+    {
         $total = 0;
+
+        $electricity = 0;
+
+        $detergent = 0;
+
+        $rent = 0;
+
+        $petrol = 0;
+
+        $misc = 0;
 
 
         foreach ($expenseQuery->get() as $expense) {
             $total += $expense->amount;
+
+            if ($expense->category == 'electricity') {
+                $electricity += $expense->amount;
+            }
+
+            if ($expense->category == 'detergent') {
+                $detergent += $expense->amount;
+            }
+
+            if ($expense->category == 'rent') {
+                $rent += $expense->amount;
+            }
+
+            if ($expense->category == 'petrol') {
+                $petrol += $expense->amount;
+            }
+
+            if ($expense->category == 'misc') {
+                $misc += $expense->amount;
+            }
         }
 
         $expenses = $expenseQuery->paginate(10);
 
-        return view('expense.index', compact('expenses', 'total', 'date'));
+        return compact('total', 'electricity', 'detergent', 'rent', 'petrol', 'misc', 'expenses');
 
     }
 
@@ -65,17 +104,9 @@ class ExpenseController extends Controller
         $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate);
 
-        $total = 0;
+        extract($this->calculate($expenseQuery));
 
-
-
-        foreach ($expenseQuery->get() as $expense) {
-                $total += $expense->amount;
-        }
-
-        $expenses = $expenseQuery->paginate(10);
-
-        return view('expense.index', compact('expenses', 'total', 'date'));
+        return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
     }
 
     /**

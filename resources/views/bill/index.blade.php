@@ -70,9 +70,11 @@
         <tbody>
         @forelse($bills as $bill)
             <tr>
-                <td>{{$bill->estimate_no}}</td>
-                <td>{{$bill->customer->name}}</td>
-                <td>{{$bill->customer->phone}}</td>
+                <td>
+                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
+                </td>
+                <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a></td>
+                <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a></td>
                 <td>{{$bill->amount}}</td>
                 <td>
                     {{--<select name="payment_status" class="payment-status" data-bill="{{$bill->id}}">--}}

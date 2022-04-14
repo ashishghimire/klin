@@ -85,32 +85,46 @@
             <td></td>
             <td><strong>Total</strong></td>
             <td><strong>Amount: </strong>{{round($total, 2)}}</td>
+            <td><small><a href="#" data-bs-toggle="modal"
+                          data-bs-target="#expenseDetails">Details</a></small></td>
         </tr>
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Cash</td>--}}
-        {{--<td>{{$cash}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Khalti</td>--}}
-        {{--<td>{{$khalti}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Esewa</td>--}}
-        {{--<td>{{$esewa}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Reward points</td>--}}
-        {{--<td>{{$rewardPay}}</td>--}}
-        {{--</tr>--}}
-        {{--<tr>--}}
-        {{--<td></td>--}}
-        {{--<td>Unpaid</td>--}}
-        {{--<td>{{$unpaid}}</td>--}}
-        {{--</tr>--}}
+
+        <div class="modal fade" id="expenseDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">Electricity</div>
+                                <div class="col-md-4 ms-auto">{{round($electricity,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Detergent</div>
+                                <div class="col-md-4 ms-auto">{{round($detergent,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Rent</div>
+                                <div class="col-md-4 ms-auto">{{round($rent,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Petrol</div>
+                                <div class="col-md-4 ms-auto">{{round($petrol,2)}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-red-600">Miscellaneous</div>
+                                <div class="col-md-4 ms-auto text-red-600">{{round($misc,2)}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         </tfoot>
 
     </table>
