@@ -33,6 +33,8 @@ class BillController extends Controller
     {
         $this->customer = $customer;
         $this->bill = $bill;
+        $this->middleware('auth');
+        $this->middleware('isAdmin',['only' => ['edit', 'update', 'destroy']]);
     }
 
     public function index()

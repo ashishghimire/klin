@@ -12,6 +12,10 @@ use Maatwebsite\Excel\Facades\Excel;
 class IncomeController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('isAdmin');
+    }
 
     public function index()
     {

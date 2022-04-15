@@ -53,7 +53,7 @@ class CustomerPolicy
      */
     public function update(User $user, customer $customer)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
@@ -65,7 +65,7 @@ class CustomerPolicy
      */
     public function delete(User $user, customer $customer)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
@@ -89,6 +89,6 @@ class CustomerPolicy
      */
     public function forceDelete(User $user, customer $customer)
     {
-        //
+        return $user->role == 'admin';
     }
 }

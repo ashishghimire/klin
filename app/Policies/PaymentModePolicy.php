@@ -41,7 +41,7 @@ class PaymentModePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
@@ -53,7 +53,7 @@ class PaymentModePolicy
      */
     public function update(User $user, PaymentMode $paymentMode)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
@@ -65,7 +65,7 @@ class PaymentModePolicy
      */
     public function delete(User $user, PaymentMode $paymentMode)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
@@ -89,6 +89,6 @@ class PaymentModePolicy
      */
     public function forceDelete(User $user, PaymentMode $paymentMode)
     {
-        //
+        return $user->role == 'admin';
     }
 }

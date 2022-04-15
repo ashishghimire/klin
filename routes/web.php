@@ -18,24 +18,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/admin_dashboard', 'App\Http\Controllers\Admin\DashboardController@index')->name('admin.dashboard');
-Route::get('/employee_dashboard', 'App\Http\Controllers\Employee\DashboardController@index')->name('employee.dashboard');
+//Route::get('/admin_dashboard', 'App\Http\Controllers\Admin\DashboardController@index')->name('admin.dashboard');
+//Route::get('/employee_dashboard', 'App\Http\Controllers\Employee\DashboardController@index')->name('employee.dashboard');
 
-Route::get('/dashboard', function () {
-    $role = Auth::user()->role;
-    switch ($role) {
-        case 'admin':
-            return redirect()->route('admin.dashboard');
-            break;
-        case 'employee':
-            return redirect()->route('employee.dashboard');
-            break;
-
-        default:
-            return '/';
-            break;
-    }
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->middleware(['auth'])->name('dashboard');
 
 Route::resource('customer', \App\Http\Controllers\CustomerController::class)->except(['destroy'])->middleware(['auth']);
 
@@ -55,17 +41,15 @@ Route::get('invoice/create', 'App\Http\Controllers\BillController@createInvoice'
 
 //Route::get('invoice-customer/store', 'App\Http\Controllers\CustomerController@createAndRedirectToBilling')->name('invoice.create')->middleware(['auth']);
 
-Route::get('rewards-system', 'App\Http\Controllers\CustomerController@editRewardKey')->name('rewards.edit')->middleware(['auth']);
+Route::get('rewards-system', 'App\Http\Controllers\CustomerController@editRewardKey')->name('rewards.edit')->middleware(['auth', 'isAdmin']);
 
-Route::patch('rewards-system', 'App\Http\Controllers\CustomerController@updateRewardKey')->name('rewards.store')->middleware(['auth']);
+Route::patch('rewards-system', 'App\Http\Controllers\CustomerController@updateRewardKey')->name('rewards.store')->middleware(['auth', 'isAdmin']);
 require __DIR__ . '/auth.php';
 
 Route::get('income-statement', 'App\Http\Controllers\IncomeController@index')->name('income')->middleware(['auth']);
 
 Route::any('income-statement/search', 'App\Http\Controllers\IncomeController@search')->name('income.search')->middleware(['auth']);
 
-
-Route::get('import-customer', 'App\Http\Controllers\CustomerController@import')->name('customer.import')->middleware(['auth']);
 
 Route::resource('expense', \App\Http\Controllers\ExpenseController::class)->only(['create', 'store'])->middleware(['auth']);
 
@@ -83,3 +67,7 @@ Route::get('customer-export', 'App\Http\Controllers\CustomerController@fileExpor
 Route::get('income-export', 'App\Http\Controllers\IncomeController@fileExport')->name('income-export')->middleware(['auth']);
 
 Route::get('expense-export', 'App\Http\Controllers\ExpenseController@fileExport')->name('expense-export')->middleware(['auth']);
+
+Route::resource('employee', \App\Http\Controllers\EmployeeController::class)->middleware(['auth', 'isAdmin']);
+
+Route::get('import-db', 'App\Http\Controllers\DashboardController@import')->name('import.db')->middleware(['auth', 'isAdmin']);

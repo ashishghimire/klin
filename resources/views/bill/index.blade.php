@@ -64,7 +64,9 @@
             <th>Payment Status</th>
             <th class="no-sort">Laundry Status</th>
             <th>Date</th>
-            <th class="no-sort">Action</th>
+            @if(auth()->user()->role == 'admin')
+                <th class="no-sort">Action</th>
+            @endif
         </tr>
         </thead>
         <tbody>
@@ -77,13 +79,6 @@
                 <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a></td>
                 <td>{{$bill->amount}}</td>
                 <td>
-                    {{--<select name="payment_status" class="payment-status" data-bill="{{$bill->id}}">--}}
-                    {{--<option value="paid" {{$bill->payment_status == 'paid' ? 'selected' : ''}}>Paid</option>--}}
-                    {{--<option value="partial" {{$bill->payment_status == 'partial' ? 'selected' : ''}}>Partially--}}
-                    {{--Paid--}}
-                    {{--</option>--}}
-                    {{--<option value="unpaid" {{$bill->payment_status == 'unpaid' ? 'selected' : ''}}>Unpaid</option>--}}
-                    {{--</select>--}}
                     @if($bill->payment_status == 'paid')
                         <button type="button" class="btn btn-info btn-sm"
                                 disabled="disabled">{{$bill->payment_status}}</button>
@@ -96,7 +91,9 @@
                     {!! Form::select('laundry_status',['unprocessed'=>'Unprocessed', 'processing'=>'Processing', 'completed'=>'Completed', 'delivered'=>'Delivered'], $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
                 </td>
                 <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
-                <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
+                @if(auth()->user()->role == 'admin')
+                    <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
+                @endif
             </tr>
             <div class="modal fade" id="modal-{{$bill->id}}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">

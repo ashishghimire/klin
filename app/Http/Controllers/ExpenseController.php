@@ -25,6 +25,8 @@ class ExpenseController extends Controller
     {
 
         $this->expense = $expense;
+        $this->middleware('auth');
+        $this->middleware('isAdmin',['only' => ['search', 'fileExport']]);
 
     }
 

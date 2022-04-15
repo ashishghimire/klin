@@ -5,17 +5,31 @@ namespace App\Imports;
 
 
 use App\Models\Customer;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class CustomerImport implements ToModel
+
+class CustomerImport implements ToCollection
 {
-    public function model(array $row)
+
+    public $data = [];
+
+    public function collection(Collection $rows)
     {
-        dd($row);
-//        return new Customer([
-//            'name' => $row[0],
-//            'email' => $row[1],
-//            'password' => Hash::make($row[2]),
-//        ]);
+        $data = [];
+
+//        $i = 0;
+//        foreach ($rows as $row) {
+//            if ($i > 0) {
+//                $data['name'] = $row[1];
+//                $data['address'] = $row[2];
+//                $data['phone'] = $row[4];
+//                $data['customer_id'] = $row[5];
+//            }
+//
+//            $i++;
+//
+//            array_push($this->data, $data);
+//        }
     }
 }

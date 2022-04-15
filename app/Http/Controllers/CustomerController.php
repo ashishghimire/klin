@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\CustomersExport;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
-use App\Imports\CustomerImport;
 use App\Models\customer;
 use App\Models\Setting;
 use App\Services\CustomerService;
@@ -25,6 +24,8 @@ class CustomerController extends Controller
     public function __construct(CustomerService $customer)
     {
         $this->customer = $customer;
+        $this->middleware('auth');
+        $this->middleware('isAdmin', ['only' => ['edit', 'update', 'destroy', 'editRewardKey', 'updateRewardKey', 'fileExport']]);
     }
 
     /**
@@ -56,7 +57,7 @@ class CustomerController extends Controller
             })
             ->addColumn('edit', function ($row) {
 
-                $btn = '<a href=' . route('bill.edit', $row->id) . ' class="edit btn btn-secondary btn-sm">Edit Customer</a>';
+                $btn = '<a href=' . route('customer.edit', $row->id) . ' class="edit btn btn-secondary btn-sm">Edit Customer</a>';
 
                 return $btn;
             })
@@ -186,11 +187,6 @@ class CustomerController extends Controller
         return redirect()->route('dashboard')->with('message', "Reward Key successfully set to " . $request->rewards_key);
     }
 
-
-    public function import()
-    {
-        $customers = Excel::import(new CustomerImport, 'import/customer_export.csv');
-    }
 
     public function fileExport()
     {

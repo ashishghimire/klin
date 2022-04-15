@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Bill;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BillPolicy
+class SettingPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class BillPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Bill  $bill
+     * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Bill $bill)
+    public function view(User $user, Setting $setting)
     {
         //
     }
@@ -41,29 +41,29 @@ class BillPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Bill  $bill
+     * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Bill $bill)
+    public function update(User $user, Setting $setting)
     {
-        //
+        return $user->role == 'admin';
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Bill  $bill
+     * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Bill $bill)
+    public function delete(User $user, Setting $setting)
     {
         return $user->role == 'admin';
     }
@@ -72,10 +72,10 @@ class BillPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Bill  $bill
+     * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Bill $bill)
+    public function restore(User $user, Setting $setting)
     {
         //
     }
@@ -84,11 +84,11 @@ class BillPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Bill  $bill
+     * @param  \App\Models\Setting  $setting
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Bill $bill)
+    public function forceDelete(User $user, Setting $setting)
     {
-        return $user->role == 'admin';
+        //
     }
 }

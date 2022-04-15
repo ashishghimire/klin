@@ -58,6 +58,7 @@ class BillService
 
         if ($data['payment_mode'] == 'reward points') {
             $data['payment_status'] = 'paid';
+            $data['paid_amount'] = $data['amount'];
             return $data;
         }
 
