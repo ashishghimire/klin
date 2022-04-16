@@ -4,32 +4,25 @@
 namespace App\Imports;
 
 
-use App\Models\Customer;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use App\Models\ImportedCustomer;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\ToModel;
 
 
-class CustomerImport implements ToCollection
+class CustomerImport implements ToModel
 {
 
     public $data = [];
 
-    public function collection(Collection $rows)
+    public function model(array $row)
     {
-        $data = [];
-
-//        $i = 0;
-//        foreach ($rows as $row) {
-//            if ($i > 0) {
-//                $data['name'] = $row[1];
-//                $data['address'] = $row[2];
-//                $data['phone'] = $row[4];
-//                $data['customer_id'] = $row[5];
-//            }
-//
-//            $i++;
-//
-//            array_push($this->data, $data);
-//        }
+        return new ImportedCustomer([
+            'name' => $row[1],
+            'address' => $row[2],
+            'phone' => $row[4],
+            'manual_id' => $row[5],
+            'created_at' => Carbon::now()->toDateString(),
+            'updated_at' => Carbon::now()->toDateString(),
+        ]);
     }
 }

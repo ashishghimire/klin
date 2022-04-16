@@ -4,8 +4,14 @@ namespace App\Http\Controllers;
 
 
 use App\Imports\CustomerImport;
+use App\Imports\LaundryImport;
+use App\Models\Customer;
+use App\Models\ImportedCustomer;
+use App\Models\ImportedLaundry;
+use App\Models\Setting;
 use App\Services\BillService;
 use App\Services\CustomerService;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -25,13 +31,16 @@ class DashboardController extends Controller
      * @param CustomerService $customer
      * @param BillService $bill
      */
-    public function __construct(CustomerService $customer, BillService $bill) {
+    public function __construct(CustomerService $customer, BillService $bill)
+    {
         $this->middleware(['auth']);
         $this->middleware('isAdmin')->only(['import']);
         $this->customer = $customer;
         $this->bill = $bill;
     }
-    public function index() {
+
+    public function index()
+    {
         $customersCount = $this->customer->total();
         $unprocessedCount = $this->bill->getCount('unprocessed');
         $processingCount = $this->bill->getCount('processing');
@@ -42,9 +51,32 @@ class DashboardController extends Controller
 
     public function import()
     {
-        $import = new CustomerImport;
 
-        Excel::import($import, 'imports/customer_export.csv');
-        dd($import->data);
+        Excel::import(new CustomerImport, 'imports/customer_export.csv');
+
+        Excel::import(new LaundryImport, 'imports/laundry_export.csv');
+
+        $importedLaundries = ImportedLaundry::all();
+
+        $rewardKey = Setting::first()->rewards_key;
+
+        foreach ($importedLaundries as $importedLaundry) {
+
+            $importedCustomer = ImportedCustomer::where('manual_id', $importedLaundry->imported_customer_manual_id)->first();
+
+            if (!empty($importedCustomer)) {
+                $rewardPoints = floatval($importedLaundry->amount) * floatval($rewardKey);
+                $importedCustomer->reward_points += floatval($rewardPoints);
+                $importedCustomer->save();
+            }
+        }
+
+        $importedCustomers = ImportedCustomer::all('name', 'address', 'phone', 'reward_points', 'created_at', 'updated_at');
+
+
+        Customer::insert($importedCustomers->toArray());
+
+        return redirect()->route('dashboard');
+
     }
 }
