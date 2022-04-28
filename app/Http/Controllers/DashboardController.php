@@ -71,7 +71,7 @@ class DashboardController extends Controller
             }
         }
 
-        $importedCustomers = ImportedCustomer::all('name', 'address', 'phone', 'reward_points', 'created_at', 'updated_at');
+        $importedCustomers = ImportedCustomer::all('name', 'address', 'phone', 'reward_points', 'created_at', 'updated_at', 'nepali_date');
 
 
         Customer::insert($importedCustomers->toArray());

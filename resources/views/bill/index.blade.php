@@ -90,7 +90,7 @@
                 <td>
                     {!! Form::select('laundry_status',['unprocessed'=>'Unprocessed', 'processing'=>'Processing', 'completed'=>'Completed', 'delivered'=>'Delivered'], $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
                 </td>
-                <td>{{!empty($bill->created_at) ? $bill->created_at : '-'}}</td>
+                <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
                 @if(auth()->user()->role == 'admin')
                     <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
                 @endif
@@ -104,7 +104,7 @@
                                     <div class="col-md-5"> Estimate no. {{$bill->estimate_no}}</div>
 
                                     <div class="col-md-5 ms-auto">
-                                        <small>{{!empty($bill->created_at) ? date('d-m-Y', strtotime($bill->created_at)) : ''}}</small>
+                                        <small>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</small>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -1,33 +1,33 @@
 <x-app-layout>
 
-    @section('styles')
-        <link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">
-    @stop
-    @section('scripts')
-        <script src="{{asset('js/moment.min.js')}}"></script>
-        <script src="{{asset('js/daterangepicker.js')}}"></script>
-        <script>
-            $(document).ready(function () {
-                $('input[name="datefilter"]').daterangepicker({
-                    autoUpdateInput: false,
-                    applyButtonClasses: 'btn btn-outline-primary',
-                    locale: {
-                        cancelLabel: 'Clear'
-                    }
-                });
+    {{--@section('styles')--}}
+        {{--<link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">--}}
+    {{--@stop--}}
+    {{--@section('scripts')--}}
+        {{--<script src="{{asset('js/moment.min.js')}}"></script>--}}
+        {{--<script src="{{asset('js/daterangepicker.js')}}"></script>--}}
+        {{--<script>--}}
+            {{--$(document).ready(function () {--}}
+                {{--$('input[name="datefilter"]').daterangepicker({--}}
+                    {{--autoUpdateInput: false,--}}
+                    {{--applyButtonClasses: 'btn btn-outline-primary',--}}
+                    {{--locale: {--}}
+                        {{--cancelLabel: 'Clear'--}}
+                    {{--}--}}
+                {{--});--}}
 
-                $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
-                    $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                });
+                {{--$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {--}}
+                    {{--$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));--}}
+                {{--});--}}
 
-                $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
-                    $(this).val('');
-                });
+                {{--$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {--}}
+                    {{--$(this).val('');--}}
+                {{--});--}}
 
 
-            });
-        </script>
-    @stop
+            {{--});--}}
+        {{--</script>--}}
+    {{--@stop--}}
 
     <x-slot name="header">
         <a href="{{route('income-export')}}">
@@ -49,7 +49,11 @@
             {{ csrf_field() }}
             Get income statement for
 
-            {!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}
+            {!! Form::text('startDate', null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
+
+            {!! Form::text('endDate', null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
+
+            {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 
             {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
         </form>
@@ -65,7 +69,6 @@
             <th>Amount</th>
             <th>Payment Status</th>
             <th>Payment Mode</th>
-            {{--<th>Action</th>--}}
         </tr>
         </thead>
         <tbody>
@@ -75,7 +78,7 @@
                 <td>
                     <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
                 </td>
-                <td>{{!empty($bill->created_at) ? date("Y-m-d", strtotime($bill->created_at)) : '-'}}</td>
+                <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : '-'}}</td>
                 <td>{{round(($bill->amount/1.13), 2)}}</td>
                 <td>{{round(($bill->amount/1.13 *0.13), 2)}}</td>
                 <td>{{round(($bill->amount), 2)}}</td>

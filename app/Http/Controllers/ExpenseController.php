@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Nilambar\NepaliDate\NepaliDate;
 
 class ExpenseController extends Controller
 {
@@ -16,18 +17,24 @@ class ExpenseController extends Controller
      * @var Expense
      */
     protected $expense;
+    /**
+     * @var NepaliDate
+     */
+    protected $nepaliDate;
 
     /**
      * ExpenseController constructor.
      * @param Expense $expense
+     * @param NepaliDate $nepaliDate
      */
-    public function __construct(Expense $expense)
+    public function __construct(Expense $expense, NepaliDate $nepaliDate)
     {
 
         $this->expense = $expense;
         $this->middleware('auth');
-        $this->middleware('isAdmin',['only' => ['search', 'fileExport']]);
+        $this->middleware('isAdmin', ['only' => ['search', 'fileExport']]);
 
+        $this->nepaliDate = $nepaliDate;
     }
 
     /**
@@ -39,7 +46,7 @@ class ExpenseController extends Controller
     {
         $today = Carbon::now()->startOfDay()->toDateString();
 
-        $date = Carbon::now()->format('m/d/Y');
+        $date = $this->todaysNepaliDate();
 
         $expenseQuery = Expense::whereDate('created_at', $today);
 
@@ -97,13 +104,23 @@ class ExpenseController extends Controller
 
     public function search()
     {
-        $date = request()->get('datefilter');
+        $startDateNepali = explode("-", trim(request()->get('startDate')));
+        $endDateNepali = explode("-", trim(request()->get('endDate')));
 
-        $dates = explode("-", $date);
+        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]),trim($startDateNepali[1]),trim($startDateNepali[2]));
 
-        $startDate = Carbon::parse(strtotime($dates[0]))->startOfDay()->toDateString();
+        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]),trim($endDateNepali[1]),trim($endDateNepali[2]));
 
-        $endDate = Carbon::parse(strtotime($dates[1]))->endOfDay()->toDateString();
+        $startDateEnglish = implode("-", $startDateEnglishArray);
+        $endDateEnglish = implode("-", $endDateEnglishArray);
+
+        $date = request()->get('startDate').' : '.request()->get('endDate');
+
+        $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
+
+        $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
+
+//        dd($startDate);
 
         $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate);
@@ -137,6 +154,15 @@ class ExpenseController extends Controller
         $data = $request->all();
 
         $data['user_id'] = auth()->user()->id;
+
+        $englishDate = Carbon::now();
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+
+        $data['nepali_date'] = $nepaliDate;
 
         DB::beginTransaction();
 
@@ -201,5 +227,16 @@ class ExpenseController extends Controller
     public function fileExport()
     {
         return Excel::download(new ExpenseExport, 'expense_data.xlsx');
+    }
+
+    public function todaysNepaliDate()
+    {
+        $englishDate = Carbon::now();
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+        return $nepaliDate;
     }
 }

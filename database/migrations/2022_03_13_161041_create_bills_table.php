@@ -24,6 +24,7 @@ class CreateBillsTable extends Migration
             $table->string('payment_mode')->nullable();
             $table->enum('laundry_status', ['unprocessed', 'processing', 'completed', 'delivered'])->default('unprocessed');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nepali_date');
             $table->timestamps();
             $table->softDeletes();
         });

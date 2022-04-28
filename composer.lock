@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c11fd3cc9eaf172c395615add460d5fa",
+    "content-hash": "b564e226910be0fd0573ca6bbc5dc162",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -492,6 +492,57 @@
                 }
             ],
             "time": "2020-12-29T14:50:06+00:00"
+        },
+        {
+            "name": "ernilambar/nepali-date",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ernilambar/nepali-date.git",
+                "reference": "8ac91a49267e3821bf03f052d3cb6b7876af4a12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ernilambar/nepali-date/zipball/8ac91a49267e3821bf03f052d3cb6b7876af4a12",
+                "reference": "8ac91a49267e3821bf03f052d3cb6b7876af4a12",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nilambar\\NepaliDate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nilambar Sharma",
+                    "email": "nilambar@outlook.com",
+                    "homepage": "https://www.nilambar.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Nepali Date",
+            "homepage": "https://github.com/ernilambar/nepali-date",
+            "keywords": [
+                "date"
+            ],
+            "support": {
+                "issues": "https://github.com/ernilambar/nepali-date/issues",
+                "source": "https://github.com/ernilambar/nepali-date/tree/1.0.5"
+            },
+            "time": "2021-07-20T06:11:00+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

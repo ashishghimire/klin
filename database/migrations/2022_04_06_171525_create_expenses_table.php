@@ -20,6 +20,7 @@ class CreateExpensesTable extends Migration
             $table->string('details');
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nepali_date');
             $table->timestamps();
         });
     }

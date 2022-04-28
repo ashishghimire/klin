@@ -15,7 +15,7 @@
                                 <div class="amount"><span
                                         class="text-primary font-weight-bold">{{$bill->customer->name}}</span>
                                     <h4>{{$bill->customer->phone}}</h4>
-                                    <small>{{!empty($bill->created_at) ? date('d-m-Y', strtotime($bill->created_at)) : ''}}</small>
+                                    <small>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</small>
                                 </div>
                                 <div class="d-flex flex-row align-items-center">
                                     <div class="add"><span

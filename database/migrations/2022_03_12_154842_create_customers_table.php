@@ -19,6 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('address')->nullable();
             $table->string('phone')->unique();
             $table->double('reward_points',7, 2)->default(0);
+            $table->string('nepali_date');
             $table->timestamps();
             $table->softDeletes();
         });

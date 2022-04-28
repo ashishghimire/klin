@@ -10,7 +10,7 @@ class ImportedCustomer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'address', 'phone', 'manual_id', 'reward_points', 'created_at', 'updated_at'
+        'name', 'address', 'phone', 'manual_id', 'reward_points', 'created_at', 'updated_at', 'nepali_date'
     ];
 
     public $timestamps = false;

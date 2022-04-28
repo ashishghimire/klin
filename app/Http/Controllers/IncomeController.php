@@ -8,13 +8,24 @@ use App\Services\BillService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Nilambar\NepaliDate\NepaliDate;
 
 class IncomeController extends Controller
 {
+    /**
+     * @var NepaliDate
+     */
+    protected $nepaliDate;
 
-    public function __construct()
+    /**
+     * IncomeController constructor.
+     * @param NepaliDate $nepaliDate
+     */
+    public function __construct(NepaliDate $nepaliDate)
     {
+
         $this->middleware('isAdmin');
+        $this->nepaliDate = $nepaliDate;
     }
 
     public function index()
@@ -22,7 +33,7 @@ class IncomeController extends Controller
 
         $today = Carbon::now()->startOfDay()->toDateString();
 
-        $date = Carbon::now()->format('m/d/Y');
+        $date = $this->todaysNepaliDate();
 
         $billsQuery = Bill::whereDate('created_at', $today);
 
@@ -33,13 +44,22 @@ class IncomeController extends Controller
 
     public function search()
     {
-        $date = request()->get('datefilter');
+        $startDateNepali = explode("-", trim(request()->get('startDate')));
+        $endDateNepali = explode("-", trim(request()->get('endDate')));
 
-        $dates = explode("-", $date);
+        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]),trim($startDateNepali[1]),trim($startDateNepali[2]));
 
-        $startDate = Carbon::parse(strtotime($dates[0]))->startOfDay()->toDateString();
+        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]),trim($endDateNepali[1]),trim($endDateNepali[2]));
 
-        $endDate = Carbon::parse(strtotime($dates[1]))->endOfDay()->toDateString();
+        $startDateEnglish = implode("-", $startDateEnglishArray);
+        $endDateEnglish = implode("-", $endDateEnglishArray);
+
+        $date = request()->get('startDate').' : '.request()->get('endDate');
+
+        $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
+
+        $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
+
 
         $billsQuery = Bill::whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate);
@@ -103,5 +123,16 @@ class IncomeController extends Controller
     public function fileExport()
     {
         return Excel::download(new IncomeExport, 'income_data.xlsx');
+    }
+
+    public function todaysNepaliDate()
+    {
+        $englishDate = Carbon::now();
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+        return $nepaliDate;
     }
 }

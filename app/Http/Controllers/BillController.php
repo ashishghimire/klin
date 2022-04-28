@@ -9,6 +9,8 @@ use App\Models\PaymentMode;
 use App\Models\Service;
 use App\Services\BillService;
 use App\Services\CustomerService;
+use Carbon\Carbon;
+use Nilambar\NepaliDate\NepaliDate;
 
 
 class BillController extends Controller
@@ -21,24 +23,31 @@ class BillController extends Controller
      * @var BillService
      */
     protected $bill;
+    /**
+     * @var NepaliDate
+     */
+    protected $nepaliDate;
 
     /**
      * Display a listing of the resource.
      *
      * @param CustomerService $customer
      * @param BillService $bill
+     * @param NepaliDate $nepaliDate
      */
 
-    public function __construct(CustomerService $customer, BillService $bill)
+    public function __construct(CustomerService $customer, BillService $bill, NepaliDate $nepaliDate)
     {
         $this->customer = $customer;
         $this->bill = $bill;
         $this->middleware('auth');
         $this->middleware('isAdmin',['only' => ['edit', 'update', 'destroy']]);
+        $this->nepaliDate = $nepaliDate;
     }
 
     public function index()
     {
+        $nepaliDateObj = $this->nepaliDate;
         $laundryStatus = request()->query('laundry-status');
         $number = 1000;
 
@@ -53,7 +62,7 @@ class BillController extends Controller
 
         $paymentModes = PaymentMode::where('name', '!=', 'reward points');
 
-        return view('bill.index', compact('bills', 'paymentModes'));
+        return view('bill.index', compact('bills', 'paymentModes', 'nepaliDateObj'));
     }
 
     /**
@@ -84,6 +93,15 @@ class BillController extends Controller
     public function store($customerId, StoreBillRequest $request)
     {
         $data = $request->all();
+
+        $englishDate = Carbon::now();
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+
+        $data['nepali_date'] = $nepaliDate;
 
         $customer = $this->customer->find($customerId);
 

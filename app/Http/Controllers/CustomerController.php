@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Nilambar\NepaliDate\NepaliDate;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -20,12 +21,22 @@ class CustomerController extends Controller
      * @var CustomerService
      */
     protected $customer;
+    /**
+     * @var NepaliDate
+     */
+    protected $nepaliDate;
 
-    public function __construct(CustomerService $customer)
+    /**
+     * CustomerController constructor.
+     * @param CustomerService $customer
+     * @param NepaliDate $nepaliDate
+     */
+    public function __construct(CustomerService $customer, NepaliDate $nepaliDate)
     {
         $this->customer = $customer;
         $this->middleware('auth');
         $this->middleware('isAdmin', ['only' => ['edit', 'update', 'destroy', 'editRewardKey', 'updateRewardKey', 'fileExport']]);
+        $this->nepaliDate = $nepaliDate;
     }
 
     /**
@@ -45,7 +56,7 @@ class CustomerController extends Controller
             })
             ->editColumn('created_at', function ($customer) {
 
-                $date = date("Y-m-d", strtotime($customer->created_at));
+                $date = $customer->nepali_date;
 
                 return $date;
             })
@@ -91,6 +102,15 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         $data = $request->all();
+
+        $englishDate = Carbon::now();
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+
+        $data['nepali_date'] = $nepaliDate;
 
         $customer = $this->customer->save($data);
         if (!$customer) {
