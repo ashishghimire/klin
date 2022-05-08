@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exports\ExpenseExport;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\Salary;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,13 +23,18 @@ class ExpenseController extends Controller
      * @var NepaliDate
      */
     protected $nepaliDate;
+    /**
+     * @var Salary
+     */
+    protected $salary;
 
     /**
      * ExpenseController constructor.
      * @param Expense $expense
      * @param NepaliDate $nepaliDate
+     * @param Salary $salary
      */
-    public function __construct(Expense $expense, NepaliDate $nepaliDate)
+    public function __construct(Expense $expense, NepaliDate $nepaliDate, Salary $salary)
     {
 
         $this->expense = $expense;
@@ -35,6 +42,7 @@ class ExpenseController extends Controller
         $this->middleware('isAdmin', ['only' => ['search', 'fileExport']]);
 
         $this->nepaliDate = $nepaliDate;
+        $this->salary = $salary;
     }
 
     /**
@@ -48,7 +56,12 @@ class ExpenseController extends Controller
 
         $date = $this->todaysNepaliDate();
 
-        $expenseQuery = Expense::whereDate('created_at', $today);
+        if (auth()->user()->role == 'admin') {
+            $expenseQuery = Expense::whereDate('created_at', $today);
+        } else {
+            $expenseQuery = Expense::whereDate('created_at', $today)
+                ->where('user_id', '=', auth()->user()->id);
+        }
 
         extract($this->calculate($expenseQuery));
 
@@ -107,23 +120,27 @@ class ExpenseController extends Controller
         $startDateNepali = explode("-", trim(request()->get('startDate')));
         $endDateNepali = explode("-", trim(request()->get('endDate')));
 
-        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]),trim($startDateNepali[1]),trim($startDateNepali[2]));
+        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
 
-        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]),trim($endDateNepali[1]),trim($endDateNepali[2]));
+        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
 
         $startDateEnglish = implode("-", $startDateEnglishArray);
         $endDateEnglish = implode("-", $endDateEnglishArray);
 
-        $date = request()->get('startDate').' : '.request()->get('endDate');
+        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
 
         $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
 
         $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
 
-//        dd($startDate);
-
-        $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate);
+        if (auth()->user()->role == 'admin') {
+            $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
+        } else {
+            $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)
+                ->where('user_id', '=', auth()->user()->id);
+        }
 
         extract($this->calculate($expenseQuery));
 
@@ -137,9 +154,10 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $categories = ExpenseCategory::all();
+        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where('name', '!=', 'salary')->get();
+        $employees = User::where('role', '!=', 'admin')->get();
 
-        return view('expense.create', compact('categories'));
+        return view('expense.create', compact('categories', 'employees'));
     }
 
     /**
@@ -163,11 +181,18 @@ class ExpenseController extends Controller
         $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
 
         $data['nepali_date'] = $nepaliDate;
+        $salaryData = [];
 
         DB::beginTransaction();
 
         try {
             $this->expense->create($data);
+
+            if ($data['category'] == 'salary') {
+                $salaryData['user_id'] = $data['employee_id'];
+                $salaryData['amount'] = $data['amount'];
+                $this->salary->create($salaryData);
+            }
 
             DB::commit();
             return redirect()->route('expense.index');

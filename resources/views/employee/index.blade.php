@@ -28,7 +28,7 @@
                 <td>
                     {{$i}}
                 </td>
-                <td>{{$employee->name}}</td>
+                <td><a href="{{route('employee.show', $employee->id)}}"> {{$employee->name}}</a></td>
                 <td>{{$employee->username}}</td>
                 <td><a class="btn-sm btn-outline-dark" href="{{route('employee.edit',  $employee)}}">Edit </a>
                     {{ Form::open(['url' => route('employee.destroy', $employee), 'method' => 'delete']) }}

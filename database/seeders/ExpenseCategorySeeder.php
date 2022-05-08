@@ -33,6 +33,9 @@ class ExpenseCategorySeeder extends Seeder
             [
                 'name' => 'misc'
             ],
+            [
+                'name' => 'misc'
+            ],
 
         ]);
     }

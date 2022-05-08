@@ -76,6 +76,7 @@ Route::get('income-export', 'App\Http\Controllers\IncomeController@fileExport')-
 
 Route::get('expense-export', 'App\Http\Controllers\ExpenseController@fileExport')->name('expense-export')->middleware(['auth']);
 
-Route::resource('employee', \App\Http\Controllers\EmployeeController::class)->middleware(['auth', 'isAdmin']);
+Route::resource('employee', \App\Http\Controllers\EmployeeController::class);
 
 Route::get('import-db', 'App\Http\Controllers\DashboardController@import')->name('import.db')->middleware(['auth', 'isAdmin']);
+

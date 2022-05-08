@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\customer;
+use App\Models\Customer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CustomerPolicy
@@ -51,7 +51,7 @@ class CustomerPolicy
      * @param  \App\Models\customer  $customer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, customer $customer)
+    public function update(User $user, Customer $customer)
     {
         return $user->role == 'admin';
     }
@@ -63,7 +63,7 @@ class CustomerPolicy
      * @param  \App\Models\customer  $customer
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, customer $customer)
+    public function delete(User $user, Customer $customer)
     {
         return $user->role == 'admin';
     }

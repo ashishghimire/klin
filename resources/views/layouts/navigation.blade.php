@@ -157,6 +157,11 @@
 
                     <x-slot name="content">
                         <!-- Authentication -->
+
+                            <x-dropdown-link :href="route('employee.show', auth()->user()->id)">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 

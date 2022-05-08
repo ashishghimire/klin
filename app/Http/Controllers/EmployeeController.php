@@ -12,7 +12,7 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('isAdmin');
+        $this->middleware('isAdmin')->except('show');
     }
 
     public function index()
@@ -64,5 +64,13 @@ class EmployeeController extends Controller
         $employee->delete();
         return redirect()->route('dashboard')->with('message', "Employee Successfully Deleted");
 
+    }
+
+    public function show(User $employee)
+    {
+        if (auth()->user()->role == 'admin' || auth()->user()->id == $employee->id)
+            return view('employee.show', compact('employee'));
+
+        return redirect()->route('dashboard')->with('message', "You are not allowed to view this page");
     }
 }
