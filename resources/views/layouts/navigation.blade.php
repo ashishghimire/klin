@@ -60,9 +60,9 @@
                         Invoices
                     </x-nav-link>
                     @if(auth()->user()->role == 'admin')
-                    <x-nav-link :href="route('income')" :active="request()->routeIs('income')">
-                        Income Statement
-                    </x-nav-link>
+                        <x-nav-link :href="route('income')" :active="request()->routeIs('income')">
+                            Income Statement
+                        </x-nav-link>
                     @endif
 
 
@@ -93,6 +93,11 @@
                                 <x-dropdown-link :href="route('expense.create')">
                                     Add Expense
                                 </x-dropdown-link>
+                                @if(auth()->user()->role == 'admin')
+                                    <x-dropdown-link :href="route('expense-category.index')">
+                                        Expense Category
+                                    </x-dropdown-link>
+                                @endif
 
                             </x-slot>
                         </x-dropdown>
@@ -158,9 +163,9 @@
                     <x-slot name="content">
                         <!-- Authentication -->
 
-                            <x-dropdown-link :href="route('employee.show', auth()->user()->id)">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
+                        <x-dropdown-link :href="route('employee.show', auth()->user()->id)">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

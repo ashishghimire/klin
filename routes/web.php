@@ -80,3 +80,5 @@ Route::resource('employee', \App\Http\Controllers\EmployeeController::class);
 
 Route::get('import-db', 'App\Http\Controllers\DashboardController@import')->name('import.db')->middleware(['auth', 'isAdmin']);
 
+Route::resource('expense-category', \App\Http\Controllers\ExpenseCategoryController::class)->middleware(['auth', 'isAdmin']);
+
