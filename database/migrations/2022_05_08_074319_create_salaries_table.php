@@ -16,6 +16,7 @@ class CreateSalariesTable extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('expense_id')->constrained()->onDelete('cascade');
             $table->bigInteger('amount');
             $table->timestamps();
         });

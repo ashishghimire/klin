@@ -12,7 +12,7 @@ class Salary extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'amount'
+        'user_id', 'amount', 'expense_id'
     ];
 
     public function getNepaliDateAttribute()
@@ -25,5 +25,15 @@ class Salary extends Model
         $nepaliDate = $nepaliDateObj->convertAdToBs($year, $month, $day);
         $date = $nepaliDate['year'] . '-' . $nepaliDate['month'] . '-' . $nepaliDate['day'];
         return $date;
+    }
+
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

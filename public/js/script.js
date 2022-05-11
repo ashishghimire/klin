@@ -10,18 +10,20 @@ $(document).ready(function(){
         var additionalService = $('.additional-service').html();
 
         $('.service-wrapper').append(additionalService);
-
+        changeAmount();
     });
 
     $(document).on('click', '.remove-service', function () {
         $(this).parent().closest('.service-individual').remove();
+        changeAmount();
     });
 
+    $(document).on('keyup', '.quantity', function () {
+        changeAmount();
+    });
 
     $(document).on('click', '.calculate-amount', function () {
-        var amount = calculateAmount();
-        $('.amount-calculated').text(amount);
-        $("input[name='amount']").val(amount);
+        changeAmount();
     });
 
     function calculateAmount() {
@@ -45,6 +47,7 @@ $(document).ready(function(){
         $(this).closest('.service-individual').find('input.rate-dynamic').val(rate);
         $(this).closest('.service-individual').find('span.unit-dynamic').text(unitMsg);
         $(this).closest('.service-individual').find('input.unit-dynamic').val(unit);
+        changeAmount();
     });
 
 
@@ -68,6 +71,13 @@ $(document).ready(function(){
             $("input[name='paid_amount']").val(0);
         }
     });
+
+
+    function changeAmount() {
+        var amount = calculateAmount();
+        $('.amount-calculated').text(amount);
+        $("input[name='amount']").val(amount);
+    }
 });
 
 

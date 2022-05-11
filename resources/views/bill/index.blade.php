@@ -88,7 +88,14 @@
                     @endif
                 </td>
                 <td>
-                    {!! Form::select('laundry_status',['unprocessed'=>'Unprocessed', 'processing'=>'Processing', 'completed'=>'Completed', 'delivered'=>'Delivered'], $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
+                    <?php
+                    if ($bill->payment_status == 'paid') {
+                        $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
+                    } else {
+                        $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed'];
+                    }
+                    ?>
+                    {!! Form::select('laundry_status',$laundryStatusArray, $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
                 </td>
                 <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
                 @if(auth()->user()->role == 'admin')

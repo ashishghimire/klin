@@ -49,7 +49,7 @@
     <div class="container">
         <form action={{route('expense.search')}} method="GET" role="search" class="search">
             {{ csrf_field() }}
-            Get expense statement for
+            {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), null, ['placeholder' => 'Pick a category']) !!}
 
             {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 
@@ -71,6 +71,7 @@
             <th>Category</th>
             <th>Details</th>
             <th>Added By</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -84,6 +85,11 @@
                 <td>{{$expense->category}}</td>
                 <td>{{$expense->details}}</td>
                 <td>{{$expense->user->name}}</td>
+                <td><a class="btn-sm btn-outline-dark" href="{{route('expense.edit',  $expense)}}">Edit </a>
+                    {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
+                    <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete</button>
+                    {{ Form::close() }}
+                </td>
             </tr>
 
         @empty

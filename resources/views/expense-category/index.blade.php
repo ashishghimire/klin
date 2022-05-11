@@ -30,7 +30,7 @@
                 <td>{{$category->name}}</td>
                 <td><a class="btn-sm btn-outline-dark" href="{{route('expense-category.edit',  $category)}}">Edit </a>
                     {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
-                    <button class="btn-sm btn-outline-danger d-none" onclick="confirm('Are you sure?')">Delete</button>
+                    <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete</button>
                     {{ Form::close() }}
                 </td>
 

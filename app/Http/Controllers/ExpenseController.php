@@ -39,7 +39,7 @@ class ExpenseController extends Controller
 
         $this->expense = $expense;
         $this->middleware('auth');
-        $this->middleware('isAdmin', ['only' => ['search', 'fileExport']]);
+        $this->middleware('isAdmin', ['only' => ['search', 'fileExport', 'edit', 'destroy']]);
 
         $this->nepaliDate = $nepaliDate;
         $this->salary = $salary;
@@ -117,6 +117,8 @@ class ExpenseController extends Controller
 
     public function search()
     {
+        $category = request()->get('category');
+
         $startDateNepali = explode("-", trim(request()->get('startDate')));
         $endDateNepali = explode("-", trim(request()->get('endDate')));
 
@@ -140,6 +142,10 @@ class ExpenseController extends Controller
             $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
                 ->whereDate('created_at', '<=', $endDate)
                 ->where('user_id', '=', auth()->user()->id);
+        }
+
+        if (!empty($category)) {
+            $expenseQuery->where('category', $category);
         }
 
         extract($this->calculate($expenseQuery));
@@ -186,10 +192,11 @@ class ExpenseController extends Controller
         DB::beginTransaction();
 
         try {
-            $this->expense->create($data);
+            $expense = $this->expense->create($data);
 
             if ($data['category'] == 'salary') {
                 $salaryData['user_id'] = $data['employee_id'];
+                $salaryData['expense_id'] = $expense->id;
                 $salaryData['amount'] = $data['amount'];
                 $this->salary->create($salaryData);
             }
@@ -223,7 +230,17 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        //
+        $employee = null;
+        if ($expense->category == 'salary') {
+            $categories = ExpenseCategory::where('name', 'salary')->get();
+            $employee = Salary::where('expense_id', $expense->id)->first()->user;
+        } else {
+            $categories = ExpenseCategory::where('name', '!=', 'salary')->get();
+        }
+
+        $employees = User::where('role', '!=', 'admin')->get();
+
+        return view('expense.edit', compact('categories', 'employees', 'expense', 'employee'));
     }
 
     /**
@@ -235,7 +252,19 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, Expense $expense)
     {
-        //
+        $data = $request->all();
+
+        $expense->update($data);
+
+        if ($data['category'] == 'salary') {
+            $salary = $expense->salary;
+            $salaryData['user_id'] = $data['employee_id'];
+            $salaryData['expense_id'] = $expense->id;
+            $salaryData['amount'] = $data['amount'];
+            $salary->update($salaryData);
+        }
+
+        return redirect()->route('expense.index');
     }
 
     /**
@@ -246,7 +275,9 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        //
+        $expense->delete();
+
+        return redirect()->route('expense.index');
     }
 
     public function fileExport()

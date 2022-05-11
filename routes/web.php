@@ -59,7 +59,7 @@ Route::get('income-statement', 'App\Http\Controllers\IncomeController@index')->n
 Route::any('income-statement/search', 'App\Http\Controllers\IncomeController@search')->name('income.search')->middleware(['auth']);
 
 
-Route::resource('expense', \App\Http\Controllers\ExpenseController::class)->only(['create', 'store'])->middleware(['auth']);
+Route::resource('expense', \App\Http\Controllers\ExpenseController::class)->only(['create', 'store', 'edit', 'update', 'destroy'])->middleware(['auth']);
 
 Route::get('expense-statement', 'App\Http\Controllers\ExpenseController@index')->name('expense.index')->middleware(['auth']);
 
