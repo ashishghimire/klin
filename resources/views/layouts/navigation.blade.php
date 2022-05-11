@@ -64,7 +64,11 @@
                             Income Statement
                         </x-nav-link>
                     @endif
-
+                    @if(auth()->user()->role == 'admin')
+                        <x-nav-link :href="route('service.index')" :active="request()->routeIs('service.index')">
+                            Services
+                        </x-nav-link>
+                    @endif
 
                     {{--Expenses Dropdown--}}
 
