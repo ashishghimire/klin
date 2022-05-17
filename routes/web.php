@@ -83,3 +83,9 @@ Route::get('import-db', 'App\Http\Controllers\DashboardController@import')->name
 Route::resource('expense-category', \App\Http\Controllers\ExpenseCategoryController::class)->middleware(['auth', 'isAdmin']);
 
 Route::resource('service', \App\Http\Controllers\ServiceController::class)->middleware(['auth','isAdmin']);
+
+
+
+Route::get('income-statement1', 'App\Http\Controllers\IncomeController@index1')->name('income1')->middleware(['auth']);
+
+Route::any('income-statement1/search1', 'App\Http\Controllers\IncomeController@search1')->name('income1.search1')->middleware(['auth']);

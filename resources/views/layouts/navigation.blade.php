@@ -60,7 +60,7 @@
                         Invoices
                     </x-nav-link>
                     @if(auth()->user()->role == 'admin')
-                        <x-nav-link :href="route('income')" :active="request()->routeIs('income')">
+                        <x-nav-link :href="route('income1')" :active="request()->routeIs('income')">
                             Income Statement
                         </x-nav-link>
                     @endif
