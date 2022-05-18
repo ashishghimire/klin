@@ -5,15 +5,16 @@ namespace App\Exports;
 use App\Models\Bill;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class IncomeExport implements FromCollection, WithHeadings
+class IncomeExport implements FromCollection, WithHeadings, WithMapping
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        return Bill::all();
+        return request()->session()->get('bills')->sortByDesc('nepali_date');
     }
 
     /**
@@ -22,19 +23,32 @@ class IncomeExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Id',
-            'Customer Id',
-            'Estimate No.',
-            'Service Details',
-            'Amount',
-            'Paid Amount',
-            'Payment Status',
-            'Payment Mode',
-            'Laundry Status',
-            'User Id',
-            'Created At',
-            'Updated At',
-            'Deleted At',
+            'Date',
+            'Cash',
+            'Khalti',
+            'Esewa',
+            'Reward Pay',
+            'Total Paid',
+            'Unpaid',
+            'Total Sales (excluding reward pay)',
+        ];
+    }
+
+    /**
+     * @param  mixed $row
+     * @return array
+     */
+    public function map($row): array
+    {
+        return [
+            $row->nepali_date,
+            $row->cash,
+            $row->khalti,
+            $row->esewa,
+            $row->reward_pay,
+            $row->paid,
+            $row->unpaid,
+            $row->total
         ];
     }
 }

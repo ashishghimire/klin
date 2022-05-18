@@ -5,15 +5,17 @@ namespace App\Exports;
 use App\Models\Expense;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ExpenseExport implements FromCollection, WithHeadings
+class ExpenseExport implements FromCollection, WithHeadings, WithMapping
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        return Expense::all();
+        return request()->session()->get('expenses')->sortByDesc('nepali_date');
+
     }
 
     /**
@@ -22,14 +24,28 @@ class ExpenseExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Id',
+            'Date',
             'TXN No.',
+            'Amount',
             'Category',
             'Details',
-            'Amount',
-            'User Id',
-            'Created Date',
-            'Updated Date',
+            'Added By',
+        ];
+    }
+
+    /**
+     * @param  mixed $row
+     * @return array
+     */
+    public function map($row): array
+    {
+        return [
+            $row->nepali_date,
+            $row->txn_no,
+            $row->amount,
+            $row->category,
+            $row->details,
+            $row->user->name,
         ];
     }
 }

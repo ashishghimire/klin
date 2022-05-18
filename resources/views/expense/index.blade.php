@@ -1,38 +1,38 @@
 <x-app-layout>
 
     {{--@section('styles')--}}
-        {{--<link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">--}}
+    {{--<link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">--}}
     {{--@stop--}}
     {{--@section('scripts')--}}
-        {{--<script src="{{asset('js/moment.min.js')}}"></script>--}}
-        {{--<script src="{{asset('js/daterangepicker.js')}}"></script>--}}
-        {{--<script>--}}
-            {{--$(document).ready(function () {--}}
-                {{--$('input[name="datefilter"]').daterangepicker({--}}
-                    {{--autoUpdateInput: false,--}}
-                    {{--applyButtonClasses: 'btn btn-outline-primary',--}}
-                    {{--locale: {--}}
-                        {{--cancelLabel: 'Clear'--}}
-                    {{--}--}}
-                {{--});--}}
+    {{--<script src="{{asset('js/moment.min.js')}}"></script>--}}
+    {{--<script src="{{asset('js/daterangepicker.js')}}"></script>--}}
+    {{--<script>--}}
+    {{--$(document).ready(function () {--}}
+    {{--$('input[name="datefilter"]').daterangepicker({--}}
+    {{--autoUpdateInput: false,--}}
+    {{--applyButtonClasses: 'btn btn-outline-primary',--}}
+    {{--locale: {--}}
+    {{--cancelLabel: 'Clear'--}}
+    {{--}--}}
+    {{--});--}}
 
-                {{--$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {--}}
-                    {{--$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));--}}
-                {{--});--}}
+    {{--$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {--}}
+    {{--$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));--}}
+    {{--});--}}
 
-                {{--$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {--}}
-                    {{--$(this).val('');--}}
-                {{--});--}}
+    {{--$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {--}}
+    {{--$(this).val('');--}}
+    {{--});--}}
 
 
-            {{--});--}}
-        {{--</script>--}}
+    {{--});--}}
+    {{--</script>--}}
     {{--@stop--}}
 
     <x-slot name="header">
         @if(auth()->user()->role == 'admin')
             <a href="{{route('expense-export')}}">
-                <small>Download All Data</small>
+                <small>Download Data</small>
             </a>
         @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -41,9 +41,9 @@
         <br>
     </x-slot>
 
-    @if(Session::has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
+    @if(Session::has('error'))
+        <div class="alert alert-danger">
+            <h4>{{session('error')}}</h4>
         </div>
     @endif
     <div class="container">

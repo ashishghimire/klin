@@ -57,7 +57,7 @@
 
     <x-slot name="header">
         <a href="{{route('income-export')}}">
-            <small>Download All Data</small>
+            <small>Download Data</small>
         </a>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Income Statement for {{$date}}
@@ -65,9 +65,9 @@
         <br>
     </x-slot>
 
-    @if(Session::has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
+    @if(Session::has('error'))
+        <div class="alert alert-danger">
+            <h4>{{session('error')}}</h4>
         </div>
     @endif
     <div class="container">

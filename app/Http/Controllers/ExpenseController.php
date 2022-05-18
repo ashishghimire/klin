@@ -65,6 +65,7 @@ class ExpenseController extends Controller
 
         extract($this->calculate($expenseQuery));
 
+        request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
         return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
 
@@ -149,6 +150,9 @@ class ExpenseController extends Controller
         }
 
         extract($this->calculate($expenseQuery));
+
+        request()->session()->put('expenses', $expenseQuery->with('user')->get());
+
 
         return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
     }
@@ -282,7 +286,16 @@ class ExpenseController extends Controller
 
     public function fileExport()
     {
-        return Excel::download(new ExpenseExport, 'expense_data.xlsx');
+
+        if (request()->session()->has('expenses')) {
+            if (!request()->session()->get('expenses')->isEmpty()) {
+                return Excel::download(new ExpenseExport, 'expense_data.xlsx');
+            } else {
+                return redirect()->route('expense.index')->with('error', 'Error!! Please refresh the page and try again, or contact admin');
+            }
+        } else {
+            return redirect()->route('expense.index')->with('error', 'Error!! Please refresh the page and try again, or contact admin');
+        }
     }
 
     public function todaysNepaliDate()

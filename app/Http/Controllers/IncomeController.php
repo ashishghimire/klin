@@ -124,7 +124,15 @@ class IncomeController extends Controller
 
     public function fileExport()
     {
-        return Excel::download(new IncomeExport, 'income_data.xlsx');
+        if (request()->session()->has('bills')) {
+            if (!request()->session()->get('bills')->isEmpty()) {
+                return Excel::download(new IncomeExport, 'income_data.xlsx');
+            } else {
+                return redirect()->route('income1')->with('error', 'Error!! Please refresh the page and try again, or contact admin');
+            }
+        } else {
+            return redirect()->route('income1')->with('error', 'Error!! Please refresh the page and try again, or contact admin');
+        }
     }
 
     public function todaysNepaliDate()
@@ -170,6 +178,8 @@ class IncomeController extends Controller
             ->groupBy('nepali_date')
             ->get();
 
+        request()->session()->put('bills', $bills);
+
         return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
     }
 
@@ -214,6 +224,8 @@ class IncomeController extends Controller
             ->select($select)
             ->groupBy('nepali_date')
             ->get();
+
+        request()->session()->put('bills', $bills);
 
         return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
 
