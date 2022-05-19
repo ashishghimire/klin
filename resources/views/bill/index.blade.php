@@ -99,7 +99,9 @@
                 </td>
                 <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
                 @if(auth()->user()->role == 'admin')
-                    <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
+                    {{--@if($bill->payment_status != 'paid')--}}
+                        <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
+                    {{--@endif--}}
                 @endif
             </tr>
             <div class="modal fade" id="modal-{{$bill->id}}" tabindex="-1" aria-hidden="true">

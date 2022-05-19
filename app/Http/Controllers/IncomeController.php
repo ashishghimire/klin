@@ -156,31 +156,7 @@ class IncomeController extends Controller
 
         $date = $this->todaysNepaliDate();
 
-        $select = DB::raw(
-            'nepali_date,
-            sum(amount) AS total, 
-            sum(paid_amount) AS paid,
-            sum(amount-paid_amount) AS unpaid,
-            sum(case when payment_status = "unpaid" THEN amount else 0 end) AS unpaid,
-            sum(case when payment_mode = "cash" THEN amount else 0 end) AS cash,
-            sum(case when payment_mode = "khalti" THEN amount else 0 end) AS khalti,
-            sum(case when payment_mode = "esewa" THEN amount else 0 end) AS esewa,
-            sum(case when payment_mode = "reward points" THEN amount else 0 end) AS reward_pay');
-
-        $billsQuery = DB::table('bills')
-            ->whereDate('created_at', $today)
-            ->where('deleted_at', null);
-
-        extract($this->calculate1($billsQuery));
-
-        $bills = $billsQuery
-            ->select($select)
-            ->groupBy('nepali_date')
-            ->get();
-
-        request()->session()->put('bills', $bills);
-
-        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
+        return $this->queryDate($today, $today, $date);
     }
 
 
@@ -202,33 +178,7 @@ class IncomeController extends Controller
 
         $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
 
-
-        $select = DB::raw(
-            'nepali_date,
-            sum(amount) AS total,
-            sum(paid_amount) AS paid,
-            sum(amount-paid_amount) AS unpaid,
-            sum(case when payment_mode = "cash" THEN amount else 0 end) AS cash,
-            sum(case when payment_mode = "khalti" THEN amount else 0 end) AS khalti,
-            sum(case when payment_mode = "esewa" THEN amount else 0 end) AS esewa,
-            sum(case when payment_mode = "reward points" THEN amount else 0 end) AS reward_pay');
-
-        $billsQuery = DB::table('bills')
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->where('deleted_at', null);
-
-        extract($this->calculate1($billsQuery));
-
-        $bills = $billsQuery
-            ->select($select)
-            ->groupBy('nepali_date')
-            ->get();
-
-        request()->session()->put('bills', $bills);
-
-        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
-
+        return $this->queryDate($startDate, $endDate, $date);
     }
 
     public function calculate1($billsQuery)
@@ -245,18 +195,12 @@ class IncomeController extends Controller
 
         $unpaid = 0;
 
-        $income = 0;
-
-        $vat = 0;
-
-        $data = [];
 
         foreach ($billsQuery->get() as $bill) {
 
 
             if ($bill->payment_mode != 'reward points') {
                 $total += $bill->amount;
-                $income += $bill->amount / 1.13;
             }
 
             if ($bill->payment_mode == 'cash') {
@@ -278,9 +222,38 @@ class IncomeController extends Controller
             $unpaid += $bill->amount - $bill->paid_amount;
 
         }
-        $bills = $billsQuery->paginate(10);
 
-        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'bills', 'vat', 'income', 'data');
+        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid');
+    }
+
+    private function queryDate($startDate, $endDate, $date)
+    {
+        $select = DB::raw(
+            'nepali_date,
+            sum(amount) AS total,
+            sum(paid_amount) AS paid,
+            sum(amount-paid_amount) AS unpaid,
+            sum(case when payment_mode = "cash" THEN paid_amount else 0 end) AS cash,
+            sum(case when payment_mode = "khalti" THEN paid_amount else 0 end) AS khalti,
+            sum(case when payment_mode = "esewa" THEN paid_amount else 0 end) AS esewa,
+            sum(case when payment_mode = "reward points" THEN paid_amount else 0 end) AS reward_pay');
+
+
+        $billsQuery = DB::table('bills')
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->where('deleted_at', null);
+
+        extract($this->calculate1($billsQuery));
+
+        $bills = $billsQuery
+            ->select($select)
+            ->groupBy('nepali_date')
+            ->get();
+
+        request()->session()->put('bills', $bills);
+
+        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
     }
 
 }

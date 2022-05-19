@@ -190,7 +190,7 @@
         <div class="mb-3 row">
             <div class="col-sm-2"></div>
             <div class="col-sm-6">
-                {!! Form::number('paid_amount', 0, ['class' => 'form-control form-control-sm float-only', 'hidden', 'step'=>'.01', 'placeholder'=>'Amount (Rs.)','autocomplete'=>'off', 'required'])   !!}
+                {!! Form::number('paid_amount', null, ['class' => 'form-control form-control-sm float-only', $bill->payment_status == 'unpaid' || $bill->payment_mode == 'reward points' ? 'hidden' : '', 'step'=>'.01', 'placeholder'=>'Amount (Rs.)','autocomplete'=>'off', 'required'])   !!}
             </div>
         </div>
 
