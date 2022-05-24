@@ -76,7 +76,7 @@
         @forelse($bills->sortByDesc('created_at') as $bill)
             <tr {{$bill->payment_mode == 'reward points' ? 'class=table-danger': ''}}>
                 <td>
-                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
+                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
                 </td>
                 <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : '-'}}</td>
                 <td>{{round(($bill->amount/1.13), 2)}}</td>

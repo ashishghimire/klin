@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Bill no. {{$bill->estimate_no}}, Customer: {{$bill->customer->name}}
+            Bill no. {{$bill->id}}, Customer: {{$bill->customer->name}}
         </h2>
     </x-slot>
     <div class="container">
@@ -10,7 +10,7 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="upper p-4">
-                            Bill no. {{$bill->estimate_no}}
+                            Bill no. {{$bill->id}}
                             <div class="d-flex justify-content-between">
                                 <div class="amount"><span
                                         class="text-primary font-weight-bold">{{$bill->customer->name}}</span>
@@ -41,8 +41,10 @@
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex flex-row align-items-center"><i
                                                 class="fa fa-check-circle-o"></i> <span class="ml-2">{{$detail['service_type']}}
-                                                : {{$detail['quantity']}} {{$detail['unit']}} * (Rs. {{$detail['rate']}} per {{$detail['unit']}})</span></div>
-                                        <span class="font-weight-bold">Rs. {{$detail['quantity']*$detail['rate']}}</span>
+                                                : {{$detail['quantity']}} {{$detail['unit']}} * (Rs. {{$detail['rate']}}
+                                                per {{$detail['unit']}})</span></div>
+                                        <span
+                                            class="font-weight-bold">Rs. {{$detail['quantity']*$detail['rate']}}</span>
                                     </div>
                                 </div>
                             @empty
@@ -66,6 +68,12 @@
                                 <h3>Rs. {{$bill['amount'] - $bill['paid_amount']}}</h3>
                             </div>
                         </div>
+                        @if(!empty($bill->note))
+                            <p>Note:
+                                <span>{{$bill->note}}</span>
+                            </p>
+                        @endif
+
                     </div>
                     <a class="btn btn-primary float-end" href="{{route('dashboard')}}">Go to dashboard</a>
                 </div>

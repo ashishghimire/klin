@@ -33,7 +33,7 @@
         <?php $sum = 0.0;?>
         @forelse($customer->bills->sortByDesc('created_at') as $bill)
             <tr>
-                <td><a href="{{route('customer.bill.show', [$customer->id, $bill->id])}}">{{$bill->estimate_no}}</a>
+                <td><a href="{{route('customer.bill.show', [$customer->id, $bill->id])}}">{{$bill->id}}</a>
                 </td>
                 <td>{{!empty($bill->created_at) ? date("Y-m-d", strtotime($bill->created_at)) : '-'}}</td>
                 <td>{{$bill->amount}}</td>

@@ -64,6 +64,7 @@
             <th>Payment Status</th>
             <th class="no-sort">Laundry Status</th>
             <th>Date</th>
+            <th class="no-sort">Note</th>
             @if(auth()->user()->role == 'admin')
                 <th class="no-sort">Action</th>
             @endif
@@ -73,7 +74,7 @@
         @forelse($bills as $bill)
             <tr>
                 <td>
-                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->estimate_no}}</a>
+                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
                 </td>
                 <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a></td>
                 <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a></td>
@@ -98,6 +99,7 @@
                     {!! Form::select('laundry_status',$laundryStatusArray, $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
                 </td>
                 <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
+                <td>{{!empty($bill->note) ? $bill->note : ''}}</td>
                 @if(auth()->user()->role == 'admin')
                     {{--@if($bill->payment_status != 'paid')--}}
                         <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
@@ -110,7 +112,7 @@
                         <div class="modal-header">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-md-5"> Estimate no. {{$bill->estimate_no}}</div>
+                                    <div class="col-md-5"> Estimate no. {{$bill->id}}</div>
 
                                     <div class="col-md-5 ms-auto">
                                         <small>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</small>

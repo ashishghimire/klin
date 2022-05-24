@@ -24,7 +24,7 @@ class UpdateBillRequest extends FormRequest
     public function rules()
     {
         return [
-            'estimate_no' => 'required| unique:bills,estimate_no,' . $this->bill->id,
+//            'estimate_no' => 'required| unique:bills,estimate_no,' . $this->bill->id,
         ];
     }
 }

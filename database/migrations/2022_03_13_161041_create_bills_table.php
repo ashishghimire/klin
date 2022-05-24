@@ -16,7 +16,6 @@ class CreateBillsTable extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->bigInteger('estimate_no')->unique();
             $table->json('service_details');
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->decimal('paid_amount', $precision = 8, $scale = 2)->default(0);
@@ -25,6 +24,7 @@ class CreateBillsTable extends Migration
             $table->enum('laundry_status', ['unprocessed', 'processing', 'completed', 'delivered'])->default('unprocessed');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nepali_date');
+            $table->string('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -22,13 +22,13 @@
         <br>
         {!! Form::model($bill, ['route' => ['bill.update', $bill->id], 'class' => 'billing-form', 'method' => 'PATCH']) !!}
 
-        <div class="mb-3 row">
-            {!! Form::label('estimate_no', 'Estimate Number', ['class' => 'col-sm-2 col-form-label']) !!}
+        {{--<div class="mb-3 row">--}}
+            {{--{!! Form::label('estimate_no', 'Estimate Number', ['class' => 'col-sm-2 col-form-label']) !!}--}}
 
-            <div class="col-sm-6">
-                {!! Form::text('estimate_no', null, ['class' => 'form-control form-control-sm', 'autofocus', 'autocomplete'=>'off', 'placeholder' => 'Enter estimate no.', 'required']) !!}
-            </div>
-        </div>
+            {{--<div class="col-sm-6">--}}
+                {{--{!! Form::text('estimate_no', null, ['class' => 'form-control form-control-sm', 'autofocus', 'autocomplete'=>'off', 'placeholder' => 'Enter estimate no.', 'required']) !!}--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <br>
         <div class="mb-3 row">
             <div class="services-section">
@@ -173,7 +173,7 @@
                 <input type="hidden" name="amount" value="{{$bill->amount}}">
             </div>
             <div class="col-sm">
-                <button type="button" class="btn btn-outline-secondary calculate-amount float-sm-start">Calculate
+                <button type="button" class="btn btn-outline-secondary calculate-amount d-none float-sm-start">Calculate
                 </button>
             </div>
 
@@ -194,6 +194,13 @@
             </div>
         </div>
 
+            <div class="mb-3 row">
+                {!! Form::label('note', 'Note', ['class' => 'col-sm-2 col-form-label']) !!}
+
+                <div class="col-sm-6">
+                    {!! Form::text('note', null, ['class' => 'form-control form-control-sm', 'autocomplete'=>'off', 'placeholder' => 'Notes (if any)']) !!}
+                </div>
+            </div>
 
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
