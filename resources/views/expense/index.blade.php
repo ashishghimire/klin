@@ -49,7 +49,7 @@
     <div class="container">
         <form action={{route('expense.search')}} method="GET" role="search" class="search">
             {{ csrf_field() }}
-            {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), null, ['placeholder' => 'Pick a category']) !!}
+            {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), null, ['placeholder' => 'All Categories']) !!}
 
             {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 

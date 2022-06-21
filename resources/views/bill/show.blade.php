@@ -53,7 +53,6 @@
                         <div class="lower bg-primary p-4 py-5 text-white d-flex justify-content-between">
                             <div>
                                 <div class="d-flex flex-column"><span>Total</span>
-                                    <small>(Including 13% VAT)</small>
                                 </div>
                                 <h3>Rs. {{$bill['amount']}}</h3>
                             </div>

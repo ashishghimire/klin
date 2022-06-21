@@ -62,13 +62,13 @@ class CustomerController extends Controller
             })
             ->addColumn('billing', function ($row) {
 
-                $btn = '<a href=' . route('customer.bill.create', $row->id) . ' class="edit btn btn-primary btn-sm">Create Invoice</a>';
+                $btn = '<a href=' . route('customer.bill.create', $row->id) . ' class="edit btn btn-link btn-sm">Create Invoice</a>';
 
                 return $btn;
             })
             ->addColumn('edit', function ($row) {
 
-                $btn = '<a href=' . route('customer.edit', $row->id) . ' class="edit btn btn-secondary btn-sm">Edit Customer</a>';
+                $btn = '<a href=' . route('customer.edit', $row->id) . ' class="edit btn btn-link btn-sm">Edit Customer</a>';
 
                 return $btn;
             })

@@ -68,22 +68,27 @@
         </div>
     @endif
 
+    <div class="container-fluid">
 
-    <table id="customer-info" class="table table-striped" style="width:100%">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Phone Number</th>
-            <th>Joined Date</th>
-            <th>Reward Points</th>
-            <th>Billing</th>
-            @if(auth()->user()->role == 'admin')
-                <th>Edit</th>
-            @endif
-        </tr>
-        </thead>
-        <tbody>
-    </table>
+        <div class="body">
 
+
+            <table id="customer-info" class="compact table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Joined Date</th>
+                    <th>Reward Points</th>
+                    <th>Billing</th>
+                    @if(auth()->user()->role == 'admin')
+                        <th>Edit</th>
+                    @endif
+                </tr>
+                </thead>
+                <tbody>
+            </table>
+        </div>
+    </div>
 </x-app-layout>

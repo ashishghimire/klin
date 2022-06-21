@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Bills
+            Employees <a class="btn-sm btn-outline-primary" href="{{route('employee.create')}}">Add</a>
         </h2>
     </x-slot>
 

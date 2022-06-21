@@ -44,12 +44,6 @@
                                 <x-dropdown-link :href="route('customer.create')">
                                     Add Customer
                                 </x-dropdown-link>
-                                @if(auth()->user()->role == 'admin')
-                                    <x-dropdown-link :href="route('rewards.edit')">
-                                        Rewards System
-                                    </x-dropdown-link>
-                                @endif
-
                             </x-slot>
                         </x-dropdown>
 
@@ -60,15 +54,13 @@
                         Invoices
                     </x-nav-link>
                     @if(auth()->user()->role == 'admin')
-                        <x-nav-link :href="route('income1')" :active="request()->routeIs('income')">
+                        <x-nav-link :href="route('income1')" :active="request()->routeIs('income1')">
                             Income Statement
                         </x-nav-link>
                     @endif
-                    @if(auth()->user()->role == 'admin')
-                        <x-nav-link :href="route('service.index')" :active="request()->routeIs('service.index')">
-                            Services
+                        <x-nav-link :href="route('letter.index')" :active="request()->routeIs('letter.index')">
+                            Office
                         </x-nav-link>
-                    @endif
 
                     {{--Expenses Dropdown--}}
 
@@ -97,11 +89,6 @@
                                 <x-dropdown-link :href="route('expense.create')">
                                     Add Expense
                                 </x-dropdown-link>
-                                @if(auth()->user()->role == 'admin')
-                                    <x-dropdown-link :href="route('expense-category.index')">
-                                        Expense Category
-                                    </x-dropdown-link>
-                                @endif
 
                             </x-slot>
                         </x-dropdown>
@@ -113,7 +100,7 @@
                                 <x-slot name="trigger">
                                     <button
                                         class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                        <div>Employees</div>
+                                        <div>Settings</div>
 
                                         <div class="ml-1">
                                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -128,10 +115,16 @@
 
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('employee.index')">
-                                        View Employees
+                                        Employees
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('employee.create')">
-                                        Add Employee
+                                    <x-dropdown-link :href="route('service.index')">
+                                        Services
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('rewards.edit')">
+                                        Rewards System
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('expense-category.index')">
+                                        Expense Category
                                     </x-dropdown-link>
 
                                 </x-slot>
