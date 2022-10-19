@@ -14,7 +14,7 @@ class Customer extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'address', 'phone', 'nepali_date', 'reward_points'
+        'name', 'address', 'phone', 'nepali_date', 'reward_points', 'password'
     ];
 
     public function bills(){

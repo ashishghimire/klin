@@ -26,6 +26,7 @@ class UpdateCustomerRequest extends FormRequest
         return [
             'name' => 'required',
             'phone' => 'required| unique:customers,phone,' . $this->customer->id,
+            'password' => 'required',
         ];
     }
 }

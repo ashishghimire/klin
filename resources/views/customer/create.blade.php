@@ -36,6 +36,13 @@
                 {!! Form::text('address', null, ['class' => 'form-control-plaintext']) !!}
             </div>
         </div>
+        <div class="mb-3 row">
+            {!! Form::label('password', 'Create Password', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('password', 'klincustomer123', ['class' => 'form-control-plaintext']) !!}
+            </div>
+        </div>
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
         {!! Form::close() !!}

@@ -83,6 +83,13 @@
                                         {!! Form::text('address', null, ['class' => 'form-control-plaintext']) !!}
                                     </div>
                                 </div>
+                                <div class="mb-3 row">
+                                    {!! Form::label('password', 'Create Password', ['class' => 'col-sm-5 col-form-label']) !!}
+
+                                    <div class="col-sm">
+                                        {!! Form::text('password', 'klincustomer123', ['class' => 'form-control-plaintext']) !!}
+                                    </div>
+                                </div>
                                 <div class="mb-3 row float-sm-start">
                                     {!! Form::submit('Continue to billing', ['class' => 'btn btn-outline-primary']); !!}
                                 </div>
