@@ -166,8 +166,9 @@ class ExpenseController extends Controller
     {
         $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where('name', '!=', 'salary')->get();
         $employees = User::where('role', '!=', 'admin')->get();
+        $modes = ['cash' => 'Cash', 'cheque' => 'Cheque', 'bank' => 'Bank Deposit', 'other' => 'Other'];
 
-        return view('expense.create', compact('categories', 'employees'));
+        return view('expense.create', compact('categories', 'employees', 'modes'));
     }
 
     /**
@@ -244,7 +245,9 @@ class ExpenseController extends Controller
 
         $employees = User::where('role', '!=', 'admin')->get();
 
-        return view('expense.edit', compact('categories', 'employees', 'expense', 'employee'));
+        $modes = ['cash' => 'Cash', 'cheque' => 'Cheque', 'bank' => 'Bank Deposit', 'other' => 'Other'];
+
+        return view('expense.edit', compact('categories', 'employees', 'expense', 'employee', 'modes'));
     }
 
     /**

@@ -72,6 +72,32 @@
                 {!! Form::number('amount', null, ['class' => 'form-control-plaintext']) !!}
             </div>
         </div>
+
+        <hr>
+        <hr>
+        <br>
+        <div class="mb-3 row">
+            {!! Form::label('mode', 'Mode', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::select('mode', $modes , old('mode'), ['class' => 'form-select form-select-sm']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            {!! Form::label('payee', 'Payee', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('payee', null, ['class' => 'form-control-plaintext']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            {!! Form::label('receiver', 'Received By', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('receiver', null, ['class' => 'form-control-plaintext']) !!}
+            </div>
+        </div>
+
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
         {!! Form::close() !!}

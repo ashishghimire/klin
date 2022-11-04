@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Imports\CustomerImport;
+use App\Imports\ExpenseImport;
 use App\Imports\LaundryImport;
 use App\Models\Customer;
 use App\Models\ImportedCustomer;
@@ -13,6 +14,7 @@ use App\Services\BillService;
 use App\Services\CustomerService;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Nilambar\NepaliDate\NepaliDate;
 
 
 class DashboardController extends Controller
@@ -49,12 +51,17 @@ class DashboardController extends Controller
         return view('dashboard', compact('customersCount', 'processingCount', 'completedCount', 'deliveredCount', 'unprocessedCount'));
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function import()
     {
 
+        $nepaliDate = new NepaliDate;
+        Excel::import(new ExpenseImport($nepaliDate), 'imports/expense_export.csv');
         Excel::import(new CustomerImport, 'imports/customer_export.csv');
-
         Excel::import(new LaundryImport, 'imports/laundry_export.csv');
+
 
         $importedLaundries = ImportedLaundry::all();
 
