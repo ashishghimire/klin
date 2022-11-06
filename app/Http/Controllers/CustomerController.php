@@ -103,6 +103,10 @@ class CustomerController extends Controller
     {
         $data = $request->all();
 
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+
         $englishDate = Carbon::now();
         $year = $englishDate->format('Y');
         $month = $englishDate->format('m');
@@ -158,7 +162,13 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        if (!$this->customer->update($customer, $request->all())) {
+        $data = $request->all();
+        if (!empty($data['new-password'])) {
+            $data['password'] = bcrypt($data['new-password']);
+
+        }
+
+        if (!$this->customer->update($customer, $data)) {
             return redirect()->back()->withErrors('There was a problem in updating customer');
         }
 
