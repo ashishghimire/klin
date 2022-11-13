@@ -18,6 +18,8 @@ class CreateSalariesTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('expense_id')->constrained()->onDelete('cascade');
             $table->bigInteger('amount');
+            $table->string('type');
+            $table->string('details');
             $table->timestamps();
         });
     }

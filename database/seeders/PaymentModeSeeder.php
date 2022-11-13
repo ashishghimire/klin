@@ -29,7 +29,22 @@ class PaymentModeSeeder extends Seeder
             ],
             [
                 'name' => 'reward points',
-            ]
+            ],
+            [
+                'name' => 'cheque',
+            ],
+            [
+                'name' => 'fonepay',
+            ],
+            [
+                'name' => 'bank deposit',
+            ],
+            [
+                'name' => 'credited/adjusted',
+            ],
+            [
+                'name' => 'bank transfer',
+            ],
         ]);
     }
 }

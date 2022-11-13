@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ExpenseExport;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\PaymentMode;
 use App\Models\Salary;
 use App\Models\User;
 use Carbon\Carbon;
@@ -164,9 +165,9 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where('name', '!=', 'salary')->get();
+        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where('name', '!=', 'salary')->where('name', '!=', 'lunch')->where('name', '!=', 'allowance')->get();
         $employees = User::where('role', '!=', 'admin')->get();
-        $modes = ['cash' => 'Cash', 'cheque' => 'Cheque', 'bank' => 'Bank Deposit', 'other' => 'Other'];
+        $modes = PaymentMode::all()->pluck('name', 'name');
 
         return view('expense.create', compact('categories', 'employees', 'modes'));
     }
@@ -199,10 +200,12 @@ class ExpenseController extends Controller
         try {
             $expense = $this->expense->create($data);
 
-            if ($data['category'] == 'salary') {
+            if ($data['category'] == 'salary' || $data['category'] == 'lunch' || $data['category'] == 'allowance') {
                 $salaryData['user_id'] = $data['employee_id'];
                 $salaryData['expense_id'] = $expense->id;
                 $salaryData['amount'] = $data['amount'];
+                $salaryData['type'] = $data['category'];
+                $salaryData['details'] = $data['details'];
                 $this->salary->create($salaryData);
             }
 
@@ -236,11 +239,11 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $employee = null;
-        if ($expense->category == 'salary') {
-            $categories = ExpenseCategory::where('name', 'salary')->get();
+        if ($expense->category == 'salary' || $expense->category == 'lunch' || $expense->category == 'allowance') {
+            $categories = ExpenseCategory::where('name', $expense->category)->get();
             $employee = Salary::where('expense_id', $expense->id)->first()->user;
         } else {
-            $categories = ExpenseCategory::where('name', '!=', 'salary')->get();
+            $categories = ExpenseCategory::where('name', '!=', 'salary')->where('name', '!=', 'lunch')->where('name', '!=', 'allowance')->get();
         }
 
         $employees = User::where('role', '!=', 'admin')->get();
@@ -263,11 +266,13 @@ class ExpenseController extends Controller
 
         $expense->update($data);
 
-        if ($data['category'] == 'salary') {
+        if ($data['category'] == 'salary' || $data['category'] == 'lunch' || $data['category'] == 'allowance') {
             $salary = $expense->salary;
             $salaryData['user_id'] = $data['employee_id'];
             $salaryData['expense_id'] = $expense->id;
             $salaryData['amount'] = $data['amount'];
+            $salaryData['type'] = $data['category'];
+            $salaryData['details'] = $data['details'];
             $salary->update($salaryData);
         }
 

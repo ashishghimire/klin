@@ -21,34 +21,39 @@
         </div>
     @endif
 
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            <table id="expense-category" class="table table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>S.N.</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php $i = 1;?>
+                @forelse($categories as $category)
+                    <tr>
+                        <td>
+                            {{$i}}
+                        </td>
+                        <td>{{$category->name}}</td>
+                        <td><a class="btn-sm btn-outline-dark" href="{{route('expense-category.edit',  $category)}}">Edit </a>
+                            {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
+                            <button class="btn-sm btn-outline-danger"
+                                    onclick=OnClickNextPage(event) {{$category->name == 'salary' || $category->name == 'allowance' || $category->name == 'lunch' ? 'disabled' : ''}}>
+                                Delete
+                            </button>
+                            {{ Form::close() }}
+                        </td>
 
-    <table id="expense-category" class="table table-striped" style="width:100%">
-        <thead>
-        <tr>
-            <th>S.N.</th>
-            <th>Category</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php $i = 1;?>
-        @forelse($categories as $category)
-            <tr>
-                <td>
-                    {{$i}}
-                </td>
-                <td>{{$category->name}}</td>
-                <td><a class="btn-sm btn-outline-dark" href="{{route('expense-category.edit',  $category)}}">Edit </a>
-                    {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
-                    <button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete</button>
-                    {{ Form::close() }}
-                </td>
-
-            <?php $i++;?>
-        @empty
-            <tr>No Categories Found</tr>
-        @endforelse
-        </tbody>
-    </table>
-
+                    <?php $i++;?>
+                @empty
+                    <tr>No Categories Found</tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </x-app-layout>

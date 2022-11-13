@@ -46,7 +46,7 @@
             {!! Form::label('category', 'Category', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
-                @if($expense->category == 'salary')
+                @if($expense->category == 'salary'  || $expense->category == 'allowance' || $expense->category == 'lunch')
                     <input name="category" value="{{$expense->category}}" class="form-select form-select-sm" readonly>
                 @else
                     {!! Form::select('category',  $categories->pluck('name', 'name') , old('category'), ['placeholder' => 'Select a category', 'class' => 'form-select form-select-sm category']) !!}
@@ -54,11 +54,11 @@
             </div>
         </div>
 
-        <div class="mb-3 row employee-wrap {{$expense->category != 'salary' ? 'd-none' : ''}}">
+        <div class="mb-3 row employee-wrap {{$expense->category != 'salary' && $expense->category != 'allowance' && $expense->category != 'lunch'? 'd-none' : ''}}">
             {!! Form::label('employee_id', 'Select Employee', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
-                {!! Form::select('employee_id',  $employees->pluck('name', 'id') , $expense->category == 'salary' ? $employee->id:null, ['placeholder' => 'Select Employee', 'class' => 'form-select form-select-sm employee']) !!}
+                {!! Form::select('employee_id',  $employees->pluck('name', 'id') , $expense->category == 'salary' || $expense->category == 'allowance' || $expense->category == 'lunch' ? $employee->id : null, ['placeholder' => 'Select Employee', 'class' => 'form-select form-select-sm employee']) !!}
             </div>
         </div>
 

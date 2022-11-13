@@ -3,8 +3,7 @@
         <script>
             $(document).on('change', '.category', function () {
 
-                if (this.value == 'salary') {
-
+                if (this.value == 'salary' || this.value == 'lunch' || this.value == 'allowance') {
                     $('.employee-wrap').removeClass('d-none');
                     $("select.employee").attr('required', true);
                 } else {

@@ -36,6 +36,12 @@ class ExpenseCategorySeeder extends Seeder
             [
                 'name' => 'salary'
             ],
+            [
+                'name' => 'lunch'
+            ],
+            [
+                'name' => 'allowance'
+            ],
         ]);
     }
 }

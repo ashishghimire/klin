@@ -12,7 +12,7 @@ class Salary extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'amount', 'expense_id'
+        'user_id', 'amount', 'expense_id', 'type', 'details'
     ];
 
     public function getNepaliDateAttribute()
