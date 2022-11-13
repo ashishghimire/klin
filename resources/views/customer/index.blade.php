@@ -12,6 +12,7 @@
                     $('#customer-info').DataTable({
                         processing: true,
                         serverSide: true,
+                        "iDisplayLength": 100,
                         ajax: "{{ route('customer.index') }}",
                         "order": [[3, 'desc']],
                         columns: [
@@ -68,9 +69,8 @@
         </div>
     @endif
 
-    <div class="container-fluid">
-
-        <div class="body">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
 
 
             <table id="customer-info" class="compact table-bordered" style="width:100%">

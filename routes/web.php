@@ -48,6 +48,8 @@ Route::delete('bill/{bill}', 'App\Http\Controllers\BillController@destroy')->nam
 
 Route::patch('bill/{bill}/update', 'App\Http\Controllers\BillController@update')->name('bill.update')->middleware(['auth']);
 
+Route::any('bill/search', 'App\Http\Controllers\BillController@search')->name('bill.search')->middleware(['auth']);
+
 Route::get('invoice/create', 'App\Http\Controllers\BillController@createInvoice')->name('invoice.create')->middleware(['auth']);
 
 //Route::get('invoice-customer/store', 'App\Http\Controllers\CustomerController@createAndRedirectToBilling')->name('invoice.create')->middleware(['auth']);

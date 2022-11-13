@@ -4,47 +4,48 @@
             {{ __('Create Letter') }}
         </h2>
     </x-slot>
-    <div class="container">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        {!! Form::open(['route' => 'letter.store']) !!}
-        <div class="mb-3 row">
-            {!! Form::label('to', 'To', ['class' => 'col-sm-2 col-form-label']) !!}
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            {!! Form::open(['route' => 'letter.store']) !!}
+            <div class="mb-3 row">
+                {!! Form::label('to', 'To', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-10">
-                {!! Form::textarea('to', null, ['class' => 'form-control','rows' => 2, 'style'=>'resize: none;', 'required']) !!}
+                <div class="col-sm-10">
+                    {!! Form::textarea('to', null, ['class' => 'form-control','rows' => 2, 'style'=>'resize: none;', 'required']) !!}
+                </div>
             </div>
-        </div>
-        <div class="mb-3 row">
-            {!! Form::label('address', 'Address', ['class' => 'col-sm-2 col-form-label']) !!}
+            <div class="mb-3 row">
+                {!! Form::label('address', 'Address', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-10">
-                {!! Form::textarea('address', null, ['class' => 'form-control','rows' => 2, 'style'=>'resize: none;', 'required']) !!}
+                <div class="col-sm-10">
+                    {!! Form::textarea('address', null, ['class' => 'form-control','rows' => 2, 'style'=>'resize: none;', 'required']) !!}
+                </div>
             </div>
-        </div>
-        <div class="mb-3 row">
-            {!! Form::label('subject', 'Subject', ['class' => 'col-sm-2 col-form-label']) !!}
+            <div class="mb-3 row">
+                {!! Form::label('subject', 'Subject', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-10">
-                {!! Form::textarea('subject', null, ['class' => 'form-control','rows' => 1, 'style'=>'resize: none;', 'required']) !!}
+                <div class="col-sm-10">
+                    {!! Form::textarea('subject', null, ['class' => 'form-control','rows' => 1, 'style'=>'resize: none;', 'required']) !!}
+                </div>
             </div>
-        </div>
-        <div class="mb-3 row">
-            {!! Form::label('body', 'Body', ['class' => 'col-sm-2 col-form-label']) !!}
+            <div class="mb-3 row">
+                {!! Form::label('body', 'Body', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-10">
-                {!! Form::textarea('body', null, ['class' => 'form-control','rows' => 5, 'style'=>'resize: none;', 'required']) !!}
+                <div class="col-sm-10">
+                    {!! Form::textarea('body', null, ['class' => 'form-control','rows' => 5, 'style'=>'resize: none;', 'required']) !!}
+                </div>
             </div>
-        </div>
-        <div class="mb-3 row">
-            <div class="col-sm-2"></div>
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
 
                 {!! Form::label('signed_by', 'Signed By', ['class' => 'col-sm-1 col-form-label']) !!}
 
@@ -64,10 +65,11 @@
                     {!! Form::text('nepali_date', $today, ['class' => 'form-control-plaintext', 'required']) !!}
                 </div>
 
-        </div>
-        {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
+            </div>
+            {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
-        {!! Form::close() !!}
+            {!! Form::close() !!}
+        </div>
     </div>
 
 </x-app-layout>

@@ -43,96 +43,99 @@
             {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
         </form>
     </div>
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            <table id="customer-info" class="table table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Txn No</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Details</th>
+                    <th>Added By</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
 
-    <table id="customer-info" class="table table-striped" style="width:100%">
-        <thead>
-        <tr>
-            <th>Txn No</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Details</th>
-            <th>Added By</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
+                @forelse($expenses->sortByDesc('created_at') as $expense)
+                    <tr>
+                        <td>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}
+                        </td>
+                        <td>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</td>
+                        <td>{{round(($expense->amount), 2)}}</td>
+                        <td>{{$expense->category}}</td>
+                        <td>{{$expense->details}}</td>
+                        <td>{{$expense->user->name}}</td>
+                        <td><a class="btn-sm btn-outline-dark" href="{{route('expense.edit',  $expense)}}">Edit </a>
+                            @if(auth()->user()->role == 'admin')
+                                {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
+                                <button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete</button>
+                                {{ Form::close() }}
+                            @endif
+                        </td>
+                    </tr>
 
-        @forelse($expenses->sortByDesc('created_at') as $expense)
-            <tr>
-                <td>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}
-                </td>
-                <td>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</td>
-                <td>{{round(($expense->amount), 2)}}</td>
-                <td>{{$expense->category}}</td>
-                <td>{{$expense->details}}</td>
-                <td>{{$expense->user->name}}</td>
-                <td><a class="btn-sm btn-outline-dark" href="{{route('expense.edit',  $expense)}}">Edit </a>
+                @empty
+                    <tr>No Expenses Found</tr>
+                @endforelse
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td><strong>Total</strong></td>
+                    <td><strong>Amount: </strong>{{round($total, 2)}}</td>
                     @if(auth()->user()->role == 'admin')
-                        {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
-                        <button class="btn-sm btn-outline-danger" onclick =OnClickNextPage(event)>Delete</button>
-                        {{ Form::close() }}
+                        <td>
+                            <small><a href="#" data-bs-toggle="modal"
+                                      data-bs-target="#expenseDetails">Details</a></small>
+                        </td>
                     @endif
-                </td>
-            </tr>
+                </tr>
 
-        @empty
-            <tr>No Expenses Found</tr>
-        @endforelse
-        </tbody>
-        <tfoot>
-        <tr>
-            <td></td>
-            <td><strong>Total</strong></td>
-            <td><strong>Amount: </strong>{{round($total, 2)}}</td>
-            @if(auth()->user()->role == 'admin')
-                <td>
-                    <small><a href="#" data-bs-toggle="modal"
-                              data-bs-target="#expenseDetails">Details</a></small>
-                </td>
-            @endif
-        </tr>
+                <div class="modal fade" id="expenseDetails" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
 
-        <div class="modal fade" id="expenseDetails" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-4">Electricity</div>
-                                <div class="col-md-4 ms-auto">{{round($electricity,2)}}</div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-4">Electricity</div>
+                                        <div class="col-md-4 ms-auto">{{round($electricity,2)}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">Detergent</div>
+                                        <div class="col-md-4 ms-auto">{{round($detergent,2)}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">Rent</div>
+                                        <div class="col-md-4 ms-auto">{{round($rent,2)}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">Petrol</div>
+                                        <div class="col-md-4 ms-auto">{{round($petrol,2)}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-red-600">Miscellaneous</div>
+                                        <div class="col-md-4 ms-auto text-red-600">{{round($misc,2)}}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4">Detergent</div>
-                                <div class="col-md-4 ms-auto">{{round($detergent,2)}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">Rent</div>
-                                <div class="col-md-4 ms-auto">{{round($rent,2)}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">Petrol</div>
-                                <div class="col-md-4 ms-auto">{{round($petrol,2)}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 text-red-600">Miscellaneous</div>
-                                <div class="col-md-4 ms-auto text-red-600">{{round($misc,2)}}</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close
-                        </button>
-                    </div>
                 </div>
-            </div>
+
+                </tfoot>
+
+            </table>
+            {{$expenses->withQueryString()->links()}}
         </div>
-
-        </tfoot>
-
-    </table>
-    {{$expenses->withQueryString()->links()}}
+    </div>
 </x-app-layout>
 

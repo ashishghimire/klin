@@ -163,7 +163,7 @@ class LetterController extends Controller
     {
         $letter = Letter::find($id);
         $dompdf = new Dompdf();
-        $html = view('letter.partials._letter', compact('letter'));
+        $html = view('letter.printable-letter', compact('letter'));
         $dompdf->loadHtml($html);
         $dompdf->render();
 

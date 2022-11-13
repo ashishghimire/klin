@@ -33,53 +33,59 @@
             {{Session::get('success')}}
         </div>
     @endif
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
 
+            <table id="letter-info" class="compact table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Ref no.</th>
+                    <th>To</th>
+                    <th>Address</th>
+                    <th>Subject</th>
+                    <th>Body</th>
+                    <th class="no-sort">Signed By</th>
+                    <th>Designation</th>
+                    <th class="no-sort">Created By</th>
+                    @if(auth()->user()->role == 'admin')
+                        <th class="no-sort">Action</th>
+                    @endif
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($letters as $letter)
+                    <tr>
+                        <td>
+                            <a href="{{route('letter.show', [$letter->id])}}"> {{$letter->ref_no}}</a>
+                        </td>
+                        <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->to}}</a></td>
+                        <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->address}}</a></td>
+                        <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->subject}}</a></td>
+                        <td>
+                            <a href="{{route('letter.show', [$letter->id])}}">{{str_limit(strip_tags($letter->body), 20)}}</a>
+                        </td>
+                        <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->signed_by}}</a></td>
+                        <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->designation}}</a></td>
+                        <td><a href="{{route('employee.show', [$letter->user_id])}}">{{$letter->user->name}}</a></td>
 
-    <table id="letter-info" class="compact table-bordered" style="width:100%">
-        <thead>
-        <tr>
-            <th>Ref no.</th>
-            <th>To</th>
-            <th>Address</th>
-            <th>Subject</th>
-            <th>Body</th>
-            <th class="no-sort">Signed By</th>
-            <th>Designation</th>
-            <th class="no-sort">Created By</th>
-            @if(auth()->user()->role == 'admin')
-                <th class="no-sort">Action</th>
-            @endif
-        </tr>
-        </thead>
-        <tbody>
-        @forelse($letters as $letter)
-            <tr>
-                <td>
-                    <a href="{{route('letter.show', [$letter->id])}}"> {{$letter->ref_no}}</a>
-                </td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->to}}</a></td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->address}}</a></td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->subject}}</a></td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{str_limit(strip_tags($letter->body), 20)}}</a></td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->signed_by}}</a></td>
-                <td><a href="{{route('letter.show', [$letter->id])}}">{{$letter->designation}}</a></td>
-                <td><a href="{{route('employee.show', [$letter->user_id])}}">{{$letter->user->name}}</a></td>
+                        @if(auth()->user()->role == 'admin')
+                            <td>
+                                {{ Form::open(['url' => route('letter.destroy', $letter), 'method' => 'delete']) }}
+                                <a class="btn btn-link btn-sm" href="{{route('letter.edit',  $letter)}}">Edit </a>
+                                <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete
+                                </button>
+                                {{ Form::close() }}
 
-                @if(auth()->user()->role == 'admin')
-                    <td>
-                        {{ Form::open(['url' => route('letter.destroy', $letter), 'method' => 'delete']) }}
-                        <a class="btn btn-link btn-sm" href="{{route('letter.edit',  $letter)}}">Edit </a>
-                        <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete</button>
-                        {{ Form::close() }}
+                            </td>
 
-                    </td>
-
-                @endif
-            </tr>
-        @empty
-            <tr>No Letters Found</tr>
-        @endforelse
-        </tbody>
-    </table>
+                        @endif
+                    </tr>
+                @empty
+                    <tr>No Letters Found</tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </x-app-layout>

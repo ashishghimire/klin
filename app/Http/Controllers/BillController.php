@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Services\BillService;
 use App\Services\CustomerService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Nilambar\NepaliDate\NepaliDate;
 
 
@@ -206,6 +207,41 @@ class BillController extends Controller
             $bill->save();
             return true;
         }
+    }
+
+//--------------------------------------------------------
+    public function search()
+    {
+        $startDateNepali = explode("-", trim(request()->get('startDate')));
+        $endDateNepali = explode("-", trim(request()->get('endDate')));
+
+        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
+
+        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
+
+        $startDateEnglish = implode("-", $startDateEnglishArray);
+        $endDateEnglish = implode("-", $endDateEnglishArray);
+
+        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
+
+        $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
+
+        $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
+
+        return $this->queryDate($startDate, $endDate, $date);
+    }
+
+    private function queryDate($startDate, $endDate, $date)
+    {
+        $bills = Bill::whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->where('deleted_at', null)->get();
+
+        $nepaliDateObj = $this->nepaliDate;
+
+        $paymentModes = PaymentMode::all();
+
+        return view('bill.index', compact('bills', 'nepaliDateObj', 'paymentModes'));
     }
 
 }

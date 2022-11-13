@@ -8,10 +8,11 @@
         <script>
             $(document).ready(function () {
                 $('#bill-info').DataTable({
+                    "iDisplayLength": 100,
                     "columnDefs": [{
                         "searchable": false,
                         "orderable": false,
-                        "targets": 'no-sort'
+                        "targets": 'no-sort',
                     },
                         {
                             "searchable": false,
@@ -43,8 +44,19 @@
     @stop
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Bills
+            Invoices {{ !empty(request()->get('startDate')) && !empty(request()->get('endDate')) ?  'from '.request()->get('startDate').' to '.request()->get('endDate') :  '' }}
         </h2>
+        <br>
+        <form action={{route('bill.search')}} method="GET" role="search" class="search">
+            {{ csrf_field() }}
+            Get invoices for
+
+            {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
+
+            {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
+
+            {!! Form::submit('Search by Date', ['class' => 'btn btn-outline-primary']); !!}
+        </form>
     </x-slot>
 
     @if(Session::has('success'))
@@ -53,105 +65,111 @@
         </div>
     @endif
 
-
-    <table id="bill-info" class="table table-striped" style="width:100%">
-        <thead>
-        <tr>
-            <th>Estimate No.</th>
-            <th>Customer Name</th>
-            <th>Phone Number</th>
-            <th>Amount</th>
-            <th>Payment Status</th>
-            <th class="no-sort">Laundry Status</th>
-            <th>Date</th>
-            <th class="no-sort">Note</th>
-            @if(auth()->user()->role == 'admin')
-                <th class="no-sort">Action</th>
-            @endif
-        </tr>
-        </thead>
-        <tbody>
-        @forelse($bills as $bill)
-            <tr>
-                <td>
-                    <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
-                </td>
-                <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a></td>
-                <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a></td>
-                <td>{{$bill->amount}}</td>
-                <td>
-                    @if($bill->payment_status == 'paid')
-                        <button type="button" class="btn btn-info btn-sm"
-                                disabled="disabled">{{$bill->payment_status}}</button>
-                    @else
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            <table id="bill-info" class="table table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Estimate No.</th>
+                    <th>Customer Name</th>
+                    <th>Phone Number</th>
+                    <th>Amount</th>
+                    <th>Payment Status</th>
+                    <th class="no-sort">Laundry Status</th>
+                    <th>Date</th>
+                    <th class="no-sort">Note</th>
+                    @if(auth()->user()->role == 'admin')
+                        <th class="no-sort">Action</th>
                     @endif
-                </td>
-                <td>
-                    <?php
-                    if ($bill->payment_status == 'paid') {
-                        $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
-                    } else {
-                        $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed'];
-                    }
-                    ?>
-                    {!! Form::select('laundry_status',$laundryStatusArray, $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
-                </td>
-                <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
-                <td>{{!empty($bill->note) ? $bill->note : ''}}</td>
-                @if(auth()->user()->role == 'admin')
-                    {{--@if($bill->payment_status != 'paid')--}}
-                        <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
-                    {{--@endif--}}
-                @endif
-            </tr>
-            <div class="modal fade" id="modal-{{$bill->id}}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-5"> Estimate no. {{$bill->id}}</div>
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($bills as $bill)
+                    <tr>
+                        <td>
+                            <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
+                        </td>
+                        <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a>
+                        </td>
+                        <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a>
+                        </td>
+                        <td>{{$bill->amount}}</td>
+                        <td>
+                            @if($bill->payment_status == 'paid')
+                                <button type="button" class="btn btn-info btn-sm"
+                                        disabled="disabled">{{$bill->payment_status}}</button>
+                            @else
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
+                            @endif
+                        </td>
+                        <td>
+                            <?php
+                            if ($bill->payment_status == 'paid') {
+                                $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
+                            } else {
+                                $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed'];
+                            }
+                            ?>
+                            {!! Form::select('laundry_status',$laundryStatusArray, $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}
+                        </td>
+                        <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
+                        <td>{{!empty($bill->note) ? $bill->note : ''}}</td>
+                        @if(auth()->user()->role == 'admin')
+                            {{--@if($bill->payment_status != 'paid')--}}
+                            <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>
+                            {{--@endif--}}
+                        @endif
+                    </tr>
+                    <div class="modal fade" id="modal-{{$bill->id}}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-5"> Estimate no. {{$bill->id}}</div>
 
-                                    <div class="col-md-5 ms-auto">
-                                        <small>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</small>
+                                            <div class="col-md-5 ms-auto">
+                                                <small>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</small>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="align-self-md-auto">Customer: {{$bill->customer->name}}</div>
+
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            Amount: {{$bill->amount}}
+                                        </div>
+                                        {!! Form::open(['route'=>['change-payment-status', $bill->id]]) !!}
+                                        <div class="row">
+                                            {!! Form::select('payment_mode',  $paymentModes->pluck('name', 'name') , $bill->payment_mode, ['placeholder' => 'Not paid', 'class' => 'form-select form-select-sm payment']) !!}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="align-self-md-auto">Customer: {{$bill->customer->name}}</div>
 
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-outline-primary">Pay</button>
                                 </div>
-                            </div>
-
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    Amount: {{$bill->amount}}
-                                </div>
-                                {!! Form::open(['route'=>['change-payment-status', $bill->id]]) !!}
-                                <div class="row">
-                                    {!! Form::select('payment_mode',  $paymentModes->pluck('name', 'name') , $bill->payment_mode, ['placeholder' => 'Not paid', 'class' => 'form-select form-select-sm payment']) !!}
-                                </div>
+                                {!! Form::close() !!}
                             </div>
                         </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close
-                            </button>
-                            <button type="submit" class="btn btn-outline-primary">Pay</button>
-                        </div>
-                        {!! Form::close() !!}
                     </div>
-                </div>
-            </div>
-        @empty
-            <tr>No Customers Found</tr>
-        @endforelse
-        </tbody>
-    </table>
+                @empty
+                    <tr>No Bills Found</tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </x-app-layout>
