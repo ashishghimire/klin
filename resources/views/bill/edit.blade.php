@@ -2,6 +2,14 @@
 
     @section('scripts')
         <script src="{{asset('js/script.js')}}"></script>
+        <script>
+            function OnClickNextPage(event) {
+                var result = confirm("Are you sure ?");
+                if (!result) {
+                    event.preventDefault(); // prevent event when user cancel
+                }
+            }
+        </script>
     @stop
 
     <x-slot name="header">
@@ -23,11 +31,11 @@
         {!! Form::model($bill, ['route' => ['bill.update', $bill->id], 'class' => 'billing-form', 'method' => 'PATCH']) !!}
 
         {{--<div class="mb-3 row">--}}
-            {{--{!! Form::label('estimate_no', 'Estimate Number', ['class' => 'col-sm-2 col-form-label']) !!}--}}
+        {{--{!! Form::label('estimate_no', 'Estimate Number', ['class' => 'col-sm-2 col-form-label']) !!}--}}
 
-            {{--<div class="col-sm-6">--}}
-                {{--{!! Form::text('estimate_no', null, ['class' => 'form-control form-control-sm', 'autofocus', 'autocomplete'=>'off', 'placeholder' => 'Enter estimate no.', 'required']) !!}--}}
-            {{--</div>--}}
+        {{--<div class="col-sm-6">--}}
+        {{--{!! Form::text('estimate_no', null, ['class' => 'form-control form-control-sm', 'autofocus', 'autocomplete'=>'off', 'placeholder' => 'Enter estimate no.', 'required']) !!}--}}
+        {{--</div>--}}
         {{--</div>--}}
         <br>
         <div class="mb-3 row">
@@ -194,18 +202,26 @@
             </div>
         </div>
 
-            <div class="mb-3 row">
-                {!! Form::label('note', 'Note', ['class' => 'col-sm-2 col-form-label']) !!}
+        <div class="mb-3 row">
+            {!! Form::label('note', 'Note', ['class' => 'col-sm-2 col-form-label']) !!}
 
-                <div class="col-sm-6">
-                    {!! Form::text('note', null, ['class' => 'form-control form-control-sm', 'autocomplete'=>'off', 'placeholder' => 'Notes (if any)']) !!}
-                </div>
+            <div class="col-sm-6">
+                {!! Form::text('note', null, ['class' => 'form-control form-control-sm', 'autocomplete'=>'off', 'placeholder' => 'Notes (if any)']) !!}
             </div>
+        </div>
 
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
         {!! Form::close() !!}
         <br>
+        @if(auth()->user()->role == 'admin')
+            <div class="float-end">
+                {!! Form::open(['route'=>['bill.destroy', $bill->id], 'method'=>'DELETE']) !!}
+                {!! Form::submit('Delete Invoice', ['class' => 'btn btn-outline-danger', 'onclick' =>'OnClickNextPage(event)']) !!}
+
+                {!! Form::close() !!}
+            </div>
+        @endif
     </div>
 
     <div class="additional-service d-none">

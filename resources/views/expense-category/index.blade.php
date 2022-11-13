@@ -1,4 +1,14 @@
 <x-app-layout>
+    @section('scripts')
+        <script>
+            function OnClickNextPage(event) {
+                var result = confirm("Are you sure ?");
+                if (!result) {
+                    event.preventDefault(); // prevent event when user cancel
+                }
+            }
+        </script>
+    @stop
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Expense Category <a class="btn-sm btn-outline-primary" href="{{route('expense-category.create')}}">Add</a>
@@ -30,7 +40,7 @@
                 <td>{{$category->name}}</td>
                 <td><a class="btn-sm btn-outline-dark" href="{{route('expense-category.edit',  $category)}}">Edit </a>
                     {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
-                    <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete</button>
+                    <button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete</button>
                     {{ Form::close() }}
                 </td>
 

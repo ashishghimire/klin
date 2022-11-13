@@ -1,4 +1,14 @@
 <x-app-layout>
+    @section('scripts')
+        <script>
+            function OnClickNextPage(event) {
+                var result = confirm("Are you sure ?");
+                if (!result) {
+                    event.preventDefault(); // prevent event when user cancel
+                }
+            }
+        </script>
+    @stop
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit customer') }}
@@ -47,12 +57,14 @@
 
         {!! Form::close() !!}
 
-        <div class="float-end">
-            {!! Form::open(['route'=>['customer.destroy', $customer->id], 'method'=>'DELETE']) !!}
-            {!! Form::submit('Delete Customer', ['class' => 'btn btn-outline-danger']); !!}
+        @if(auth()->user()->role == 'admin')
+            <div class="float-end">
+                {!! Form::open(['route'=>['customer.destroy', $customer->id], 'method'=>'DELETE']) !!}
+                {!! Form::submit('Delete Customer', ['class' => 'btn btn-outline-danger','onclick' =>'OnClickNextPage(event)']); !!}
 
-            {!! Form::close() !!}
-        </div>
+                {!! Form::close() !!}
+            </div>
+        @endif
     </div>
 
 </x-app-layout>

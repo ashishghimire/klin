@@ -1,33 +1,15 @@
 <x-app-layout>
+    @section('scripts')
+        <script>
+            function OnClickNextPage(event) {
+                var result = confirm("Are you sure ?");
+                if (!result) {
+                    event.preventDefault(); // prevent event when user cancel
+                }
+            }
+        </script>
+    @stop
 
-    {{--@section('styles')--}}
-    {{--<link rel="stylesheet" href="{{ asset('css/daterangepicker.css') }}">--}}
-    {{--@stop--}}
-    {{--@section('scripts')--}}
-    {{--<script src="{{asset('js/moment.min.js')}}"></script>--}}
-    {{--<script src="{{asset('js/daterangepicker.js')}}"></script>--}}
-    {{--<script>--}}
-    {{--$(document).ready(function () {--}}
-    {{--$('input[name="datefilter"]').daterangepicker({--}}
-    {{--autoUpdateInput: false,--}}
-    {{--applyButtonClasses: 'btn btn-outline-primary',--}}
-    {{--locale: {--}}
-    {{--cancelLabel: 'Clear'--}}
-    {{--}--}}
-    {{--});--}}
-
-    {{--$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {--}}
-    {{--$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));--}}
-    {{--});--}}
-
-    {{--$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {--}}
-    {{--$(this).val('');--}}
-    {{--});--}}
-
-
-    {{--});--}}
-    {{--</script>--}}
-    {{--@stop--}}
 
     <x-slot name="header">
         @if(auth()->user()->role == 'admin')
@@ -86,9 +68,11 @@
                 <td>{{$expense->details}}</td>
                 <td>{{$expense->user->name}}</td>
                 <td><a class="btn-sm btn-outline-dark" href="{{route('expense.edit',  $expense)}}">Edit </a>
-                    {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
-                    <button class="btn-sm btn-outline-danger" onclick="confirm('Are you sure?')">Delete</button>
-                    {{ Form::close() }}
+                    @if(auth()->user()->role == 'admin')
+                        {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
+                        <button class="btn-sm btn-outline-danger" onclick =OnClickNextPage(event)>Delete</button>
+                        {{ Form::close() }}
+                    @endif
                 </td>
             </tr>
 

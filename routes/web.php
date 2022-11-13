@@ -39,9 +39,12 @@ Route::delete('/customer/{customer}', 'App\Http\Controllers\CustomerController@d
 
 Route::resource('customer.bill', \App\Http\Controllers\BillController::class)->only(['create', 'store', 'show'])->middleware(['auth']);
 
+
 Route::get('bill', 'App\Http\Controllers\BillController@index')->name('bill.index')->middleware(['auth']);
 
 Route::get('bill/{bill}/edit', 'App\Http\Controllers\BillController@edit')->name('bill.edit')->middleware(['auth']);
+
+Route::delete('bill/{bill}', 'App\Http\Controllers\BillController@destroy')->name('bill.destroy')->middleware(['auth', 'isAdmin']);
 
 Route::patch('bill/{bill}/update', 'App\Http\Controllers\BillController@update')->name('bill.update')->middleware(['auth']);
 
