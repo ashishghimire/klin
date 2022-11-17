@@ -53,11 +53,9 @@
                     <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
                         Invoices
                     </x-nav-link>
-                    @if(auth()->user()->role == 'admin')
                         <x-nav-link :href="route('income1')" :active="request()->routeIs('income1')">
                             Income Statement
                         </x-nav-link>
-                    @endif
                         <x-nav-link :href="route('letter.index')" :active="request()->routeIs('letter.index')">
                             Office
                         </x-nav-link>

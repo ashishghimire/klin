@@ -36,7 +36,7 @@ $(document).ready(function(){
         });
 
         if (isNaN(amount)) return 0;
-        else return amount;
+        else return amount.toFixed(2);
 
     }
 

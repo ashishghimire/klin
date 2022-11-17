@@ -25,7 +25,7 @@ class IncomeController extends Controller
     public function __construct(NepaliDate $nepaliDate)
     {
 
-        $this->middleware('isAdmin');
+        $this->middleware('auth');
         $this->nepaliDate = $nepaliDate;
     }
 

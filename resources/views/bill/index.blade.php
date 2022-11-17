@@ -45,6 +45,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Invoices {{ !empty(request()->get('startDate')) && !empty(request()->get('endDate')) ?  'from '.request()->get('startDate').' to '.request()->get('endDate') :  '' }}
+            <a class="btn-sm btn-outline-primary" href="{{route('invoice.create')}}">Add</a>
         </h2>
         <br>
         <form action={{route('bill.search')}} method="GET" role="search" class="search">
