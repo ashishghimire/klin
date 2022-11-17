@@ -79,6 +79,9 @@
                     <th>Date</th>
                     <th class="no-sort">Note</th>
                     @if(auth()->user()->role == 'admin')
+                        <th class="no-sort">Added By</th>
+                    @endif
+                    @if(auth()->user()->role == 'admin')
                         <th class="no-sort">Action</th>
                     @endif
                 </tr>
@@ -115,6 +118,11 @@
                         </td>
                         <td>{{!empty($bill->nepali_date) ? $bill->nepali_date : ''}}</td>
                         <td>{{!empty($bill->note) ? $bill->note : ''}}</td>
+                        @if(auth()->user()->role == 'admin')
+                            {{--@if($bill->payment_status != 'paid')--}}
+                            <td><a href="{{route('employee.show',  $bill->user->id)}}">{{$bill->user->username}} </a></td>
+                            {{--@endif--}}
+                        @endif
                         @if(auth()->user()->role == 'admin')
                             {{--@if($bill->payment_status != 'paid')--}}
                             <td><a class="btn btn-outline-dark" href="{{route('bill.edit',  $bill->id)}}">Edit </a></td>

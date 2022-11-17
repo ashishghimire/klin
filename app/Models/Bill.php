@@ -24,6 +24,11 @@ class Bill extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 //    public function getNepaliDateAttribute()
 //    {
 //        $englishDate = new Carbon($this->attributes['created_at']);
