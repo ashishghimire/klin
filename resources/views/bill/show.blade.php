@@ -75,6 +75,7 @@
 
                     </div>
                     <a class="btn btn-primary float-end" href="{{route('dashboard')}}">Go to dashboard</a>
+                    <a class="btn btn-outline-secondary float-left" href="{{route('invoice.create')}}">Create new invoice</a>
                 </div>
             </div>
         </div>
