@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap-grid.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap-reboot.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap-utilities.css') }}">
+    <link rel="icon" href="{{asset('images/klin.jpg')}}">
 
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
