@@ -154,9 +154,11 @@ class IncomeController extends Controller
 
         $today = Carbon::now()->startOfDay()->toDateString();
 
+        $sevenDaysBack = Carbon::now()->subDays(7)->startOfDay()->toDateString();
+
         $date = $this->todaysNepaliDate();
 
-        return $this->queryDate($today, $today, $date);
+        return $this->queryDate($sevenDaysBack, $today, $date);
     }
 
 
@@ -224,7 +226,7 @@ class IncomeController extends Controller
         }
 
 
-        $total = round($total, 2);
+        $total = round($total-$unpaid, 2);
         $cash = round($cash, 2);
         $khalti = round($khalti, 2);
         $esewa = round($esewa, 2);

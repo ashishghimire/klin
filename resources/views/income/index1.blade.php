@@ -60,9 +60,8 @@
             <small>Download Data</small>
         </a>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Income Statement for {{$date}}
+            Income Statement
         </h2>
-        <br>
     </x-slot>
 
     @if(Session::has('error'))
@@ -117,7 +116,7 @@
                             <td>{{$bill->esewa}}</td>
                             <td>{{$bill->reward_pay}}</td>
                             <td>{{$bill->unpaid}}</td>
-                            <td>{{round($bill->total-$bill->reward_pay, 2)}}</td>
+                            <td>{{round($bill->total-$bill->reward_pay-$bill->unpaid, 2)}}</td>
                         </tr>
 
                     @empty
