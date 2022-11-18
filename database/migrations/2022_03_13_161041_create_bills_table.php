@@ -21,7 +21,7 @@ class CreateBillsTable extends Migration
             $table->decimal('paid_amount', $precision = 8, $scale = 2)->default(0);
             $table->enum('payment_status',['unpaid', 'partial', 'paid'])->default('unpaid');
             $table->string('payment_mode')->nullable();
-            $table->enum('laundry_status', ['unprocessed', 'processing', 'completed', 'delivered'])->default('unprocessed');
+            $table->enum('laundry_status', ['processing', 'completed', 'delivered'])->default('processing');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nepali_date');
             $table->string('note')->nullable();

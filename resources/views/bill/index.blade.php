@@ -110,9 +110,9 @@
                         <td>
                             <?php
                             if ($bill->payment_status == 'paid') {
-                                $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
+                                $laundryStatusArray = ['processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
                             } else {
-                                $laundryStatusArray = ['unprocessed' => 'Unprocessed', 'processing' => 'Processing', 'completed' => 'Completed'];
+                                $laundryStatusArray = ['processing' => 'Processing', 'completed' => 'Completed'];
                             }
                             ?>
                             {!! Form::select('laundry_status',$laundryStatusArray, $bill->laundry_status, ['class'=>'laundry-status', 'data-bill'=>$bill->id]) !!}

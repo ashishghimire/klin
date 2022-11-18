@@ -10,18 +10,6 @@
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <a href="{{route('bill.index', ['laundry-status'=>'unprocessed'])}}">
-                                <figure class="figure">
-                                    <img src="{{asset('images/laundryunprocessed.png')}}"
-                                         class="figure-img img-fluid rounded" style="width:250px;height:250px">
-                                    <figcaption
-                                        class="figure-caption font-semibold text-xl text-gray-800 leading-tight">
-                                        Unprocessed: {{$unprocessedCount}}</figcaption>
-                                </figure>
-                            </a>
-                        </div>
-
-                        <div class="col-sm-3">
                             <a href="{{route('bill.index', ['laundry-status'=>'processing'])}}">
                                 <figure class="figure">
                                     <img src="{{asset('images/laundryprocessing.png')}}"
@@ -56,10 +44,8 @@
                                 </figure>
                             </a>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
-                            <a href="{{route('customer.index', ['laundry-status'=>'unprocessed'])}}">
+                            <a href="{{route('customer.index')}}">
                                 <figure class="figure">
                                     <img src="{{asset('images/customers.png')}}"
                                          class="figure-img img-fluid rounded" style="width:250px;height:250px">
