@@ -223,6 +223,14 @@ class IncomeController extends Controller
 
         }
 
+
+        $total = round($total, 2);
+        $cash = round($cash, 2);
+        $khalti = round($khalti, 2);
+        $esewa = round($esewa, 2);
+        $rewardPay = round($rewardPay, 2);
+        $unpaid = round($unpaid, 2);
+
         return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid');
     }
 

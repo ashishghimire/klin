@@ -44,7 +44,7 @@
                                                 : {{$detail['quantity']}} {{$detail['unit']}} * (Rs. {{$detail['rate']}}
                                                 per {{$detail['unit']}})</span></div>
                                         <span
-                                            class="font-weight-bold">Rs. {{$detail['quantity']*$detail['rate']}}</span>
+                                            class="font-weight-bold">Rs. {{round($detail['quantity']*$detail['rate'], 2)}}</span>
                                     </div>
                                 </div>
                             @empty
@@ -54,17 +54,17 @@
                             <div>
                                 <div class="d-flex flex-column"><span>Total</span>
                                 </div>
-                                <h3>Rs. {{$bill['amount']}}</h3>
+                                <h3>Rs. {{round($bill['amount'], 2)}}</h3>
                             </div>
                             <div>
                                 <div class="d-flex flex-column"><span>Amount Paid</span>
                                 </div>
-                                <h3>Rs. {{$bill['paid_amount']}}</h3>
+                                <h3>Rs. {{round($bill['paid_amount'], 2)}}</h3>
                             </div>
                             <div>
                                 <div class="d-flex flex-column"><span>Due Amount</span>
                                 </div>
-                                <h3>Rs. {{$bill['amount'] - $bill['paid_amount']}}</h3>
+                                <h3>Rs. {{round($bill['amount'] - $bill['paid_amount'], 2)}}</h3>
                             </div>
                         </div>
                         @if(!empty($bill->note))

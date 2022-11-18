@@ -50,9 +50,10 @@ class BillController extends Controller
     {
         $nepaliDateObj = $this->nepaliDate;
         $laundryStatus = request()->query('laundry-status');
-        $number = 1000;
+        $number = 10000;
 
         if (empty($laundryStatus)) {
+
             $bills = $this->bill->get($number);
         }
 

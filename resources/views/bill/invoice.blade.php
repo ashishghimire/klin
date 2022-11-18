@@ -12,7 +12,7 @@
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             $(document).ready(function () {
-                $('#customer-info').DataTable({
+                var table = $('#customer-info').DataTable({
                     processing: true,
                     serverSide: true,
                     "bLengthChange": false,
@@ -29,6 +29,7 @@
                         {data: 'billing', name: 'billing', orderable: false, searchable: false},
                     ]
                 });
+                $('div.dataTables_filter input', table.table().container()).focus();
             });
         </script>
     @stop

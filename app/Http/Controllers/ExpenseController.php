@@ -266,7 +266,7 @@ class ExpenseController extends Controller
 
         $expense->update($data);
 
-        if ($data['category'] == 'salary' || $data['category'] == 'lunch' || $data['category'] == 'allowance') {
+        if (strtoupper($data['category']) == 'SALARY' || strtoupper($data['category']) == 'LUNCH' || strtoupper($data['category']) == 'ALLOWANCE') {
             $salary = $expense->salary;
             $salaryData['user_id'] = $data['employee_id'];
             $salaryData['expense_id'] = $expense->id;
