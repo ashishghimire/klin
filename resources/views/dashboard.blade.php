@@ -4,15 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a class="btn btn-primary btn-lg" href="{{route('invoice.create')}}">Create Invoice</a>
-            {{--@if(auth()->user()->role == 'admin')--}}
-                {{--<a class="btn btn-primary btn-lg" href="{{route('import.db')}}">Import database</a>--}}
-            {{--@endif--}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                <a class="btn btn-primary btn-lg" href="{{route('invoice.create')}}">Create Invoice</a>
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -79,6 +73,4 @@
 
                 </div>
             </div>
-        </div>
-    </div>
 </x-app-layout>

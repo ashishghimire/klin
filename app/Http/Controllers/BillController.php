@@ -42,7 +42,7 @@ class BillController extends Controller
         $this->customer = $customer;
         $this->bill = $bill;
         $this->middleware('auth');
-        $this->middleware('isAdmin',['only' => ['edit', 'update', 'destroy']]);
+        $this->middleware('isAdmin', ['only' => ['edit', 'update', 'destroy']]);
         $this->nepaliDate = $nepaliDate;
     }
 
@@ -55,10 +55,7 @@ class BillController extends Controller
         if (empty($laundryStatus)) {
 
             $bills = $this->bill->get($number);
-        }
-
-        else
-        {
+        } else {
             $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->take($number)->get();
         }
 
@@ -160,9 +157,26 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill)
     {
-        if (!$this->bill->update($bill, $request->all())) {
+        $data = $request->all();
+
+        if (!empty($data['nepali_date'])) {
+            if ($data['nepali_date'] != $bill['nepali_date']) {
+                $nepaliDate = $startDateNepali = explode("-", trim($data['nepali_date']));
+                $englishDateArray = $this->nepaliDate->convertBsToAd(trim($nepaliDate[0]), trim($nepaliDate[1]), trim($nepaliDate[2]));
+                $englishDate = implode("-", $englishDateArray);
+                $createdAt = Carbon::parse($englishDate)->endOfDay();
+                $bill->created_at = $createdAt;
+                $bill->save();
+            }
+        }
+
+        $updatedBill = $this->bill->update($bill, $data);
+
+
+        if (!$updatedBill) {
             return redirect()->back()->withErrors('There was a problem in updating bill');
         }
+
 
         return redirect()->route('bill.index')->withSuccess("Bill successfully updated");
     }
