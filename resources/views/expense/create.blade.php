@@ -3,7 +3,7 @@
         <script>
             $(document).on('change', '.category', function () {
 
-                if (this.value.toUpperCase() == 'SALARY' || this.value.toUpperCase() == 'LUNCH' || this.value.toUpperCase() == 'ALLOWANCE') {
+                if (this.value.toUpperCase() == 'SALARY' || this.value.toUpperCase() == 'LUNCH' || this.value.toUpperCase() == 'ALLOWANCE' || this.value.toUpperCase() == 'CREDITED/ADJUSTED') {
                     $('.employee-wrap').removeClass('d-none');
                     $("select.employee").attr('required', true);
                 } else {

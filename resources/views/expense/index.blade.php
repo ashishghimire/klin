@@ -32,13 +32,13 @@
         <div class="p-6 bg-white border-b border-gray-200">
             <form action={{route('expense.search')}} method="GET" role="search" class="search">
                 {{ csrf_field() }}
-                {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), null, ['placeholder' => 'All Categories']) !!}
+                {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), !empty(request()->get('category')) ? request()->get('category') : null, ['placeholder' => 'All Categories']) !!}
 
                 {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 
-                {!! Form::text('startDate', null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
+                {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
 
-                {!! Form::text('endDate', null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
+                {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
 
 
                 {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}

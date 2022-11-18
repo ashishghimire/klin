@@ -39,13 +39,17 @@
                             {{$i}}
                         </td>
                         <td>{{$category->name}}</td>
-                        <td><a class="btn-sm btn-outline-dark" href="{{route('expense-category.edit',  $category)}}">Edit </a>
-                            {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
-                            <button class="btn-sm btn-outline-danger"
-                                    onclick=OnClickNextPage(event) {{$category->name == 'salary' || $category->name == 'allowance' || $category->name == 'lunch' ? 'disabled' : ''}}>
-                                Delete
-                            </button>
-                            {{ Form::close() }}
+                        <td>
+                            @if(!(strtoupper($category->name) == 'SALARY' || strtoupper($category->name) == 'ALLOWANCE' || strtoupper($category->name) == 'LUNCH' || strtoupper($category->name) == 'CREDITED/ADJUSTED'))
+                                <a class="btn-sm btn-outline-dark"
+                                   href="{{route('expense-category.edit',  $category)}}">Edit </a>
+                                {{ Form::open(['url' => route('expense-category.destroy', $category), 'method' => 'delete']) }}
+                                <button class="btn-sm btn-outline-danger"
+                                        onclick=OnClickNextPage(event) {{strtoupper($category->name) == 'SALARY' || strtoupper($category->name) == 'ALLOWANCE' || strtoupper($category->name) == 'LUNCH' || strtoupper($category->name) == 'CREDITED/ADJUSTED' ? 'disabled' : ''}}>
+                                    Delete
+                                </button>
+                                {{ Form::close() }}
+                            @endif
                         </td>
 
                     <?php $i++;?>

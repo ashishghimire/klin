@@ -147,7 +147,7 @@ class ExpenseController extends Controller
         }
 
         if (!empty($category)) {
-            $expenseQuery->where('category', $category);
+            $expenseQuery->where(DB::raw('upper(category)'), strtoupper($category));
         }
 
         extract($this->calculate($expenseQuery));
@@ -165,7 +165,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where('name', '!=', 'salary')->where('name', '!=', 'lunch')->where('name', '!=', 'allowance')->get();
+        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where(DB::raw('upper(name)'), '!=', 'SALARY')->where(DB::raw('upper(name)'), '!=', 'LUNCH')->where(DB::raw('upper(name)'), '!=', 'ALLOWANCE')->where(DB::raw('upper(name)'), '!=', 'CREDITED/ADJUSTED')->get();
         $employees = User::where('role', '!=', 'admin')->get();
         $modes = PaymentMode::all()->pluck('name', 'name');
 
@@ -200,7 +200,7 @@ class ExpenseController extends Controller
         try {
             $expense = $this->expense->create($data);
 
-            if ($data['category'] == 'salary' || $data['category'] == 'lunch' || $data['category'] == 'allowance') {
+            if (strtoupper($data['category']) == 'SALARY' || strtoupper($data['category']) == 'LUNCH' || strtoupper($data['category']) == 'ALLOWANCE' || strtoupper($data['category']) == 'CREDITED/ADJUSTED') {
                 $salaryData['user_id'] = $data['employee_id'];
                 $salaryData['expense_id'] = $expense->id;
                 $salaryData['amount'] = $data['amount'];
@@ -239,11 +239,11 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $employee = null;
-        if ($expense->category == 'salary' || $expense->category == 'lunch' || $expense->category == 'allowance') {
+        if (strtoupper($expense->category) == 'SALARY' || strtoupper($expense->category) == 'LUNCH' || strtoupper($expense->category) == 'ALLOWANCE' || strtoupper($expense->category) == 'CREDITED/ADJUSTED') {
             $categories = ExpenseCategory::where('name', $expense->category)->get();
             $employee = Salary::where('expense_id', $expense->id)->first()->user;
         } else {
-            $categories = ExpenseCategory::where('name', '!=', 'salary')->where('name', '!=', 'lunch')->where('name', '!=', 'allowance')->get();
+            $categories = ExpenseCategory::where(DB::raw('upper(name)'), '!=', 'SALARY')->where(DB::raw('upper(name)'), '!=', 'LUNCH')->where(DB::raw('upper(name)'), '!=', 'ALLOWANCE')->where(DB::raw('upper(name)'), '!=', 'CREDITED/ADJUSTED')->get();
         }
 
         $employees = User::where('role', '!=', 'admin')->get();
@@ -266,7 +266,7 @@ class ExpenseController extends Controller
 
         $expense->update($data);
 
-        if (strtoupper($data['category']) == 'SALARY' || strtoupper($data['category']) == 'LUNCH' || strtoupper($data['category']) == 'ALLOWANCE') {
+        if (strtoupper($data['category']) == 'SALARY' || strtoupper($data['category']) == 'LUNCH' || strtoupper($data['category']) == 'ALLOWANCE' || strtoupper($data['category'] == 'CREDITED/ADJUSTED')) {
             $salary = $expense->salary;
             $salaryData['user_id'] = $data['employee_id'];
             $salaryData['expense_id'] = $expense->id;
