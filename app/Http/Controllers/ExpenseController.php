@@ -264,6 +264,17 @@ class ExpenseController extends Controller
     {
         $data = $request->all();
 
+        if (!empty($data['nepali_date'])) {
+            if ($data['nepali_date'] != $expense['nepali_date']) {
+                $nepaliDate = $startDateNepali = explode("-", trim($data['nepali_date']));
+                $englishDateArray = $this->nepaliDate->convertBsToAd(trim($nepaliDate[0]), trim($nepaliDate[1]), trim($nepaliDate[2]));
+                $englishDate = implode("-", $englishDateArray);
+                $createdAt = Carbon::parse($englishDate)->endOfDay();
+                $expense->created_at = $createdAt;
+                $expense->save();
+            }
+        }
+
         $expense->update($data);
 
         if (strtoupper($data['category']) == 'SALARY' || strtoupper($data['category']) == 'LUNCH' || strtoupper($data['category']) == 'ALLOWANCE' || strtoupper($data['category'] == 'CREDITED/ADJUSTED')) {

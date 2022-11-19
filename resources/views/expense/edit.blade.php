@@ -36,6 +36,13 @@
 
         {!! Form::model($expense, ['route' => ['expense.update', $expense], 'method'=>'PATCH']) !!}
         <div class="mb-3 row">
+            {!! Form::label('nepali_date', 'Date', ['class' => 'col-sm-2 col-form-label']) !!}
+
+            <div class="col-sm-10">
+                {!! Form::text('nepali_date', null, ['class' => 'form-control-plaintext', 'required']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
             {!! Form::label('txn_no', 'TXN No', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
@@ -54,7 +61,8 @@
             </div>
         </div>
 
-        <div class="mb-3 row employee-wrap {{$expense->category != 'salary' && $expense->category != 'allowance' && $expense->category != 'lunch'? 'd-none' : ''}}">
+        <div
+            class="mb-3 row employee-wrap {{$expense->category != 'salary' && $expense->category != 'allowance' && $expense->category != 'lunch'? 'd-none' : ''}}">
             {!! Form::label('employee_id', 'Select Employee', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">

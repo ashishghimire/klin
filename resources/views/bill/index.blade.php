@@ -1,6 +1,7 @@
 <x-app-layout>
     @section('styles')
         <link rel="stylesheet" href="{{ asset('css/bootstrapDatatables.css') }}">
+
     @stop
     @section('scripts')
         <script src="{{asset('js/jQueryDatatables.js')}}"></script>
@@ -95,31 +96,47 @@
                 <tbody>
                 @forelse($bills as $bill)
                     <tr>
-                        <td  style="width: 2%">
+                        <td style="width: 2%">
                             <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
                         </td>
                         <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a>
                         </td>
-                        <td  style="width: 2%"><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a>
+                        <td style="width: 2%"><a
+                                href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a>
                         </td>
                         <td>
                             <?php
                             $shortcodes = [];
-                            foreach ($bill->service_details as $service_detail)
-                                {
-                                    array_push($shortcodes, \App\Models\Service::where('name', $service_detail['service_type'])->first('shortcode')->shortcode);
+                            foreach ($bill->service_details as $service_detail) {
+                                $servicesShortcode = \App\Models\Service::where('name', $service_detail['service_type'])->first('shortcode');
+                                if(!empty ($servicesShortcode)) {
+                                    array_push($shortcodes, $servicesShortcode->shortcode);
                                 }
+                            }
                             ?>
                             {{implode($shortcodes, ', ')}}
                         </td>
                         <td>{{$bill->amount}}</td>
                         <td style="width: 2%">
+                            <?php
+                            $imagePath = asset('images/payment_modes/money.png');
+                            if (!empty($bill->payment_mode)) {
+                                if (file_exists(public_path() . '/images/payment_modes/' . $bill->payment_mode . '.png')) { //base_path() if in production
+                                    $imagePath = asset('images/payment_modes/' . $bill->payment_mode . '.png');
+                                }
+                            } else {
+                                $imagePath = asset('images/payment_modes/unpaid.png');
+                            }
+                            ?>
                             @if($bill->payment_status == 'paid')
                                 <button type="button" class="btn btn-info btn-sm"
                                         disabled="disabled">{{$bill->payment_status}}</button>
+                                <img src="{{asset($imagePath)}}" style="width:20px;float:right;">
+
                             @else
                                 <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
+                                <img src="{{asset($imagePath)}}" style="width:20px; float:right;">
                             @endif
                         </td>
                         <td>
@@ -136,7 +153,8 @@
                         <td>{{!empty($bill->note) ? $bill->note : ''}}</td>
                         @if(auth()->user()->role == 'admin')
                             {{--@if($bill->payment_status != 'paid')--}}
-                            <td><a href="{{route('employee.show',  $bill->user->id)}}">{{$bill->user->username}} </a></td>
+                            <td><a href="{{route('employee.show',  $bill->user->id)}}">{{$bill->user->username}} </a>
+                            </td>
                             {{--@endif--}}
                         @endif
                         @if(auth()->user()->role == 'admin')
