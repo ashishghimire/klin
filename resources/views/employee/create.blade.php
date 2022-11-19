@@ -46,6 +46,15 @@
 
             </div>
 
+            <div class="mt-4">
+                <label class="block font-medium text-sm text-gray-700" for="monthly_salary">
+                    Monthly Salary
+                </label>
+
+                {!! Form::number('monthly_salary', null, ['class' => 'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full', 'required']) !!}
+
+            </div>
+
             <div class="flex items-center justify-end mt-4">
 
                 <button type="submit"

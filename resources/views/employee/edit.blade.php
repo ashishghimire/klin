@@ -14,9 +14,9 @@
                 </ul>
             </div>
         @endif
-            {!! Form::model($employee, ['route' => ['employee.update', $employee->id], 'method' => 'PATCH']) !!}
+        {!! Form::model($employee, ['route' => ['employee.update', $employee->id], 'method' => 'PATCH']) !!}
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
             <!-- Name -->
             <div>
                 <label class="block font-medium text-sm text-gray-700" for="name">
@@ -39,11 +39,17 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <label class="block font-medium text-sm text-gray-700" for="password">
-                    Password
+                {!! Form::label('new-password', 'Create Password', ['class' => 'block font-medium text-sm text-gray-700']) !!}
+
+                {!! Form::text('new-password', null, ['class' => 'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full', 'placeholder'=>'Password Unchanged', 'autocomplete'=>'off']) !!}
+            </div>
+
+            <div class="mt-4">
+                <label class="block font-medium text-sm text-gray-700" for="monthly_salary">
+                    Monthly Salary
                 </label>
 
-                {!! Form::password('password', ['class' => 'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full', 'id'=>'password', 'required']) !!}
+                {!! Form::number('monthly_salary', null, ['class' => 'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full', 'required']) !!}
 
             </div>
 

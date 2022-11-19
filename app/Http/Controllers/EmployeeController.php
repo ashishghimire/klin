@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         $data['password'] = bcrypt($request->password);
         User::create($data);
 
-        return redirect()->route('dashboard')->with('message', "Employee Successfully Created");
+        return redirect()->route('employee.index')->with('message', "Employee Successfully Created");
     }
 
     public function update(User $employee)
@@ -48,21 +48,24 @@ class EmployeeController extends Controller
                 'required', 'string',
                 Rule::unique('users')->ignore($employee)
             ],
-            'password' => ['required', 'string'],
             'name' => ['required', 'string'],
         ]);
 
         $data = request()->all();
-        $data['password'] = bcrypt(request()->password);
+        if (!empty($data['new-password'])) {
+            $data['password'] = bcrypt($data['new-password']);
+
+        }
+
         $employee->update($data);
 
-        return redirect()->route('dashboard')->with('message', "Employee Successfully Updated");
+        return redirect()->route('employee.index')->with('message', "Employee Successfully Updated");
     }
 
     public function destroy(User $employee)
     {
         $employee->delete();
-        return redirect()->route('dashboard')->with('message', "Employee Successfully Deleted");
+        return redirect()->route('employee.index')->with('message', "Employee Successfully Deleted");
 
     }
 
@@ -71,6 +74,6 @@ class EmployeeController extends Controller
         if (auth()->user()->role == 'admin' || auth()->user()->id == $employee->id)
             return view('employee.show', compact('employee'));
 
-        return redirect()->route('dashboard')->with('message', "You are not allowed to view this page");
+        return redirect()->route('employee.index')->with('message', "You are not allowed to view this page");
     }
 }
