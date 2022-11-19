@@ -9,6 +9,10 @@
             $(document).ready(function () {
                 $('#bill-info').DataTable({
                     "iDisplayLength": 100,
+                    aLengthMenu: [
+                        [25, 50, 100, 200, -1],
+                        [25, 50, 100, 200, "All"]
+                    ],
                     "columnDefs": [{
                         "searchable": false,
                         "orderable": false,
@@ -74,6 +78,7 @@
                     <th>Estimate No.</th>
                     <th>Customer Name</th>
                     <th>Phone Number</th>
+                    <th>Services</th>
                     <th>Amount</th>
                     <th>Payment Status</th>
                     <th class="no-sort">Laundry Status</th>
@@ -90,15 +95,25 @@
                 <tbody>
                 @forelse($bills as $bill)
                     <tr>
-                        <td>
+                        <td  style="width: 2%">
                             <a href="{{route('customer.bill.show', [$bill->customer->id, $bill->id])}}"> {{$bill->id}}</a>
                         </td>
                         <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->name}}</a>
                         </td>
-                        <td><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a>
+                        <td  style="width: 2%"><a href="{{route('customer.show', [$bill->customer->id])}}">{{$bill->customer->phone}}</a>
+                        </td>
+                        <td>
+                            <?php
+                            $shortcodes = [];
+                            foreach ($bill->service_details as $service_detail)
+                                {
+                                    array_push($shortcodes, \App\Models\Service::where('name', $service_detail['service_type'])->first('shortcode')->shortcode);
+                                }
+                            ?>
+                            {{implode($shortcodes, ', ')}}
                         </td>
                         <td>{{$bill->amount}}</td>
-                        <td>
+                        <td style="width: 2%">
                             @if($bill->payment_status == 'paid')
                                 <button type="button" class="btn btn-info btn-sm"
                                         disabled="disabled">{{$bill->payment_status}}</button>

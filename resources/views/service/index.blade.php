@@ -27,6 +27,7 @@
         <tr>
             <th>S.N.</th>
             <th>Service</th>
+            <th>Shortcode</th>
             <th>Rate</th>
             <th>Action</th>
         </tr>
@@ -39,6 +40,7 @@
                     {{$i}}
                 </td>
                 <td>{{$service->name}}</td>
+                <td>{{$service->shortcode}}</td>
                 <td>{{$service->rate}} per {{$service->unit}}</td>
                 <td><a class="btn-sm btn-outline-dark" href="{{route('service.edit',  $service)}}">Edit </a>
                     {{ Form::open(['url' => route('service.destroy', $service), 'method' => 'delete']) }}

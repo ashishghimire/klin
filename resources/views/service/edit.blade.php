@@ -22,14 +22,21 @@
         <div class="mb-3 row">
             {!! Form::label('name', 'Service Name', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-10">
+            <div class="col-sm-3">
                 {!! Form::text('name', null, ['class' => 'form-control-plaintext', 'required']) !!}
+            </div>
+        </div>
+        <div class="mb-3 row">
+
+            {!! Form::label('shortcode', 'Shortcode', ['class' => 'col-sm-2 col-form-label']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('shortcode', null, ['class' => 'form-control-plaintext', 'required']) !!}
             </div>
         </div>
         <div class="mb-3 row">
             {!! Form::label('rate', 'Rate', ['class' => 'col-sm-2 col-form-label']) !!}
 
-            <div class="col-sm-5">
+            <div class="col-sm-2">
                 {!! Form::text('rate', null, ['class' => 'form-control-plaintext', 'required']) !!}
             </div>
             per
