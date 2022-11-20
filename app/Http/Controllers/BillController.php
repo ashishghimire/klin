@@ -161,7 +161,7 @@ class BillController extends Controller
 
         if (!empty($data['nepali_date'])) {
             if ($data['nepali_date'] != $bill['nepali_date']) {
-                $nepaliDate = $startDateNepali = explode("-", trim($data['nepali_date']));
+                $nepaliDate = explode("-", trim($data['nepali_date']));
                 $englishDateArray = $this->nepaliDate->convertBsToAd(trim($nepaliDate[0]), trim($nepaliDate[1]), trim($nepaliDate[2]));
                 $englishDate = implode("-", $englishDateArray);
                 $createdAt = Carbon::parse($englishDate)->endOfDay();
@@ -209,6 +209,9 @@ class BillController extends Controller
             $bill->paid_amount = $bill->amount;
             $bill->payment_status = 'paid';
             $bill->payment_mode = request()->payment_mode;
+            $englishDate = Carbon::now();
+            $bill->created_at = $englishDate;
+            $bill->nepali_date = $this->nepaliDate($englishDate);
             $bill->save();
         }
 
@@ -257,6 +260,16 @@ class BillController extends Controller
         $paymentModes = PaymentMode::all();
 
         return view('bill.index', compact('bills', 'nepaliDateObj', 'paymentModes'));
+    }
+
+    public function nepaliDate($englishDate)
+    {
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+        return $nepaliDate;
     }
 
 }

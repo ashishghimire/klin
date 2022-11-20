@@ -60,6 +60,10 @@ class CustomerController extends Controller
 
                 return $date;
             })
+            ->editColumn('reward_points', function ($customer) {
+
+                return round($customer->reward_points, 2);
+            })
             ->addColumn('billing', function ($row) {
 
                 $btn = '<a href=' . route('customer.bill.create', $row->id) . ' class="edit btn btn-link btn-sm">Create Invoice</a>';
