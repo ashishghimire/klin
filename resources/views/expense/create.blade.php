@@ -69,7 +69,7 @@
                 {!! Form::label('amount', 'Amount', ['class' => 'col-sm-2 col-form-label']) !!}
 
                 <div class="col-sm-10">
-                    {!! Form::number('amount', null, ['class' => 'form-control-plaintext']) !!}
+                    {!! Form::number('amount', null, ['class' => 'form-control-plaintext', 'min'=>'0', 'required']) !!}
                 </div>
             </div>
 
