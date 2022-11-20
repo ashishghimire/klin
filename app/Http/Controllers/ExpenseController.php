@@ -53,14 +53,17 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        $today = Carbon::now()->startOfDay()->toDateString();
+        $today = Carbon::now();
 
-        $date = $this->todaysNepaliDate();
+        $sevenDaysBack = Carbon::now()->subDays(7);
+
 
         if (auth()->user()->role == 'admin') {
-            $expenseQuery = Expense::whereDate('created_at', $today);
+            $expenseQuery = Expense::whereDate('created_at', '>=', $sevenDaysBack->startOfDay()->toDateString())
+                ->whereDate('created_at', '<=', $today->endOfDay()->toDateString());
         } else {
-            $expenseQuery = Expense::whereDate('created_at', $today)
+            $expenseQuery = Expense::whereDate('created_at', '>=', $sevenDaysBack->startOfDay()->toDateString())
+                ->whereDate('created_at', '<=', $today->endOfDay()->toDateString())
                 ->where('user_id', '=', auth()->user()->id);
         }
 
@@ -68,7 +71,7 @@ class ExpenseController extends Controller
 
         request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
-        return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
+        return view('expense.index', compact('expenses', 'total', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
 
     }
 
@@ -317,9 +320,8 @@ class ExpenseController extends Controller
         }
     }
 
-    public function todaysNepaliDate()
+    public function nepaliDate($englishDate)
     {
-        $englishDate = Carbon::now();
         $year = $englishDate->format('Y');
         $month = $englishDate->format('m');
         $day = $englishDate->format('d');

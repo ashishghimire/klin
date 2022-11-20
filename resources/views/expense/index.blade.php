@@ -18,7 +18,7 @@
             </a>
         @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Expense Statement for {{$date}}
+            Expense Statement
         </h2>
         <br>
     </x-slot>
