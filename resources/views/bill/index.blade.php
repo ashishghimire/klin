@@ -23,7 +23,7 @@
                             "searchable": false,
                             "targets": 'no-search'
                         }],
-                    "order": [[6, 'desc']],
+                    "order": [[7, 'desc']],
                 });
 
                 $(document).on('change', '.laundry-status', function () {
