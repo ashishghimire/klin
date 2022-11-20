@@ -60,11 +60,13 @@ class ExpenseController extends Controller
 
         if (auth()->user()->role == 'admin') {
             $expenseQuery = Expense::whereDate('created_at', '>=', $sevenDaysBack->startOfDay()->toDateString())
-                ->whereDate('created_at', '<=', $today->endOfDay()->toDateString());
+                ->whereDate('created_at', '<=', $today->endOfDay()->toDateString())
+                ->orderBy('created_at', 'desc');
         } else {
             $expenseQuery = Expense::whereDate('created_at', '>=', $sevenDaysBack->startOfDay()->toDateString())
                 ->whereDate('created_at', '<=', $today->endOfDay()->toDateString())
-                ->where('user_id', '=', auth()->user()->id);
+                ->where('user_id', '=', auth()->user()->id)
+                ->orderBy('created_at', 'desc');
         }
 
         extract($this->calculate($expenseQuery));
