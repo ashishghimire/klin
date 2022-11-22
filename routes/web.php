@@ -97,3 +97,6 @@ Route::any('income-statement1/search1', 'App\Http\Controllers\IncomeController@s
 Route::resource('letter', \App\Http\Controllers\LetterController::class);
 
 Route::get('/downloadLetter/{id}', 'App\Http\Controllers\LetterController@download')->name('letter.download');
+
+Route::any('employee/search/{employee}', 'App\Http\Controllers\EmployeeController@search')->name('employee.search')->middleware(['auth']);
+
