@@ -4,6 +4,7 @@ namespace App\Repositories\Bill;
 
 
 use App\Models\Bill;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BillRepository implements BillRepositoryInterface
@@ -87,6 +88,6 @@ class BillRepository implements BillRepositoryInterface
 
     public function getCount($string)
     {
-        return $this->bill->where('laundry_status', $string)->count();
+        return $this->bill->where('laundry_status', $string)->whereDate('created_at', Carbon::now())->count();
     }
 }
