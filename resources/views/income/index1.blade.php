@@ -99,7 +99,7 @@
                     </tr>
                     <tr>
                         <th>Cash</th>
-                        <th>Khalti</th>
+                        <th>Fonepay</th>
                         <th>Esewa</th>
                         <th style="background:#F6AE2D">Reward Pay</th>
                     </tr>
@@ -112,7 +112,7 @@
                         <tr>
                             <td>{{$bill->nepali_date}}</td>
                             <td>{{$bill->cash}}</td>
-                            <td>{{$bill->khalti}}</td>
+                            <td>{{$bill->fonepay}}</td>
                             <td>{{$bill->esewa}}</td>
                             <td>{{$bill->reward_pay}}</td>
                             <td>{{$bill->unpaid}}</td>
@@ -128,7 +128,7 @@
                 background:#00B0F0;">
                         <td>Total</td>
                         <td>{{$cash}}</td>
-                        <td>{{$khalti}}</td>
+                        <td>{{$fonepay}}</td>
                         <td>{{$esewa}}</td>
                         <td style="background:#F6AE2D">{{$rewardPay}}</td>
                         <td style="background:#D72638">{{$unpaid}}</td>

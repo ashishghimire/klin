@@ -197,6 +197,8 @@ class IncomeController extends Controller
 
         $unpaid = 0;
 
+        $fonepay = 0;
+
 
         foreach ($billsQuery->get() as $bill) {
 
@@ -217,6 +219,10 @@ class IncomeController extends Controller
                 $esewa += $bill->paid_amount;
             }
 
+            if ($bill->payment_mode == 'fonepay') {
+                $fonepay += $bill->paid_amount;
+            }
+
             if ($bill->payment_mode == 'reward points') {
                 $rewardPay += $bill->paid_amount;
             }
@@ -231,9 +237,10 @@ class IncomeController extends Controller
         $khalti = round($khalti, 2);
         $esewa = round($esewa, 2);
         $rewardPay = round($rewardPay, 2);
+        $fonepay = round($fonepay, 2);
         $unpaid = round($unpaid, 2);
 
-        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid');
+        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'fonepay');
     }
 
     private function queryDate($startDate, $endDate, $date)
@@ -246,6 +253,7 @@ class IncomeController extends Controller
             sum(case when payment_mode = "cash" THEN paid_amount else 0 end) AS cash,
             sum(case when payment_mode = "khalti" THEN paid_amount else 0 end) AS khalti,
             sum(case when payment_mode = "esewa" THEN paid_amount else 0 end) AS esewa,
+            sum(case when payment_mode = "fonepay" THEN paid_amount else 0 end) AS fonepay,
             sum(case when payment_mode = "reward points" THEN paid_amount else 0 end) AS reward_pay');
 
 
@@ -263,7 +271,7 @@ class IncomeController extends Controller
 
         request()->session()->put('bills', $bills);
 
-        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total'));
+        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total', 'fonepay'));
     }
 
 }
