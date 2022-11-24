@@ -73,52 +73,65 @@ class ExpenseController extends Controller
 
         request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
-        return view('expense.index', compact('expenses', 'total', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
+        return view('expense.index', compact('expenses', 'calculation'));
 
     }
 
     public function calculate($expenseQuery)
     {
-        $total = 0;
-
-        $electricity = 0;
-
-        $detergent = 0;
-
-        $rent = 0;
-
-        $petrol = 0;
-
-        $misc = 0;
-
-
-        foreach ($expenseQuery->get() as $expense) {
-            $total += $expense->amount;
-
-            if ($expense->category == 'electricity') {
-                $electricity += $expense->amount;
-            }
-
-            if ($expense->category == 'detergent') {
-                $detergent += $expense->amount;
-            }
-
-            if ($expense->category == 'rent') {
-                $rent += $expense->amount;
-            }
-
-            if ($expense->category == 'petrol') {
-                $petrol += $expense->amount;
-            }
-
-            if ($expense->category == 'misc') {
-                $misc += $expense->amount;
-            }
-        }
-
+        $categories = ExpenseCategory::all();
+        $calculation = [];
+        $calculation['total'] = 0;
         $expenses = $expenseQuery->orderBy('created_at', 'desc')->get();
 
-        return compact('total', 'electricity', 'detergent', 'rent', 'petrol', 'misc', 'expenses');
+
+//        $total = 0;
+//
+//        $electricity = 0;
+//
+//        $detergent = 0;
+//
+//        $rent = 0;
+//
+//        $petrol = 0;
+//
+//        $misc = 0;
+
+
+        foreach ($categories as $category) {
+            $calculation[$category->name] = 0;
+        }
+
+        foreach ($expenses as $expense) {
+            $calculation['total'] += $expense->amount;
+
+            $calculation[$expense->category] += $expense->amount;
+
+//            foreach ($categories as $category) {
+//                if (strtoupper($expense->category) == strtoupper($category->name)) {
+//                    $calculation[$category->name] += $expense->amount;
+//                }
+//            }
+
+//
+//            if ($expense->category == 'detergent') {
+//                $detergent += $expense->amount;
+//            }
+//
+//            if ($expense->category == 'rent') {
+//                $rent += $expense->amount;
+//            }
+//
+//            if ($expense->category == 'petrol') {
+//                $petrol += $expense->amount;
+//            }
+//
+//            if ($expense->category == 'misc') {
+//                $misc += $expense->amount;
+//            }
+        }
+
+        return compact('calculation', 'expenses');
 
     }
 
@@ -127,7 +140,7 @@ class ExpenseController extends Controller
         $category = request()->get('category');
         $expenseQuery = Expense::query();
 
-        if(!empty(trim(request()->get('startDate')))) {
+        if (!empty(trim(request()->get('startDate')))) {
             $startDateNepali = explode("-", trim(request()->get('startDate')));
             $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
             $startDateEnglish = implode("-", $startDateEnglishArray);
@@ -135,14 +148,13 @@ class ExpenseController extends Controller
             $expenseQuery->whereDate('created_at', '>=', $startDate);
         }
 
-        if(!empty(trim(request()->get('endDate')))) {
+        if (!empty(trim(request()->get('endDate')))) {
             $endDateNepali = explode("-", trim(request()->get('endDate')));
             $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
             $endDateEnglish = implode("-", $endDateEnglishArray);
             $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
             $expenseQuery->whereDate('created_at', '<=', $endDate);
         }
-
 
 
         if (auth()->user()->role != 'admin') {
