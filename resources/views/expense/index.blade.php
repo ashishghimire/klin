@@ -61,10 +61,16 @@
                 {{ csrf_field() }}
                 {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), !empty(request()->get('category')) ? request()->get('category') : null, ['placeholder' => 'All Categories']) !!}
 
-                {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
+                @if(request()->route()->getName() == "expense.index")
+                    {!! Form::text('startDate', !empty($startDateNepali) ? $startDateNepali : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
 
-                {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+                    {!! Form::text('endDate', !empty($endDateNepali) ? $endDateNepali : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+                @else
+                    {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
 
+                    {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+
+                @endif
 
                 {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
             </form>

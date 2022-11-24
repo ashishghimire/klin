@@ -266,7 +266,20 @@ class IncomeController extends Controller
 
         request()->session()->put('bills', $bills);
 
-        return view('income.index1', compact('bills', 'cash', 'rewardPay', 'unpaid', 'total', 'fonepay'));
+        $startDateNepali = $this->nepaliDate(Carbon::now()->subDays(7));
+        $endDateNepali = $this->nepaliDate(Carbon::now());
+
+        return view('income.index1', compact('bills', 'cash', 'rewardPay', 'unpaid', 'total', 'fonepay', 'startDateNepali', 'endDateNepali'));
+    }
+
+    public function nepaliDate($englishDate)
+    {
+        $year = $englishDate->format('Y');
+        $month = $englishDate->format('m');
+        $day = $englishDate->format('d');
+        $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
+        $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+        return $nepaliDate;
     }
 
 }

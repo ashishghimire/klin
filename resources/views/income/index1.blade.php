@@ -32,35 +32,35 @@
     @stop
 
 
-        @section('scripts')
-            <script src="{{asset('js/jQueryDatatables.js')}}"></script>
-            <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
-            <script>
-                $(document).ready(function () {
-                    $('#income-info').DataTable({
-                        "iDisplayLength": 100,
-                        "bFilter": false,
-                        "dom": 'rtip',
-                        // aLengthMenu: [
-                        //     [25, 50, 100, 200, -1],
-                        //     [25, 50, 100, 200, "All"]
-                        // ],
-                        // "columnDefs": [{
-                        //     "searchable": false,
-                        //     "orderable": false,
-                        //     "targets": 'no-sort',
-                        // },
-                        //     {
-                        //         "searchable": false,
-                        //         "targets": 'no-search'
-                        //     }],
-                        "order": [[0, 'desc']],
-                    });
-
+    @section('scripts')
+        <script src="{{asset('js/jQueryDatatables.js')}}"></script>
+        <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
+        <script>
+            $(document).ready(function () {
+                $('#income-info').DataTable({
+                    "iDisplayLength": 100,
+                    "bFilter": false,
+                    "dom": 'rtip',
+                    // aLengthMenu: [
+                    //     [25, 50, 100, 200, -1],
+                    //     [25, 50, 100, 200, "All"]
+                    // ],
+                    // "columnDefs": [{
+                    //     "searchable": false,
+                    //     "orderable": false,
+                    //     "targets": 'no-sort',
+                    // },
+                    //     {
+                    //         "searchable": false,
+                    //         "targets": 'no-search'
+                    //     }],
+                    "order": [[0, 'desc']],
                 });
-            </script>
 
-        @stop
+            });
+        </script>
+
+    @stop
 
     <x-slot name="header">
         <a href="{{route('income-export')}}">
@@ -79,13 +79,22 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
             <div class="container">
+
                 <form action={{route('income1.search1')}} method="GET" role="search" class="search">
                     {{ csrf_field() }}
                     Get income statement for
 
-                    {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
+                    @if(request()->route()->getName() == "income1")
+                        {!! Form::text('startDate', !empty($startDateNepali) ? $startDateNepali : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
 
-                    {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+                        {!! Form::text('endDate', !empty($endDateNepali) ? $endDateNepali : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+                    @else
+                        {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
+
+                        {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
+
+                    @endif
+
 
                     {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 

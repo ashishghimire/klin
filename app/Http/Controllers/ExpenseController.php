@@ -71,9 +71,12 @@ class ExpenseController extends Controller
 
         extract($this->calculate($expenseQuery));
 
+        $startDateNepali = $this->nepaliDate($sevenDaysBack);
+        $endDateNepali = $this->nepaliDate($today);
+
         request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
-        return view('expense.index', compact('expenses', 'calculation'));
+        return view('expense.index', compact('expenses', 'calculation', 'startDateNepali', 'endDateNepali'));
 
     }
 
@@ -105,7 +108,9 @@ class ExpenseController extends Controller
         foreach ($expenses as $expense) {
             $calculation['total'] += $expense->amount;
 
-            $calculation[$expense->category] += $expense->amount;
+            if (isset($calculation[$expense->category])) {
+                $calculation[$expense->category] += $expense->amount;
+            }
 
 //            foreach ($categories as $category) {
 //                if (strtoupper($expense->category) == strtoupper($category->name)) {
@@ -170,7 +175,7 @@ class ExpenseController extends Controller
         request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
 
-        return view('expense.index', compact('expenses', 'total', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
+        return view('expense.index', compact('expenses', 'calculation'));
     }
 
     /**
