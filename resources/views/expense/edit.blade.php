@@ -1,18 +1,13 @@
 <x-app-layout>
     @section('scripts')
-        {{--<script>--}}
-        {{--$(document).on('change', '.category', function () {--}}
-
-        {{--if (this.value == 'salary') {--}}
-
-        {{--$('.employee-wrap').removeClass('d-none');--}}
-        {{--$("select.employee").attr('required', true);--}}
-        {{--} else {--}}
-        {{--$('.employee-wrap').addClass('d-none');--}}
-        {{--$("select.employee").removeAttr('required');--}}
-        {{--}--}}
-        {{--});--}}
-        {{--</script>--}}
+        <script>
+            function OnClickNextPage(event) {
+                var result = confirm("Are you sure ?");
+                if (!result) {
+                    event.preventDefault(); // prevent event when user cancel
+                }
+            }
+        </script>
     @stop
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -61,7 +56,8 @@
             </div>
         </div>
 
-        <div class="mb-3 row employee-wrap {{strtoupper($expense->category)  != 'SALARY' && strtoupper($expense->category) != 'ALLOWANCE' && strtoupper($expense->category) != 'LUNCH' && strtoupper($expense->category) != 'CREDITED/ADJUSTED' ? 'd-none' : ''}}">
+        <div
+            class="mb-3 row employee-wrap {{strtoupper($expense->category)  != 'SALARY' && strtoupper($expense->category) != 'ALLOWANCE' && strtoupper($expense->category) != 'LUNCH' && strtoupper($expense->category) != 'CREDITED/ADJUSTED' ? 'd-none' : ''}}">
             {!! Form::label('employee_id', 'Select Employee', ['class' => 'col-sm-2 col-form-label']) !!}
 
             <div class="col-sm-10">
@@ -112,6 +108,14 @@
         {!! Form::submit('Submit', ['class' => 'btn btn-outline-primary']); !!}
 
         {!! Form::close() !!}
+
+        @if(auth()->user()->role == 'admin')
+            <div class="float-end">
+                {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
+                {!! Form::submit('Delete Expense', ['class' => 'btn btn-outline-danger', 'onclick' =>'OnClickNextPage(event)']) !!}
+                {{ Form::close() }}
+            </div>
+        @endif
     </div>
 
 </x-app-layout>

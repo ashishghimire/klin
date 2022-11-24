@@ -164,23 +164,28 @@ class IncomeController extends Controller
 
     public function search1()
     {
-        $startDateNepali = explode("-", trim(request()->get('startDate')));
-        $endDateNepali = explode("-", trim(request()->get('endDate')));
+        $startDate = null;
+        $endDate = null;
 
-        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
+        if (!empty(trim(request()->get('startDate')))) {
+            $startDateNepali = explode("-", trim(request()->get('startDate')));
+            $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
+            $startDateEnglish = implode("-", $startDateEnglishArray);
+            $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
+        }
 
-        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
+        if (!empty(trim(request()->get('endDate')))) {
+            $endDateNepali = explode("-", trim(request()->get('endDate')));
+            $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
+            $endDateEnglish = implode("-", $endDateEnglishArray);
+            $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
+        }
 
-        $startDateEnglish = implode("-", $startDateEnglishArray);
-        $endDateEnglish = implode("-", $endDateEnglishArray);
 
-        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
+//        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
 
-        $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
 
-        $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
-
-        return $this->queryDate($startDate, $endDate, $date);
+        return $this->queryDate($startDate, $endDate);
     }
 
     public function calculate1($billsQuery)
@@ -188,10 +193,6 @@ class IncomeController extends Controller
         $total = 0;
 
         $cash = 0;
-
-        $khalti = 0;
-
-        $esewa = 0;
 
         $rewardPay = 0;
 
@@ -211,15 +212,7 @@ class IncomeController extends Controller
                 $cash += $bill->paid_amount;
             }
 
-            if ($bill->payment_mode == 'khalti') {
-                $khalti += $bill->paid_amount;
-            }
-
-            if ($bill->payment_mode == 'esewa') {
-                $esewa += $bill->paid_amount;
-            }
-
-            if ($bill->payment_mode == 'fonepay') {
+            if ($bill->payment_mode == 'khalti' || $bill->payment_mode == 'esewa' || $bill->payment_mode == 'fonepay') {
                 $fonepay += $bill->paid_amount;
             }
 
@@ -232,18 +225,16 @@ class IncomeController extends Controller
         }
 
 
-        $total = round($total-$unpaid, 2);
+        $total = round($total - $unpaid, 2);
         $cash = round($cash, 2);
-        $khalti = round($khalti, 2);
-        $esewa = round($esewa, 2);
         $rewardPay = round($rewardPay, 2);
         $fonepay = round($fonepay, 2);
         $unpaid = round($unpaid, 2);
 
-        return compact('total', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'fonepay');
+        return compact('total', 'cash', 'rewardPay', 'unpaid', 'fonepay');
     }
 
-    private function queryDate($startDate, $endDate, $date)
+    private function queryDate($startDate, $endDate)
     {
         $select = DB::raw(
             'nepali_date,
@@ -251,16 +242,20 @@ class IncomeController extends Controller
             sum(paid_amount) AS paid,
             sum(amount-paid_amount) AS unpaid,
             sum(case when payment_mode = "cash" THEN paid_amount else 0 end) AS cash,
-            sum(case when payment_mode = "khalti" THEN paid_amount else 0 end) AS khalti,
-            sum(case when payment_mode = "esewa" THEN paid_amount else 0 end) AS esewa,
-            sum(case when payment_mode = "fonepay" THEN paid_amount else 0 end) AS fonepay,
+            sum(case when payment_mode = "khalti" or payment_mode = "esewa" or payment_mode = "fonepay" THEN paid_amount else 0 end) AS fonepay,
             sum(case when payment_mode = "reward points" THEN paid_amount else 0 end) AS reward_pay');
 
 
         $billsQuery = DB::table('bills')
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
             ->where('deleted_at', null);
+
+        if (!empty($startDate)) {
+            $billsQuery->whereDate('created_at', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $billsQuery->whereDate('created_at', '<=', $endDate);
+        }
 
         extract($this->calculate1($billsQuery));
 
@@ -271,7 +266,7 @@ class IncomeController extends Controller
 
         request()->session()->put('bills', $bills);
 
-        return view('income.index1', compact('bills', 'date', 'cash', 'khalti', 'esewa', 'rewardPay', 'unpaid', 'total', 'fonepay'));
+        return view('income.index1', compact('bills', 'cash', 'rewardPay', 'unpaid', 'total', 'fonepay'));
     }
 
 }

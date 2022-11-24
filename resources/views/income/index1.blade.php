@@ -1,6 +1,7 @@
 <x-app-layout>
 
     @section('styles')
+        <link rel="stylesheet" href="{{ asset('css/bootstrapDatatables.css') }}">
         <style>
             th, td {
                 /*font-weight:normal;*/
@@ -29,31 +30,37 @@
             }
         </style>
     @stop
-    {{--@section('scripts')--}}
-    {{--<script src="{{asset('js/moment.min.js')}}"></script>--}}
-    {{--<script src="{{asset('js/daterangepicker.js')}}"></script>--}}
-    {{--<script>--}}
-    {{--$(document).ready(function () {--}}
-    {{--$('input[name="datefilter"]').daterangepicker({--}}
-    {{--autoUpdateInput: false,--}}
-    {{--applyButtonClasses: 'btn btn-outline-primary',--}}
-    {{--locale: {--}}
-    {{--cancelLabel: 'Clear'--}}
-    {{--}--}}
-    {{--});--}}
-
-    {{--$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {--}}
-    {{--$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));--}}
-    {{--});--}}
-
-    {{--$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {--}}
-    {{--$(this).val('');--}}
-    {{--});--}}
 
 
-    {{--});--}}
-    {{--</script>--}}
-    {{--@stop--}}
+        @section('scripts')
+            <script src="{{asset('js/jQueryDatatables.js')}}"></script>
+            <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#income-info').DataTable({
+                        "iDisplayLength": 100,
+                        "bFilter": false,
+                        "dom": 'rtip',
+                        // aLengthMenu: [
+                        //     [25, 50, 100, 200, -1],
+                        //     [25, 50, 100, 200, "All"]
+                        // ],
+                        // "columnDefs": [{
+                        //     "searchable": false,
+                        //     "orderable": false,
+                        //     "targets": 'no-sort',
+                        // },
+                        //     {
+                        //         "searchable": false,
+                        //         "targets": 'no-search'
+                        //     }],
+                        "order": [[0, 'desc']],
+                    });
+
+                });
+            </script>
+
+        @stop
 
     <x-slot name="header">
         <a href="{{route('income-export')}}">
@@ -76,31 +83,31 @@
                     {{ csrf_field() }}
                     Get income statement for
 
-                    {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
+                    {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
 
-                    {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
+                    {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
 
                     {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
 
                     {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
                 </form>
+
             </div>
             @if(empty(count($bills)))
                 No Statement Found
             @endif
             <div style="padding-top: 3%;" class="{{empty(count($bills)) ? 'd-none' : ''}}">
-                <table id="customer-info" style="width:100%;">
+                <table id="income-info" style="width:100%;">
                     <thead>
                     <tr>
                         <th rowspan="2">Date</th>
-                        <th colspan="4">Paid</th>
+                        <th colspan="3">Paid</th>
                         <th rowspan="2" style="background:#D72638">Unpaid</th>
                         <th rowspan="2">Total Sales</th>
                     </tr>
                     <tr>
                         <th>Cash</th>
                         <th>Fonepay</th>
-                        <th>Esewa</th>
                         <th style="background:#F6AE2D">Reward Pay</th>
                     </tr>
                     </thead>
@@ -113,7 +120,6 @@
                             <td>{{$bill->nepali_date}}</td>
                             <td>{{$bill->cash}}</td>
                             <td>{{$bill->fonepay}}</td>
-                            <td>{{$bill->esewa}}</td>
                             <td>{{$bill->reward_pay}}</td>
                             <td>{{$bill->unpaid}}</td>
                             <td>{{round($bill->total-$bill->reward_pay-$bill->unpaid, 2)}}</td>
@@ -129,7 +135,6 @@
                         <td>Total</td>
                         <td>{{$cash}}</td>
                         <td>{{$fonepay}}</td>
-                        <td>{{$esewa}}</td>
                         <td style="background:#F6AE2D">{{$rewardPay}}</td>
                         <td style="background:#D72638">{{$unpaid}}</td>
                         <td>{{$total}}</td>

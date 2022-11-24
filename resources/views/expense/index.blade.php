@@ -1,5 +1,11 @@
 <x-app-layout>
+    @section('styles')
+        <link rel="stylesheet" href="{{ asset('css/bootstrapDatatables.css') }}">
+
+    @stop
     @section('scripts')
+        <script src="{{asset('js/jQueryDatatables.js')}}"></script>
+        <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             function OnClickNextPage(event) {
                 var result = confirm("Are you sure ?");
@@ -7,6 +13,27 @@
                     event.preventDefault(); // prevent event when user cancel
                 }
             }
+
+            $(document).ready(function () {
+                $('#expense-info').DataTable({
+                    "iDisplayLength": 100,
+                    aLengthMenu: [
+                        [25, 50, 100, 200, -1],
+                        [25, 50, 100, 200, "All"]
+                    ],
+                    "columnDefs": [{
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 'no-sort',
+                    },
+                        {
+                            "searchable": false,
+                            "targets": 'no-search'
+                        }],
+                    "order": [[0, 'desc']],
+                });
+
+            });
         </script>
     @stop
 
@@ -34,11 +61,9 @@
                 {{ csrf_field() }}
                 {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), !empty(request()->get('category')) ? request()->get('category') : null, ['placeholder' => 'All Categories']) !!}
 
-                {{--{!! Form::text('datefilter', null, ['autocomplete'=>'off', 'placeholder' => 'Select date', 'required']) !!}--}}
+                {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15']) !!}
 
-                {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
-
-                {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
+                {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30']) !!}
 
 
                 {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
@@ -46,37 +71,41 @@
         </div>
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
-                <table id="customer-info" class="table table-striped" style="width:100%">
+                <table id="expense-info" class="table table-striped" style="width:100%">
                     <thead>
                     <tr>
-                        <th>Txn No</th>
                         <th>Date</th>
                         <th>Amount</th>
                         <th>Category</th>
+                        <th>Txn No</th>
+                        <th>Payment Mode</th>
                         <th>Details</th>
                         <th>Added By</th>
-                        <th>Action</th>
+                        @if(auth()->user()->role == 'admin')
+                            <th class="no-sort no-search">Action</th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
 
                     @forelse($expenses->sortByDesc('created_at') as $expense)
                         <tr>
-                            <td>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}
-                            </td>
                             <td>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</td>
                             <td>{{round(($expense->amount), 2)}}</td>
                             <td>{{$expense->category}}</td>
+                            <td>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}</td>
+                            <td>{{$expense->mode}}</td>
                             <td>{{$expense->details}}</td>
                             <td>{{$expense->user->name}}</td>
-                            <td><a class="btn-sm btn-outline-dark" href="{{route('expense.edit',  $expense)}}">Edit </a>
-                                @if(auth()->user()->role == 'admin')
-                                    {{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}
-                                    <button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete
-                                    </button>
-                                    {{ Form::close() }}
-                                @endif
-                            </td>
+                            @if(auth()->user()->role == 'admin')
+                                <td><a class="btn-sm btn-outline-dark"
+                                       href="{{route('expense.edit',  $expense)}}">Edit </a>
+                                    {{--{{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}--}}
+                                    {{--<button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete--}}
+                                    {{--</button>--}}
+                                    {{--{{ Form::close() }}--}}
+                                </td>
+                            @endif
                         </tr>
 
                     @empty
@@ -137,7 +166,6 @@
                     </tfoot>
 
                 </table>
-                {{$expenses->withQueryString()->links()}}
             </div>
         </div>
     </div>

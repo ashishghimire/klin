@@ -1,3 +1,34 @@
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/bootstrapDatatables.css') }}">
+
+@stop
+@section('scripts')
+    <script src="{{asset('js/jQueryDatatables.js')}}"></script>
+    <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#salary-info').DataTable({
+                "iDisplayLength": 100,
+                aLengthMenu: [
+                    [25, 50, 100, 200, -1],
+                    [25, 50, 100, 200, "All"]
+                ],
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 'no-sort',
+                },
+                    {
+                        "searchable": false,
+                        "targets": 'no-search'
+                    }],
+                "order": [[0, 'desc']],
+            });
+
+        });
+    </script>
+@stop
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -27,72 +58,75 @@
                 </div>
 
             </div>
-
-            <table id="salary-info" class="table table-striped" style="width:100%">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Type</th>
-                    <th>Details</th>
-                </tr>
-                </thead>
-                <tbody>
-                @forelse($salaries as $salary)
-                    <tr>
-                        <td>
-                            {{$salary->nepaliDate}}
-                        </td>
-                        <td>
-                            {{$salary->amount}}
-                        </td>
-                        <td>
-                            {{$salary->type}}
-                        </td>
-                        <td>
-                            {{$salary->details}}
-                        </td>
-                    </tr>
-                @empty
-                    No data available
-                @endforelse
-                </tbody>
-
-            </table>
         </div>
-    </div>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <table id="salary-info" class="table table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse($salaries as $salary)
+                            <tr>
+                                <td>
+                                    {{$salary->nepaliDate}}
+                                </td>
+                                <td>
+                                    {{$salary->amount}}
+                                </td>
+                                <td>
+                                    {{strtoupper($salary->type) == 'SALARY' ? 'Cash Withdrawn' : $salary->type}}
+                                </td>
+                                <td>
+                                    {{$salary->details}}
+                                </td>
+                            </tr>
+                        @empty
+                            No data available
+                        @endforelse
+                        </tbody>
 
-    <div class="modal fade" id="salaryDetails" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+                    </table>
+                </div>
+            </div>
 
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-4">Salary</div>
-                            <div class="col-md-4 ms-auto">{{$totalSalary}}</div>
+            <div class="modal fade" id="salaryDetails" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">Credited/Adjusted</div>
+                                    <div class="col-md-4 ms-auto">{{$totalCredited}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">Cash Withdrawn</div>
+                                    <div class="col-md-4 ms-auto">{{$totalSalary}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">Lunch</div>
+                                    <div class="col-md-4 ms-auto">{{$totalLunch}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">Allowance</div>
+                                    <div class="col-md-4 ms-auto">{{$totalAllowance}}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">Lunch</div>
-                            <div class="col-md-4 ms-auto">{{$totalLunch}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">Allowance</div>
-                            <div class="col-md-4 ms-auto">{{$totalAllowance}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">Credited/Adjusted</div>
-                            <div class="col-md-4 ms-auto">{{$totalCredited}}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-sm btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                </div>
             </div>
         </div>
-    </div>
 </x-app-layout>

@@ -116,7 +116,7 @@ class ExpenseController extends Controller
             }
         }
 
-        $expenses = $expenseQuery->paginate(10);
+        $expenses = $expenseQuery->orderBy('created_at', 'desc')->get();
 
         return compact('total', 'electricity', 'detergent', 'rent', 'petrol', 'misc', 'expenses');
 
@@ -125,30 +125,28 @@ class ExpenseController extends Controller
     public function search()
     {
         $category = request()->get('category');
+        $expenseQuery = Expense::query();
 
-        $startDateNepali = explode("-", trim(request()->get('startDate')));
-        $endDateNepali = explode("-", trim(request()->get('endDate')));
+        if(!empty(trim(request()->get('startDate')))) {
+            $startDateNepali = explode("-", trim(request()->get('startDate')));
+            $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
+            $startDateEnglish = implode("-", $startDateEnglishArray);
+            $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
+            $expenseQuery->whereDate('created_at', '>=', $startDate);
+        }
 
-        $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
+        if(!empty(trim(request()->get('endDate')))) {
+            $endDateNepali = explode("-", trim(request()->get('endDate')));
+            $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
+            $endDateEnglish = implode("-", $endDateEnglishArray);
+            $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
+            $expenseQuery->whereDate('created_at', '<=', $endDate);
+        }
 
-        $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
 
-        $startDateEnglish = implode("-", $startDateEnglishArray);
-        $endDateEnglish = implode("-", $endDateEnglishArray);
 
-        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
-
-        $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
-
-        $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
-
-        if (auth()->user()->role == 'admin') {
-            $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate);
-        } else {
-            $expenseQuery = Expense::whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate)
-                ->where('user_id', '=', auth()->user()->id);
+        if (auth()->user()->role != 'admin') {
+            $expenseQuery->where('user_id', '=', auth()->user()->id);
         }
 
         if (!empty($category)) {
@@ -160,7 +158,7 @@ class ExpenseController extends Controller
         request()->session()->put('expenses', $expenseQuery->with('user')->get());
 
 
-        return view('expense.index', compact('expenses', 'total', 'date', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
+        return view('expense.index', compact('expenses', 'total', 'electricity', 'detergent', 'rent', 'petrol', 'misc'));
     }
 
     /**
