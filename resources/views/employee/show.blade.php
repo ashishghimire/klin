@@ -102,22 +102,49 @@
 
                         <div class="modal-body">
                             <div class="container-fluid">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" style="vertical-align : middle; text-align:center;">Credited</th>
+                                            <th colspan="2" style="vertical-align : middle; text-align:center;">Withdrawn</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="vertical-align : middle; text-align:center;">Lunch</th>
+                                            <th style="vertical-align : middle; text-align:center;">Salary</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td style="vertical-align : middle; text-align:center;">{{$totalCredited}}</td>
+                                        <td style="vertical-align : middle; text-align:center;">{{$totalLunch}}</td>
+                                        <td style="vertical-align : middle; text-align:center;">{{$totalSalary}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot class="table-primary">
+                                    <tr>
+                                        <td style="vertical-align : middle; text-align:center;">{{$totalCredited}}</td>
+                                        <td colspan="2" style="vertical-align : middle; text-align:center;">{{$totalLunch + $totalSalary}}</td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                {{--<div class="row">--}}
+                                    {{--<div class="col-md-4">Credited/Adjusted</div>--}}
+                                    {{--<div class="col-md-4 ms-auto">{{$totalCredited}}</div>--}}
+                                {{--</div>--}}
+                                {{--<div class="row">--}}
+                                    {{--<div class="col-md-4">Cash Withdrawn</div>--}}
+                                    {{--<div class="col-md-4 ms-auto">{{$totalSalary}}</div>--}}
+                                {{--</div>--}}
+                                {{--<div class="row">--}}
+                                    {{--<div class="col-md-4">Lunch</div>--}}
+                                    {{--<div class="col-md-4 ms-auto">{{$totalLunch}}</div>--}}
+                                {{--</div>--}}
                                 <div class="row">
-                                    <div class="col-md-4">Credited/Adjusted</div>
-                                    <div class="col-md-4 ms-auto">{{$totalCredited}}</div>
+                                    <div class="col-md-5 ms-auto">Balance:</div>
+                                    <div class="col-md-5 ms-auto">{{$totalCredited - ($totalLunch + $totalSalary)}}</div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4">Cash Withdrawn</div>
-                                    <div class="col-md-4 ms-auto">{{$totalSalary}}</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">Lunch</div>
-                                    <div class="col-md-4 ms-auto">{{$totalLunch}}</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">Allowance</div>
-                                    <div class="col-md-4 ms-auto">{{$totalAllowance}}</div>
-                                </div>
+
+
                             </div>
                         </div>
                         <div class="modal-footer">

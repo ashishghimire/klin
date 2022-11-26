@@ -98,7 +98,7 @@ class EmployeeController extends Controller
 
         extract($this->calculate($salaries));
 
-        return view('employee.show', compact('employee', 'salaries', 'totalSalary', 'totalLunch', 'totalAllowance', 'totalCredited'));
+        return view('employee.show', compact('employee', 'salaries', 'totalSalary', 'totalLunch', 'totalCredited'));
     }
 
     public function search(User $employee)
@@ -134,14 +134,13 @@ class EmployeeController extends Controller
 
         extract($this->calculate($salaries));
 
-        return view('employee.show', compact('employee', 'salaries', 'totalSalary', 'totalLunch', 'totalAllowance', 'totalCredited'));
+        return view('employee.show', compact('employee', 'salaries', 'totalSalary', 'totalLunch', 'totalCredited'));
     }
 
     protected function calculate($salaries)
     {
         $totalSalary = 0;
         $totalLunch = 0;
-        $totalAllowance = 0;
         $totalCredited = 0;
 
         foreach (($salaries) as $salary) {
@@ -154,15 +153,12 @@ class EmployeeController extends Controller
             if (strtoupper($salary->type) == 'LUNCH') {
                 $totalLunch += $salary->amount;
             }
-            if (strtoupper($salary->type) == 'ALLOWANCE') {
-                $totalAllowance += $salary->amount;
-            }
             if (strtoupper($salary->type) == 'CREDITED/ADJUSTED') {
                 $totalCredited += $salary->amount;
             }
 
         }
 
-        return compact('totalSalary', 'totalLunch', 'totalAllowance', 'totalCredited');
+        return compact('totalSalary', 'totalLunch', 'totalCredited');
     }
 }
