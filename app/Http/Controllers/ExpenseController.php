@@ -106,7 +106,9 @@ class ExpenseController extends Controller
         }
 
         foreach ($expenses as $expense) {
-            $calculation['total'] += $expense->amount;
+            if(strtoupper($expense->category) != 'CREDITED/ADJUSTED') {
+                $calculation['total'] += $expense->amount;
+            }
 
             if (isset($calculation[$expense->category])) {
                 $calculation[$expense->category] += $expense->amount;

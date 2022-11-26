@@ -96,13 +96,13 @@
 
                     @forelse($expenses->sortByDesc('created_at') as $expense)
                         <tr>
-                            <td>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</td>
-                            <td>{{round(($expense->amount), 2)}}</td>
-                            <td>{{$expense->category}}</td>
-                            <td>{{$expense->mode}}</td>
-                            <td>{{$expense->details}}</td>
-                            <td>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}</td>
-                            <td>{{$expense->user->name}}</td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{round(($expense->amount), 2)}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->category}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->mode}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->details}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}</span></td>
+                            <td><span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->user->name}}</span></td>
                             @if(auth()->user()->role == 'admin')
                                 <td><a class="btn-sm btn-outline-dark"
                                        href="{{route('expense.edit',  $expense)}}">Edit </a>
@@ -141,8 +141,8 @@
                                         @forelse($calculation as $key=>$value)
                                             @if(strtoupper($key) != 'TOTAL' && !empty($value))
                                                 <div class="row">
-                                                    <div class="col-md-4">{{$key}}</div>
-                                                    <div class="col-md-4 ms-auto">{{round($value,2)}}</div>
+                                                    <div class="col-md-4"><span {{strtoupper($key) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$key}}</span></div>
+                                                    <div class="col-md-4 ms-auto"><span {{strtoupper($key) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{round($value,2)}}</span></div>
                                                 </div>
                                             @endif
                                         @empty
