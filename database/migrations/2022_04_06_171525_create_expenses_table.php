@@ -18,7 +18,7 @@ class CreateExpensesTable extends Migration
             $table->string('txn_no')->nullable();
             $table->string('category');
             $table->string('details');
-            $table->decimal('amount', $precision = 8, $scale = 2);
+            $table->decimal('amount', $precision = 10, $scale = 2);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('mode')->default('cash');
             $table->string('payee')->nullable();

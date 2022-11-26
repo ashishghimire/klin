@@ -154,7 +154,7 @@ class IncomeController extends Controller
 
         $today = Carbon::now()->startOfDay()->toDateString();
 
-        $sevenDaysBack = Carbon::now()->subDays(7)->startOfDay()->toDateString();
+        $sevenDaysBack = Carbon::now()->subDays(6)->startOfDay()->toDateString();
 
         $date = $this->todaysNepaliDate();
 
@@ -266,7 +266,7 @@ class IncomeController extends Controller
 
         request()->session()->put('bills', $bills);
 
-        $startDateNepali = $this->nepaliDate(Carbon::now()->subDays(7));
+        $startDateNepali = $this->nepaliDate(Carbon::now()->subDays(6));
         $endDateNepali = $this->nepaliDate(Carbon::now());
 
         return view('income.index1', compact('bills', 'cash', 'rewardPay', 'unpaid', 'total', 'fonepay', 'startDateNepali', 'endDateNepali'));

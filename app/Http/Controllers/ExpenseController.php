@@ -55,7 +55,7 @@ class ExpenseController extends Controller
     {
         $today = Carbon::now();
 
-        $sevenDaysBack = Carbon::now()->subDays(7);
+        $sevenDaysBack = Carbon::now()->subDays(6);
 
 
         if (auth()->user()->role == 'admin') {
