@@ -29,6 +29,12 @@
                         {
                             "searchable": false,
                             "targets": 'no-search'
+                        },
+                        {
+                            "searchable": true,
+                            "orderable": true,
+                            "targets": 0,
+                            "type": 'date'
                         }],
                     "order": [[0, 'desc']],
                 });
