@@ -82,6 +82,7 @@
                     <th>Services</th>
                     <th>Amount</th>
                     <th>Payment Status</th>
+                    <th>Payment Mode</th>
                     <th class="no-sort">Laundry Status</th>
                     <th>Date</th>
                     <th class="no-sort">Note</th>
@@ -109,7 +110,7 @@
                             $shortcodes = [];
                             foreach ($bill->service_details as $service_detail) {
                                 $servicesShortcode = \App\Models\Service::where('name', $service_detail['service_type'])->first('shortcode');
-                                if(!empty ($servicesShortcode)) {
+                                if (!empty ($servicesShortcode)) {
                                     array_push($shortcodes, $servicesShortcode->shortcode);
                                 }
                             }
@@ -121,7 +122,7 @@
                             <?php
                             $imagePath = asset('images/payment_modes/money.png');
                             if (!empty($bill->payment_mode)) {
-                                if (file_exists(public_path() . '/images/payment_modes/' . $bill->payment_mode . '.png')) { //base_path() if in production
+                                if (file_exists(config('public.path') . '/images/payment_modes/' . $bill->payment_mode . '.png')) { //base_path() if in production
                                     $imagePath = asset('images/payment_modes/' . $bill->payment_mode . '.png');
                                 }
                             } else {
@@ -131,13 +132,21 @@
                             @if($bill->payment_status == 'paid')
                                 <button type="button" class="btn btn-info btn-sm"
                                         disabled="disabled">{{$bill->payment_status}}</button>
-                                <img src="{{asset($imagePath)}}" style="width:20px;float:right;">
 
                             @else
                                 <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modal-{{$bill->id}}">{{$bill->payment_status}}</button>
-                                <img src="{{asset($imagePath)}}" style="width:20px; float:right;">
                             @endif
+                        </td>
+                        <td>
+                            @if (!empty($bill->payment_mode))
+                                {{$bill->payment_mode}}
+                                <img src="{{asset($imagePath)}}" style="width:20px;float:left; margin-right: 10%">
+                            @else
+                                N/A
+                                <img src="{{asset($imagePath)}}" style="width:20px; float:left; margin-right: 10%">
+                            @endif
+
                         </td>
                         <td>
                             <?php

@@ -187,7 +187,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $categories = auth()->user()->role == 'admin' ? ExpenseCategory::all() : ExpenseCategory::where(DB::raw('upper(name)'), '!=', 'SALARY')->where(DB::raw('upper(name)'), '!=', 'LUNCH')->where(DB::raw('upper(name)'), '!=', 'ALLOWANCE')->where(DB::raw('upper(name)'), '!=', 'CREDITED/ADJUSTED')->get();
+        $categories = ExpenseCategory::all();
         $employees = User::where('role', '!=', 'admin')->get();
         $modes = PaymentMode::all()->pluck('name', 'name');
 

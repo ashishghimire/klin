@@ -50,13 +50,12 @@ class BillController extends Controller
     {
         $nepaliDateObj = $this->nepaliDate;
         $laundryStatus = request()->query('laundry-status');
-        $number = 100000;
 
         if (empty($laundryStatus)) {
 
-            $bills = $this->bill->get($number);
+            $bills = Bill::all();
         } else {
-            $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->take($number)->get();
+            $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->get();
         }
 
         $paymentModes = PaymentMode::where('name', '!=', 'reward points');
