@@ -53,7 +53,7 @@ class BillController extends Controller
 
         if (empty($laundryStatus)) {
 
-            $bills = Bill::all();
+            $bills = Bill::orderBy('created_at', 'desc')->get();
         } else {
             $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->get();
         }
@@ -252,7 +252,8 @@ class BillController extends Controller
     {
         $bills = Bill::whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<=', $endDate)
-            ->where('deleted_at', null)->get();
+            ->where('deleted_at', null)
+            ->orderBy('created_at', 'desc')->get();
 
         $nepaliDateObj = $this->nepaliDate;
 

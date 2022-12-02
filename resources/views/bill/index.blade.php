@@ -22,8 +22,10 @@
                         {
                             "searchable": false,
                             "targets": 'no-search'
-                        }],
-                    "order": [[7, 'desc']],
+                        },
+                        { "width": "10%", "targets": 8 }
+                    ],
+                    "order": [[8, 'desc']],
                 });
 
                 $(document).on('change', '.laundry-status', function () {
