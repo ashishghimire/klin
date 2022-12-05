@@ -16,5 +16,5 @@ interface BillRepositoryInterface
 
     public function delete($bill);
 
-    public function getCount($string);
+    public function getCount($string, $total);
 }

@@ -130,8 +130,8 @@ class BillService
     }
 
 
-    public function getCount($string)
+    public function getCount($string, $total)
     {
-        return $this->bill->getCount($string);
+        return $this->bill->getCount($string, $total);
     }
 }

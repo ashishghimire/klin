@@ -44,9 +44,9 @@ class DashboardController extends Controller
     public function index()
     {
         $customersCount = $this->customer->total();
-        $processingCount = $this->bill->getCount('processing');
-        $completedCount = $this->bill->getCount('completed');
-        $deliveredCount = $this->bill->getCount('delivered');
+        $processingCount = $this->bill->getCount('processing', true);
+        $completedCount = $this->bill->getCount('completed', true);
+        $deliveredCount = $this->bill->getCount('delivered', false);
         return view('dashboard', compact('customersCount', 'processingCount', 'completedCount', 'deliveredCount'));
     }
 

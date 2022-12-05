@@ -86,8 +86,14 @@ class BillRepository implements BillRepositoryInterface
         return $deleted;
     }
 
-    public function getCount($string)
+    public function getCount($string, $total = false)
     {
-        return $this->bill->where('laundry_status', $string)->whereDate('created_at', Carbon::now())->count();
+        if ($total) {
+            return $this->bill->where('laundry_status', $string)->count();
+        }
+
+        else {
+            return $this->bill->where('laundry_status', $string)->whereDate('created_at', Carbon::now())->count();
+        }
     }
 }
