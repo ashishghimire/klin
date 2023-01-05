@@ -126,19 +126,19 @@
             </div>
             <br>
             <div class="mb-3 row">
-                {!! Form::label('payment_mode', 'Advance Payment', ['class' => 'col-sm-2 col-form-label payment']) !!}
+                {!! Form::label('payment_mode', 'Payment', ['class' => 'col-sm-2 col-form-label payment']) !!}
 
                 <div class="col-sm-6">
                     {!! Form::select('payment_mode',  $paymentModes->pluck('name', 'name') , old('payment_mode'), ['placeholder' => 'Not paid', 'class' => 'form-select form-select-sm payment']) !!}
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-6">
-                    {!! Form::number('paid_amount', 0, ['class' => 'form-control form-control-sm float-only', 'hidden', 'step'=>'.01', 'placeholder'=>'Amount (Rs.)','autocomplete'=>'off', 'min'=>'0', 'required'])   !!}
-                </div>
-            </div>
+            {{--<div class="mb-3 row">--}}
+                {{--<div class="col-sm-2"></div>--}}
+                {{--<div class="col-sm-6">--}}
+                    {{--{!! Form::number('paid_amount', 0, ['class' => 'form-control form-control-sm float-only', 'hidden', 'step'=>'.01', 'placeholder'=>'Amount (Rs.)','autocomplete'=>'off', 'min'=>'0', 'required'])   !!}--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
             <div class="mb-3 row">
                 {!! Form::label('note', 'Note', ['class' => 'col-sm-2 col-form-label']) !!}

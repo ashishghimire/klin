@@ -56,20 +56,28 @@ class BillService
         $data['customer_id'] = $customerId;
         $data['amount'] = $this->calculateAmount($data['service_details']);
 
-        if ($data['payment_mode'] == 'reward points') {
+        if (!empty($data['payment_mode'])) {
             $data['payment_status'] = 'paid';
             $data['paid_amount'] = $data['amount'];
-            return $data;
+        } else {
+            $data['payment_status'] = 'unpaid';
+            $data['paid_amount'] = 0;
         }
 
-        if (empty($data['paid_amount'])) {
-            $data['payment_status'] = 'unpaid';
-            $data['payment_mode'] = null;
-        } elseif ($data['paid_amount'] >= $data['amount']) {
-            $data['payment_status'] = 'paid';
-        } else {
-            $data['payment_status'] = 'partial';
-        }
+//        if ($data['payment_mode'] == 'reward points') {
+//            $data['payment_status'] = 'paid';
+//            $data['paid_amount'] = $data['amount'];
+//            return $data;
+//        }
+//
+//        if (empty($data['paid_amount'])) {
+//            $data['payment_status'] = 'unpaid';
+//            $data['payment_mode'] = null;
+//        } elseif ($data['paid_amount'] >= $data['amount']) {
+//            $data['payment_status'] = 'paid';
+//        } else {
+//            $data['payment_status'] = 'partial';
+//        }
 
 
         return $data;

@@ -93,6 +93,7 @@
                         <th>Category</th>
                         <th>Payment Mode</th>
                         <th>Details</th>
+                        <th>Payee</th>
                         <th>Txn No</th>
                         <th>Added By</th>
                         @if(auth()->user()->role == 'admin')
@@ -118,6 +119,9 @@
                             </td>
                             <td>
                                 <span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->details}}</span>
+                            </td>
+                            <td>
+                                <span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{$expense->payee}}</span>
                             </td>
                             <td>
                                 <span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{!empty($expense->txn_no) ? $expense->txn_no : '-'}}</span>
@@ -193,4 +197,3 @@
         </div>
     </div>
 </x-app-layout>
-

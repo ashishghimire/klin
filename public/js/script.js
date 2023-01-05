@@ -51,26 +51,20 @@ $(document).ready(function(){
     });
 
 
-    // $(document).on("keypress", '.float-only', function (evt) {
-    //     var self = $(this);
-    //     self.val(self.val().replace(/[^0-9\.]/g, ''));
-    //     if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) {
-    //         evt.preventDefault();
-    //     }
-    // });
-
-    $(document).on('change', '.payment', function () {
-
-        if (this.value != '' && this.value != 'reward points') {
-
-            $("input[name='paid_amount']").removeAttr('hidden');
-            $("input[name='paid_amount']").val('');
-            $("input[name='paid_amount']").focus();
-        } else {
-            $("input[name='paid_amount']").attr('hidden', true);
-            $("input[name='paid_amount']").val(0);
-        }
-    });
+// ----------------Change 5/1/2023----------------------------------------------
+//     $(document).on('change', '.payment', function () {
+//
+//         if (this.value != '' && this.value != 'reward points') {
+//
+//             $("input[name='paid_amount']").removeAttr('hidden');
+//             $("input[name='paid_amount']").val('');
+//             $("input[name='paid_amount']").focus();
+//         } else {
+//             $("input[name='paid_amount']").attr('hidden', true);
+//             $("input[name='paid_amount']").val(0);
+//         }
+//     });
+// -----------------------------------------------------------------
 
 
     function changeAmount() {
