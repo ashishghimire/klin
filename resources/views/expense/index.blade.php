@@ -7,13 +7,6 @@
         <script src="{{asset('js/jQueryDatatables.js')}}"></script>
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
-            function OnClickNextPage(event) {
-                var result = confirm("Are you sure ?");
-                if (!result) {
-                    event.preventDefault(); // prevent event when user cancel
-                }
-            }
-
             $(document).ready(function () {
                 $('#expense-info').DataTable({
                     "iDisplayLength": 100,
@@ -26,19 +19,16 @@
                         "orderable": false,
                         "targets": 'no-sort',
                     },
-                        {
-                            "searchable": false,
-                            "targets": 'no-search'
-                        },
-                        {
-                            "searchable": true,
-                            "orderable": true,
-                            "targets": 0,
-                            "type": 'date'
-                        }],
+                    ],
                     "order": [[0, 'desc']],
                 });
 
+                function OnClickNextPage(event) {
+                    var result = confirm("Are you sure ?");
+                    if (!result) {
+                        event.preventDefault(); // prevent event when user cancel
+                    }
+                }
             });
         </script>
     @stop
@@ -58,13 +48,17 @@
         <br>
     </x-slot>
 
-    @if(Session::has('error'))
-        <div class="alert alert-danger">
-            <h4>{{session('error')}}</h4>
-        </div>
-    @endif
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action={{route('expense.search')}} method="GET" role="search" class="search">
                 {{ csrf_field() }}
                 {!! Form::select('category', \App\Models\ExpenseCategory::all()->pluck('name', 'name'), !empty(request()->get('category')) ? request()->get('category') : null, ['placeholder' => 'All Categories']) !!}
@@ -88,7 +82,7 @@
                 <table id="expense-info" class="table table-striped" style="width:100%">
                     <thead>
                     <tr>
-                        <th>Date</th>
+                        <th class="date">Date</th>
                         <th>Amount</th>
                         <th>Category</th>
                         <th>Payment Mode</th>
@@ -97,7 +91,7 @@
                         <th>Txn No</th>
                         <th>Added By</th>
                         @if(auth()->user()->role == 'admin')
-                            <th class="no-sort no-search">Action</th>
+                            <th class="no-sort">Action</th>
                         @endif
                     </tr>
                     </thead>
@@ -105,8 +99,8 @@
 
                     @forelse($expenses->sortByDesc('created_at') as $expense)
                         <tr>
-                            <td>
-                                <span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}</span>
+                            <td {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>
+                                {{!empty($expense->nepali_date) ? $expense->nepali_date : '-'}}
                             </td>
                             <td>
                                 <span {{strtoupper($expense->category) == 'CREDITED/ADJUSTED' ? 'style=color:red;' : ''}}>{{round(($expense->amount), 2)}}</span>
@@ -132,6 +126,8 @@
                             @if(auth()->user()->role == 'admin')
                                 <td><a class="btn-sm btn-outline-dark"
                                        href="{{route('expense.edit',  $expense)}}">Edit </a>
+                                    <a class="btn-sm btn-outline-dark"
+                                       href="{{route('expense.download',  $expense)}}" target="_blank">Print</a>
                                     {{--{{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}--}}
                                     {{--<button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete--}}
                                     {{--</button>--}}

@@ -167,8 +167,14 @@ class IncomeController extends Controller
         $startDate = null;
         $endDate = null;
 
+
         if (!empty(trim(request()->get('startDate')))) {
             $startDateNepali = explode("-", trim(request()->get('startDate')));
+
+            if (empty($this->nepaliDate->validateDate(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]), 'bs'))) {
+                return redirect()->back()->withErrors('Invalid Start Date Entered: '.trim(request()->get('startDate')));
+            }
+
             $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
             $startDateEnglish = implode("-", $startDateEnglishArray);
             $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
@@ -176,6 +182,11 @@ class IncomeController extends Controller
 
         if (!empty(trim(request()->get('endDate')))) {
             $endDateNepali = explode("-", trim(request()->get('endDate')));
+
+            if (empty($this->nepaliDate->validateDate(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]), 'bs'))) {
+                return redirect()->back()->withErrors('Invalid End Date Entered: '.trim(request()->get('endDate')));
+            }
+
             $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
             $endDateEnglish = implode("-", $endDateEnglishArray);
             $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
@@ -245,16 +256,16 @@ class IncomeController extends Controller
             sum(case when payment_mode = "khalti" or payment_mode = "esewa" or payment_mode = "fonepay" THEN paid_amount else 0 end) AS fonepay,
             sum(case when payment_mode = "reward points" THEN paid_amount else 0 end) AS reward_pay');
 
-
         $billsQuery = DB::table('bills')
             ->where('deleted_at', null);
 
+
         if (!empty($startDate)) {
-            $billsQuery->whereDate('created_at', '>=', $startDate);
+            $billsQuery->whereDate('created_at', '>=', Carbon::parse($startDate)->startOfDay());
         }
 
         if (!empty($endDate)) {
-            $billsQuery->whereDate('created_at', '<=', $endDate);
+            $billsQuery->whereDate('created_at', '<=', Carbon::parse($endDate)->endOfDay());
         }
 
         extract($this->calculate1($billsQuery));

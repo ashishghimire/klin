@@ -71,13 +71,17 @@
         </h2>
     </x-slot>
 
-    @if(Session::has('error'))
-        <div class="alert alert-danger">
-            <h4>{{session('error')}}</h4>
-        </div>
-    @endif
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="container">
 
                 <form action={{route('income1.search1')}} method="GET" role="search" class="search">
@@ -123,8 +127,6 @@
                     <tbody>
 
                     @forelse($bills->sortByDesc('nepali_date') as $bill)
-                        {{--<tr {{$bill->payment_mode == 'reward points' ? 'class=table-danger': ''}}>--}}
-
                         <tr>
                             <td>{{$bill->nepali_date}}</td>
                             <td>{{$bill->cash}}</td>

@@ -9,6 +9,7 @@ use App\Models\PaymentMode;
 use App\Models\Salary;
 use App\Models\User;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -149,6 +150,11 @@ class ExpenseController extends Controller
 
         if (!empty(trim(request()->get('startDate')))) {
             $startDateNepali = explode("-", trim(request()->get('startDate')));
+
+            if (empty($this->nepaliDate->validateDate(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]), 'bs'))) {
+                return redirect()->back()->withErrors('Invalid Start Date Entered: '.trim(request()->get('startDate')));
+            }
+
             $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
             $startDateEnglish = implode("-", $startDateEnglishArray);
             $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
@@ -157,6 +163,11 @@ class ExpenseController extends Controller
 
         if (!empty(trim(request()->get('endDate')))) {
             $endDateNepali = explode("-", trim(request()->get('endDate')));
+
+            if (empty($this->nepaliDate->validateDate(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]), 'bs'))) {
+                return redirect()->back()->withErrors('Invalid End Date Entered: '.trim(request()->get('endDate')));
+            }
+
             $endDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]));
             $endDateEnglish = implode("-", $endDateEnglishArray);
             $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
@@ -347,5 +358,14 @@ class ExpenseController extends Controller
         $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
         $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
         return $nepaliDate;
+    }
+
+    public function download(Expense $expense)
+    {
+        $dompdf = new Dompdf();
+        $html = view('expense.print', compact('expense'));
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $dompdf->stream("expense",array("Attachment"=>0));
     }
 }
