@@ -8,6 +8,7 @@
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             $(document).ready(function () {
+                @if(!empty($bills->count()))
                 $('#bill-info').DataTable({
                     "iDisplayLength": 100,
                     aLengthMenu: [
@@ -23,10 +24,11 @@
                             "searchable": false,
                             "targets": 'no-search'
                         },
-                        { "width": "10%", "targets": 8 }
+                        {"width": "10%", "targets": 8}
                     ],
                     "order": [[8, 'desc']],
                 });
+                @endif
 
                 $(document).on('change', '.laundry-status', function () {
                     $(this).attr('disabled', 'disabled');
@@ -46,6 +48,11 @@
                         },
                     });
                 });
+
+                $(document).on('change', '.change-laundry-status', function () {
+
+                    window.location = $(this).data('url') + '?laundry-status=' + $(this).val();
+                });
             });
         </script>
     @stop
@@ -55,15 +62,23 @@
             <a class="btn-sm btn-outline-primary" href="{{route('invoice.create')}}">Add</a>
         </h2>
         <br>
+        {!! Form::label('change-laundry-status', 'Laundry Status', ['class' => 'col-sm-2 col-form-label']) !!}
+        {!! Form::select('change-laundry-status', ['processing'=>'Processing', 'completed'=>'Completed', 'delivered'=>'Delivered'], !empty(request()->query->get('laundry-status')) ? request()->query->get('laundry-status') : null, ['placeholder' => 'All', 'class' => 'col-sm-2 col-form-label change-laundry-status', 'data-url' => route('bill.index')]) !!}
+        <br>
+        <br>
         <form action={{route('bill.search')}} method="GET" role="search" class="search">
             {{ csrf_field() }}
-            Get invoices for
+
+            {!! Form::label('startDate', 'Get invoices for', ['class' => 'col-sm-2 col-form-label']) !!}
+
 
             {!! Form::text('startDate', !empty(request()->get('startDate')) ? request()->get('startDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-15', 'required']) !!}
 
             {!! Form::text('endDate', !empty(request()->get('endDate')) ? request()->get('endDate') : null, ['autocomplete'=>'off', 'placeholder' => 'Eg. 2079-1-30', 'required']) !!}
 
-            {!! Form::submit('Search by Date', ['class' => 'btn btn-outline-primary']); !!}
+            {!! Form::hidden('laundry-status', !empty(request()->query->get('laundry-status')) ? request()->query->get('laundry-status') : null) !!}
+
+            {!! Form::submit('Search', ['class' => 'btn btn-outline-primary']); !!}
         </form>
     </x-slot>
 
@@ -75,6 +90,15 @@
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <table id="bill-info" class="table table-striped" style="width:100%">
                 <thead>
                 <tr>

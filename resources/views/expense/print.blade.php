@@ -11,7 +11,7 @@
 
         /** Define now the real margins of every page in the PDF **/
         body {
-            margin-top: 3cm;
+            margin-top: 4cm;
             margin-left: 2cm;
             margin-right: 2cm;
             margin-bottom: 2cm;
@@ -24,6 +24,8 @@
             left: 0cm;
             right: 0cm;
             height: 3cm;
+            margin-top: 0.5cm;
+            margin-bottom: 1cm;
         }
 
         /** Define the footer rules **/
@@ -39,11 +41,11 @@
 <body>
 <!-- Define header and footer blocks before your content -->
 <header>
-    <img src="header.png" width="100%" height="100%"/>
+    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(base_path('images/header.png')))}}" width="120%">
 </header>
 
 <footer>
-    <img src="footer.png" width="100%" height="100%"/>
+    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(base_path('images/footer.png')))}}" width="100%">
 </footer>
 
 <!-- Wrap the content of your PDF inside a main tag -->
@@ -58,11 +60,11 @@
     <br>
     <p><span class="bold">Details: </span> {{$expense->details}}</p>
     <br>
-    <p><span class="bold">TXN No.: </span> {{empty($expense->txn_no)? $expense->txn_no : '-'}}</p>
+    <p><span class="bold">TXN No.: </span> {{!empty($expense->txn_no)? $expense->txn_no : '-'}}</p>
     <br>
-    <p><span class="bold">Payee: </span> {{empty($expense->payee)? $expense->payee : '-'}}</p>
+    <p><span class="bold">Payee: </span> {{!empty($expense->payee)? $expense->payee : '-'}}</p>
     <br>
-    <p><span class="bold">Receiver: </span> {{empty($expense->receiver)? $expense->receiver : '-'}}</p>
+    <p><span class="bold">Receiver: </span> {{!empty($expense->receiver)? $expense->receiver : '-'}}</p>
     <br>
     <p><span class="bold">Paid By: </span> {{$expense->user->name}}</p>
 </main>

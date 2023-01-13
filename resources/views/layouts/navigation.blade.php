@@ -50,7 +50,7 @@
 
                     </div>
 
-                    <x-nav-link :href="route('bill.index')" :active="request()->routeIs('bill.index')">
+                    <x-nav-link :href="route('bill.index', ['laundry-status'=>'processing'])" :active="request()->routeIs('bill.index')">
                         Invoices
                     </x-nav-link>
                         <x-nav-link :href="route('income1')" :active="request()->routeIs('income1')">

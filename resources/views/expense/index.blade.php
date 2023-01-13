@@ -8,6 +8,8 @@
         <script src="{{asset('js/bootstrapDatatables.js')}}"></script>
         <script>
             $(document).ready(function () {
+                @if(!empty($expenses->count()))
+
                 $('#expense-info').DataTable({
                     "iDisplayLength": 100,
                     aLengthMenu: [
@@ -22,6 +24,8 @@
                     ],
                     "order": [[0, 'desc']],
                 });
+
+                @endif
 
                 function OnClickNextPage(event) {
                     var result = confirm("Are you sure ?");
@@ -128,10 +132,6 @@
                                        href="{{route('expense.edit',  $expense)}}">Edit </a>
                                     <a class="btn-sm btn-outline-dark"
                                        href="{{route('expense.download',  $expense)}}" target="_blank">Print</a>
-                                    {{--{{ Form::open(['url' => route('expense.destroy', $expense), 'method' => 'delete']) }}--}}
-                                    {{--<button class="btn-sm btn-outline-danger" onclick=OnClickNextPage(event)>Delete--}}
-                                    {{--</button>--}}
-                                    {{--{{ Form::close() }}--}}
                                 </td>
                             @endif
                         </tr>

@@ -58,7 +58,9 @@ class BillController extends Controller
             $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->get();
         }
 
+
         $paymentModes = PaymentMode::where('name', '!=', 'reward points');
+
 
         return view('bill.index', compact('bills', 'paymentModes', 'nepaliDateObj'));
     }
@@ -177,7 +179,7 @@ class BillController extends Controller
         }
 
 
-        return redirect()->route('bill.index')->withSuccess("Bill successfully updated");
+        return redirect()->route('bill.index', ['laundry-status'=>'processing'])->withSuccess("Bill successfully updated");
     }
 
     /**
@@ -214,7 +216,7 @@ class BillController extends Controller
             $bill->save();
         }
 
-        return redirect()->route('bill.index');
+        return redirect()->back();
     }
 
     public function changeLaundryStatus(Bill $bill)
@@ -230,7 +232,16 @@ class BillController extends Controller
     public function search()
     {
         $startDateNepali = explode("-", trim(request()->get('startDate')));
+
+        if (empty($this->nepaliDate->validateDate(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]), 'bs'))) {
+            return redirect()->back()->withErrors('Invalid Start Date Entered: ' . trim(request()->get('startDate')));
+        }
+
         $endDateNepali = explode("-", trim(request()->get('endDate')));
+
+        if (empty($this->nepaliDate->validateDate(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]), 'bs'))) {
+            return redirect()->back()->withErrors('Invalid End Date Entered: '.trim(request()->get('endDate')));
+        }
 
         $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
 
@@ -239,25 +250,35 @@ class BillController extends Controller
         $startDateEnglish = implode("-", $startDateEnglishArray);
         $endDateEnglish = implode("-", $endDateEnglishArray);
 
-        $date = request()->get('startDate') . ' : ' . request()->get('endDate');
-
         $startDate = Carbon::parse(strtotime($startDateEnglish))->startOfDay()->toDateString();
 
         $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
 
-        return $this->queryDate($startDate, $endDate, $date);
+        $status = request()->get('laundry-status');
+
+        return $this->queryDate($startDate, $endDate, $status);
     }
 
-    private function queryDate($startDate, $endDate, $date)
+    private function queryDate($startDate, $endDate, $status)
     {
-        $bills = Bill::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->where('deleted_at', null)
-            ->orderBy('created_at', 'desc')->get();
+        if (!empty($status)) {
+            $bills = Bill::where('laundry_status', $status)
+                ->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)
+                ->where('deleted_at', null)
+                ->orderBy('created_at', 'desc')->get();
+        } else {
+            $bills = Bill::whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate)
+                ->where('deleted_at', null)
+                ->orderBy('created_at', 'desc')->get();
+        }
+
 
         $nepaliDateObj = $this->nepaliDate;
 
         $paymentModes = PaymentMode::all();
+
 
         return view('bill.index', compact('bills', 'nepaliDateObj', 'paymentModes'));
     }
