@@ -12,6 +12,7 @@ use App\Services\CustomerService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Nilambar\NepaliDate\NepaliDate;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class BillController extends Controller
@@ -48,21 +49,11 @@ class BillController extends Controller
 
     public function index()
     {
-        $nepaliDateObj = $this->nepaliDate;
+        $isSearch = false;
         $laundryStatus = request()->query('laundry-status');
 
-        if (empty($laundryStatus)) {
 
-            $bills = Bill::orderBy('created_at', 'desc')->get();
-        } else {
-            $bills = Bill::where('laundry_status', $laundryStatus)->orderBy('created_at', 'desc')->get();
-        }
-
-
-        $paymentModes = PaymentMode::where('name', '!=', 'reward points');
-
-
-        return view('bill.index', compact('bills', 'paymentModes', 'nepaliDateObj'));
+        return view('bill.load', compact('laundryStatus', 'isSearch'));
     }
 
     /**
@@ -179,7 +170,7 @@ class BillController extends Controller
         }
 
 
-        return redirect()->route('bill.index', ['laundry-status'=>'processing'])->withSuccess("Bill successfully updated");
+        return redirect()->route('bill.index', ['laundry-status' => 'processing'])->withSuccess("Bill successfully updated");
     }
 
     /**
@@ -231,6 +222,7 @@ class BillController extends Controller
 //--------------------------------------------------------
     public function search()
     {
+        $isSearch = true;
         $startDateNepali = explode("-", trim(request()->get('startDate')));
 
         if (empty($this->nepaliDate->validateDate(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]), 'bs'))) {
@@ -240,7 +232,7 @@ class BillController extends Controller
         $endDateNepali = explode("-", trim(request()->get('endDate')));
 
         if (empty($this->nepaliDate->validateDate(trim($endDateNepali[0]), trim($endDateNepali[1]), trim($endDateNepali[2]), 'bs'))) {
-            return redirect()->back()->withErrors('Invalid End Date Entered: '.trim(request()->get('endDate')));
+            return redirect()->back()->withErrors('Invalid End Date Entered: ' . trim(request()->get('endDate')));
         }
 
         $startDateEnglishArray = $this->nepaliDate->convertBsToAd(trim($startDateNepali[0]), trim($startDateNepali[1]), trim($startDateNepali[2]));
@@ -254,33 +246,35 @@ class BillController extends Controller
 
         $endDate = Carbon::parse(strtotime($endDateEnglish))->endOfDay()->toDateString();
 
-        $status = request()->get('laundry-status');
+        $laundryStatus = request()->get('laundry-status');
 
-        return $this->queryDate($startDate, $endDate, $status);
+        return view('bill.load', compact('startDate', 'endDate', 'laundryStatus', 'isSearch'));
     }
 
     private function queryDate($startDate, $endDate, $status)
     {
         if (!empty($status)) {
-            $bills = Bill::where('laundry_status', $status)
-                ->whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate)
-                ->where('deleted_at', null)
-                ->orderBy('created_at', 'desc')->get();
+            $bills = DB::table('bills')
+                ->where('laundry_status', $status)
+                ->whereDate('bills.created_at', '>=', $startDate)
+                ->whereDate('bills.created_at', '<=', $endDate)
+                ->where('bills.deleted_at', null)
+                ->join('customers', 'bills.customer_id', '=', 'customers.id')
+                ->join('users', 'bills.user_id', '=', 'users.id')
+                ->select('bills.*', 'customers.id as customer_id', 'customers.phone as customer_phone', 'customers.name as customer_name', 'users.id as user_id', 'users.name as user_name');
+
         } else {
-            $bills = Bill::whereDate('created_at', '>=', $startDate)
-                ->whereDate('created_at', '<=', $endDate)
-                ->where('deleted_at', null)
-                ->orderBy('created_at', 'desc')->get();
+            $bills = DB::table('bills')
+                ->whereDate('bills.created_at', '>=', $startDate)
+                ->whereDate('bills.created_at', '<=', $endDate)
+                ->where('bills.deleted_at', null)
+                ->join('customers', 'bills.customer_id', '=', 'customers.id')
+                ->join('users', 'bills.user_id', '=', 'users.id')
+                ->select('bills.*', 'customers.id as customer_id', 'customers.phone as customer_phone', 'customers.name as customer_name', 'users.id as user_id', 'users.name as user_name');
         }
 
 
-        $nepaliDateObj = $this->nepaliDate;
-
-        $paymentModes = PaymentMode::all();
-
-
-        return view('bill.index', compact('bills', 'nepaliDateObj', 'paymentModes'));
+        return $bills;
     }
 
     public function nepaliDate($englishDate)
@@ -290,7 +284,141 @@ class BillController extends Controller
         $day = $englishDate->format('d');
         $nepaliDateArray = $this->nepaliDate->convertAdToBs($year, $month, $day);
         $nepaliDate = $nepaliDateArray['year'] . '-' . $nepaliDateArray['month'] . '-' . $nepaliDateArray['day'];
+
         return $nepaliDate;
     }
 
+
+    public function loadIndex()
+    {
+
+        $laundryStatus = request()->query('laundryStatus');
+
+        if (empty($laundryStatus)) {
+
+            $bills = DB::table('bills')
+                ->where('bills.deleted_at', null)
+                ->join('customers', 'bills.customer_id', '=', 'customers.id')
+                ->join('users', 'bills.user_id', '=', 'users.id')
+                ->select('bills.*', 'customers.id as customer_id', 'customers.phone as customer_phone', 'customers.name as customer_name', 'users.id as user_id', 'users.name as user_name');
+
+
+        } else {
+
+//
+//            $bills = DB::table('bills')
+//                ->where('laundry_status', 'completed')
+//                ->join('customers', 'bills.customer_id', '=', 'customers.id')
+//                ->join('users', 'bills.user_id', '=', 'users.id')
+//                ->join('services', DB::raw('JSON_CONTAINS(bills.service_details, JSON_OBJECT("service_type", services.name))'), '=', DB::raw('1'))
+//                ->select('bills.*', 'customers.phone as customer_phone', 'customers.name as customer_name', 'users.name as user_name', DB::raw('GROUP_CONCAT(services.shortcode SEPARATOR ", ") AS laundry_service'))
+//                ->groupBy('bills.id');
+
+            $bills = DB::table('bills')
+                ->where('bills.deleted_at', null)
+                ->where('laundry_status', $laundryStatus)
+                ->join('customers', 'bills.customer_id', '=', 'customers.id')
+                ->join('users', 'bills.user_id', '=', 'users.id')
+                ->select('bills.*', 'customers.id as customer_id', 'customers.phone as customer_phone', 'customers.name as customer_name', 'users.id as user_id', 'users.name as user_name');
+        }
+
+        return $this->load($bills);
+    }
+
+    public function loadSearch()
+    {
+
+        $laundryStatus = request()->query('laundryStatus');
+        $startDate = request()->query('startDate');
+        $endDate = request()->query('endDate');
+        $bills = $this->queryDate($startDate, $endDate, $laundryStatus);
+
+        return $this->load($bills);
+    }
+
+    public function load($bills)
+    {
+        $billDatatable = Datatables::of($bills)
+            ->addIndexColumn()
+            ->addColumn('estimate_no', function ($bill) {
+                $id = '<a href=' . route('customer.bill.show', [$bill->customer_id, $bill->id]) . '>' . $bill->id . '</a>';
+
+                return $id;
+            })
+            ->addColumn('customer_name', function ($bill) {
+
+                $customerName = '<a href=' . route('customer.show', [$bill->customer_id]) . '>' . $bill->customer_name . '</a>';
+
+                return $customerName;
+            })
+            ->addColumn('phone_no', function ($bill) {
+
+                $phoneNo = '<a href=' . route('customer.show', [$bill->customer_id]) . '>' . $bill->customer_phone . '</a>';
+
+                return $phoneNo;
+            })
+            ->addColumn('services', function ($bill) {
+                $shortcodes = [];
+                $service_details = json_decode($bill->service_details);
+                foreach ($service_details as $service_detail) {
+                    $servicesShortcode = \App\Models\Service::where('name', $service_detail->service_type)->first('shortcode');
+                    if (!empty ($servicesShortcode)) {
+                        array_push($shortcodes, $servicesShortcode->shortcode);
+                    }
+                }
+
+                return implode($shortcodes, ', ');
+                return $bill->laundry_service;
+            })
+            ->addColumn('amount', function ($bill) {
+                return $bill->amount;
+            })
+            ->addColumn('payment_status', function ($bill) {
+
+                $paymentModes = PaymentMode::where('name', '!=', 'reward points');
+
+                return view('bill.partials.payment-status', compact('bill', 'paymentModes'))->render();
+
+            })
+            ->addColumn('payment_mode', function ($bill) {
+                $imagePath = asset('images/payment_modes/money.png');
+                if (!empty($bill->payment_mode)) {
+                    if (file_exists(config('public.path') . '/images/payment_modes/' . $bill->payment_mode . '.png')) { //base_path() if in production
+                        $imagePath = asset('images/payment_modes/' . $bill->payment_mode . '.png');
+                    }
+                } else {
+                    $imagePath = asset('images/payment_modes/unpaid.png');
+                }
+
+                $paymentMode = empty($bill->payment_mode) ? '-' : $bill->payment_mode;
+
+                return $paymentMode . '<img src="' . $imagePath . '" style="width:20px;float:left; margin-right: 10%">';
+
+            })
+            ->addColumn('laundry_status', function ($bill) {
+                if ($bill->payment_status == 'paid') {
+                    $laundryStatusArray = ['processing' => 'Processing', 'completed' => 'Completed', 'delivered' => 'Delivered'];
+                } else {
+                    $laundryStatusArray = ['processing' => 'Processing', 'completed' => 'Completed'];
+                }
+                return view('bill.partials.laundry-status-form', compact('bill', 'laundryStatusArray'))->render();
+            })
+            ->addColumn('date', function ($bill) {
+                return !empty($bill->nepali_date) ? $bill->nepali_date : '';
+            })
+            ->addColumn('note', function ($bill) {
+                return !empty($bill->note) ? $bill->note : '';
+            })->addColumn('added_by', function ($bill) {
+                $addedBy = '<a href=' . route('employee.show', $bill->user_id) . '>' . $bill->user_name . '</a>';
+                return $addedBy;
+            })
+            ->addColumn('action', function ($bill) {
+                $action = '<a class="btn btn-outline-dark" href=' . route('bill.edit', $bill->id) . '>Edit </a>';
+                return $action;
+            })
+            ->rawColumns(['estimate_no', 'customer_name', 'phone_no', 'payment_status', 'payment_mode', 'laundry_status', 'added_by', 'action'])
+            ->toJson();
+
+        return $billDatatable;
+    }
 }

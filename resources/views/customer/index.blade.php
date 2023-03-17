@@ -12,8 +12,11 @@
                     $('#customer-info').DataTable({
                         processing: true,
                         serverSide: true,
+                        ajax: true,
+                        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                         "iDisplayLength": 100,
-                        ajax: "{{ route('customer.index') }}",
                         "order": [[3, 'desc']],
                         columns: [
                             {data: 'name', name: 'name'},
@@ -35,7 +38,11 @@
                     $('#customer-info').DataTable({
                         processing: true,
                         serverSide: true,
-                        ajax: "{{ route('customer.index') }}",
+                        ajax: true,
+                        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                        "iDisplayLength": 100,
                         "order": [[3, 'desc']],
                         columns: [
                             {data: 'name', name: 'name'},
@@ -69,8 +76,8 @@
         </div>
     @endif
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
 
 
             <table id="customer-info" class="compact table-bordered" style="width:100%">

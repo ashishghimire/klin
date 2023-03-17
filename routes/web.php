@@ -101,3 +101,8 @@ Route::get('/downloadLetter/{id}', 'App\Http\Controllers\LetterController@downlo
 Route::any('employee/search/{employee}', 'App\Http\Controllers\EmployeeController@search')->name('employee.search')->middleware(['auth']);
 
 Route::get('/downloadExpense/{expense}', 'App\Http\Controllers\ExpenseController@download')->name('expense.download')->middleware(['auth', 'isAdmin']);
+
+Route::get('bill/load-index', 'App\Http\Controllers\BillController@loadIndex')->name('bill.load-index')->middleware(['auth']);
+
+Route::get('bill/load-search', 'App\Http\Controllers\BillController@loadSearch')->name('bill.load-search')->middleware(['auth']);
+
